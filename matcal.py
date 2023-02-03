@@ -2,6 +2,22 @@ from tkinter import *
 import numpy as np
 
 
+def show_matlist():
+    print("in progress")
+
+
+def show_fixedmat_two():
+    print("in progress")
+
+
+def show_matdisp():
+    print("in progress")
+
+
+def show_matfunc():
+    print("in progress")
+
+
 def show_fixedmat():
     global root, scr, urow, ucol, stage, asset
     row_lab = Label(root, text="Number of Row: ")
@@ -71,16 +87,24 @@ def show_welcome():
     creatorlabel = Label(root, text="created by Naphat and Samita")
     matter_btn = Button(root, text="Create Matrix",
                         command=lambda: transit("createmat"))
+    matlist_btn = Button(root, text="Matrix List",
+                         command=lambda: transit("matlist"))
+    matfunc_btn = Button(root, text="Do Functions",
+                         command=lambda: transit("matfunc"))
     exit_btn = Button(root, text="Quit", command=exitProg)
 
     hilabel.grid(row=urow, column=ucol)
     creatorlabel.grid(row=mr(), column=ucol)
     matter_btn.grid(row=mr(), column=ucol)
+    matlist_btn.grid(row=mr(), column=ucol)
+    matfunc_btn.grid(row=mr(), column=ucol)
     exit_btn.grid(row=mr(), column=ucol)
     scr.append(hilabel)
     scr.append(creatorlabel)
     scr.append(matter_btn)
     scr.append(exit_btn)
+    scr.append(matlist_btn)
+    scr.append(matfunc_btn)
 
 
 def exitProg():
@@ -136,6 +160,10 @@ def summon():
         show_createmat()
     elif stage == "fixedmat":
         show_fixedmat()
+    elif stage == "matlist":
+        show_matlist()
+    elif stage == "matfunc":
+        show_matfunc()
 
 
 if __name__ == '__main__':
