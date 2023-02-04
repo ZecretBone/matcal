@@ -4,6 +4,20 @@ import numpy as np
 import random
 
 
+def beauty_mat(m):
+    b = ""
+    rc = m.shape
+    r = rc[0]
+    c = rc[1]
+    # b = m
+    # export matrix
+    for i in range(r):
+        for j in range(c):
+            b += str(m[i, j]) + "  "
+        b += "\n"
+    return b
+
+
 def disp_matlist(listb, lab):
     global root, scr, urow, ucol, stage, asset
     an = listb.get(ANCHOR)
@@ -11,7 +25,8 @@ def disp_matlist(listb, lab):
     for i in range(len(asset["all_mat"])):
         if asset["all_mat"][i][0] == an:
             mat = asset["all_mat"][i][1]
-    lab.config(text=mat)
+    b = beauty_mat(mat)
+    lab.config(text=b)
 
 
 def random_fixedmat(all_ent):
