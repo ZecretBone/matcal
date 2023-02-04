@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 import numpy as np
+import random
 
 
 def disp_matlist(listb, lab):
@@ -11,6 +12,16 @@ def disp_matlist(listb, lab):
         if asset["all_mat"][i][0] == an:
             mat = asset["all_mat"][i][1]
     lab.config(text=mat)
+
+
+def random_fixedmat(all_ent):
+    global root, scr, urow, ucol, stage, asset
+    print("entries")
+    for r, row in enumerate(all_ent):
+        for c, entry in enumerate(row):
+            newf = round(random.uniform(-100, 100), 2)
+            entry.delete(0, END)
+            entry.insert('end', str(newf))
 
 
 def show_matlist():
@@ -43,9 +54,15 @@ def validate_fixedmat(t):
 
 def namer_fixedmat(name):
     global root, scr, urow, ucol, stage, asset
-    for i in range(len(asset["all_mat"])):
-        if asset["all_mat"][i][0] == name:
-            name += "_duplicate"
+    dup = False
+    f = True
+    while dup or f:
+        f = False
+        dup = False
+        for i in range(len(asset["all_mat"])):
+            if asset["all_mat"][i][0] == name:
+                name += "_duplicate"
+                dup = True
     return name
 
 
@@ -56,6 +73,7 @@ def save_fixedmat(all_ent, name):
     for r, row in enumerate(all_ent):
         for c, entry in enumerate(row):
             text = entry.get()
+            print(text)
             a[r, c], err = validate_fixedmat(text)
             if err != "":
                 have_err = True
@@ -68,6 +86,8 @@ def save_fixedmat(all_ent, name):
         print(a)
         print(asset["all_mat"])
         transit("main")
+        messagebox.showinfo(title="Create Matrix Success",
+                            message="Your new matrix has been created !")
 
 
 def show_fixedmat_two():
@@ -85,25 +105,29 @@ def show_fixedmat_two():
         l.grid(row=r+1, column=0)
         scr.append(l)
         for c in range(asset["fixedmat_c"]):
-            en = Entry(root, width=5)
+            en = Entry(root, width=7)
             en.insert('end', 0)
             en.grid(row=r+1, column=c+1)
             ent_row.append(en)
             scr.append(en)
         all_ent.append(ent_row)
     name_lab = Label(root, text="Matrix Name: ")
-    name_ent = Entry(root, width=5)
+    name_ent = Entry(root, width=7)
     save_btn = Button(root, text='Save',
                       command=lambda: save_fixedmat(all_ent, name_ent))
-    name_lab.grid(row=asset["fixedmat_r"]+1, column=0)
-    name_ent.grid(row=asset["fixedmat_r"]+1, column=1)
-    save_btn.grid(row=asset["fixedmat_r"]+2, column=0)
+    random_btn = Button(root, text='Random',
+                        command=lambda: random_fixedmat(all_ent))
+    random_btn.grid(row=asset["fixedmat_r"]+1, column=0)
+    name_lab.grid(row=asset["fixedmat_r"]+2, column=0)
+    name_ent.grid(row=asset["fixedmat_r"]+2, column=1)
+    save_btn.grid(row=asset["fixedmat_r"]+3, column=0)
     canc_btn = Button(root, text='Cancel', command=lambda: transit("main"))
-    canc_btn.grid(row=asset["fixedmat_r"]+3, column=0)
+    canc_btn.grid(row=asset["fixedmat_r"]+4, column=0)
     scr.append(canc_btn)
     scr.append(save_btn)
     scr.append(name_lab)
     scr.append(name_ent)
+    scr.append(random_btn)
 
 
 def show_matdisp():
