@@ -3,8 +3,34 @@ from tkinter import messagebox
 import numpy as np
 
 
+def disp_matlist(listb, lab):
+    global root, scr, urow, ucol, stage, asset
+    an = listb.get(ANCHOR)
+    mat = None
+    for i in range(len(asset["all_mat"])):
+        if asset["all_mat"][i][0] == an:
+            mat = asset["all_mat"][i][1]
+    lab.config(text=mat)
+
+
 def show_matlist():
-    print("in progress")
+    global root, scr, urow, ucol, stage, asset
+    mat_lb = Listbox(root)
+    mat_lab = Label(root, text="")
+    mat_show = Button(root, text="Display",
+                      command=lambda: disp_matlist(mat_lb, mat_lab))
+    for i in range(len(asset["all_mat"])):
+        print(asset["all_mat"][i][0])
+        mat_lb.insert(END, asset["all_mat"][i][0])
+    back_btn = Button(root, text="Back", command=lambda: transit("main"))
+    mat_lb.grid(row=0, column=0)
+    mat_show.grid(row=1, column=0)
+    back_btn.grid(row=2, column=0)
+    mat_lab.grid(row=3, column=0)
+    scr.append(mat_lb)
+    scr.append(back_btn)
+    scr.append(mat_lab)
+    scr.append(mat_show)
 
 
 def validate_fixedmat(t):
@@ -35,12 +61,13 @@ def save_fixedmat(all_ent, name):
                 have_err = True
     if have_err:
         messagebox.showerror(title="Create Matrix Error",
-                             message="invalid input, please re-enter your input")
+                             message="Invalid input, please re-enter your input")
     else:
         newname = namer_fixedmat(name.get())
         asset["all_mat"].append([newname, a])
         print(a)
         print(asset["all_mat"])
+        transit("main")
 
 
 def show_fixedmat_two():
@@ -58,7 +85,7 @@ def show_fixedmat_two():
         l.grid(row=r+1, column=0)
         scr.append(l)
         for c in range(asset["fixedmat_c"]):
-            en = Entry(root, width=5)  # 5 chars
+            en = Entry(root, width=5)
             en.insert('end', 0)
             en.grid(row=r+1, column=c+1)
             ent_row.append(en)
@@ -89,6 +116,7 @@ def show_matfunc():
 
 def show_fixedmat():
     global root, scr, urow, ucol, stage, asset
+    root.title("Matrix Calculator: Create Fixed Matrix Size >> Define Size")
     row_lab = Label(root, text="Number of Row: ")
     col_lab = Label(root, text="Number of Column: ")
     row_ent = Entry(root, width=5)
@@ -115,15 +143,16 @@ def show_fixedmat():
 
 def next1_fixedmat(re, ce):
     global root, scr, urow, ucol, stage, asset
+    root.title("Matrix Calculator: Create Fixed Matrix Size >> Define Element")
     err = ""
     if re.get().isdigit() and ce.get().isdigit():
         r = int(re.get())
         c = int(ce.get())
         if r <= 0 or c <= 0:
-            err = "input cannot be lower than 1"
+            err = "Input cannot be lower than 1"
 
     else:
-        err = "input has to be an integer"
+        err = "Input has to be an integer"
     if err == "":
         asset["fixedmat_r"] = r
         asset["fixedmat_c"] = c
@@ -138,6 +167,7 @@ def next1_fixedmat(re, ce):
 
 def show_createmat():
     global root, scr, urow, ucol, stage, asset
+    root.title("Matrix Calculator: Create Matrix")
     fixedmat_btn = Button(root, text="Fixed Matrix Size",
                           command=lambda: transit("fixedmat"))
     dynamicmat_btn = Button(root, text="Dynamic Matrix Size", command=dummy)
@@ -153,6 +183,8 @@ def show_createmat():
 
 def show_welcome():
     global root, scr, urow, ucol, stage, asset
+    root.title("Matrix Calculator: Main Menu")
+    root.geometry("500x500")
     hilabel = Label(root, text="Welcome to matrix calculator")
     creatorlabel = Label(root, text="created by Naphat and Samita")
     matter_btn = Button(root, text="Create Matrix",
@@ -240,6 +272,7 @@ def summon():
 
 if __name__ == '__main__':
     root = Tk()
+
     scr = []
     allmat = []
     urow = 0
