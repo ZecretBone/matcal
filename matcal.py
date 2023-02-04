@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 import numpy as np
 
 
@@ -6,8 +7,76 @@ def show_matlist():
     print("in progress")
 
 
+def validate_fixedmat(t):
+    try:
+        t = float(t)
+        return t, ""
+    except:
+        return 0, "input invalid"
+
+
+def namer_fixedmat(name):
+    global root, scr, urow, ucol, stage, asset
+    for i in range(len(asset["all_mat"])):
+        if asset["all_mat"][i][0] == name:
+            name += "_duplicate"
+    return name
+
+
+def save_fixedmat(all_ent, name):
+    global root, scr, urow, ucol, stage, asset
+    a = asset["fixedmat_arr"]
+    have_err = False
+    for r, row in enumerate(all_ent):
+        for c, entry in enumerate(row):
+            text = entry.get()
+            a[r, c], err = validate_fixedmat(text)
+            if err != "":
+                have_err = True
+    if have_err:
+        messagebox.showerror(title="Create Matrix Error",
+                             message="invalid input, please re-enter your input")
+    else:
+        newname = namer_fixedmat(name.get())
+        asset["all_mat"].append([newname, a])
+        print(a)
+        print(asset["all_mat"])
+
+
 def show_fixedmat_two():
-    print("in progress")
+    global root, scr, urow, ucol, stage, asset
+    arr = np.zeros((asset["fixedmat_r"],  asset["fixedmat_c"]))
+    asset["fixedmat_arr"] = arr
+    for c in range(asset["fixedmat_c"]):
+        l = Label(root, text=str(c+1))
+        l.grid(row=0, column=c+1)
+        scr.append(l)
+    all_ent = []
+    for r in range(asset["fixedmat_r"]):
+        ent_row = []
+        l = Label(root, text=str(r+1))
+        l.grid(row=r+1, column=0)
+        scr.append(l)
+        for c in range(asset["fixedmat_c"]):
+            en = Entry(root, width=5)  # 5 chars
+            en.insert('end', 0)
+            en.grid(row=r+1, column=c+1)
+            ent_row.append(en)
+            scr.append(en)
+        all_ent.append(ent_row)
+    name_lab = Label(root, text="Matrix Name: ")
+    name_ent = Entry(root, width=5)
+    save_btn = Button(root, text='Save',
+                      command=lambda: save_fixedmat(all_ent, name_ent))
+    name_lab.grid(row=asset["fixedmat_r"]+1, column=0)
+    name_ent.grid(row=asset["fixedmat_r"]+1, column=1)
+    save_btn.grid(row=asset["fixedmat_r"]+2, column=0)
+    canc_btn = Button(root, text='Cancel', command=lambda: transit("main"))
+    canc_btn.grid(row=asset["fixedmat_r"]+3, column=0)
+    scr.append(canc_btn)
+    scr.append(save_btn)
+    scr.append(name_lab)
+    scr.append(name_ent)
 
 
 def show_matdisp():
@@ -51,19 +120,20 @@ def next1_fixedmat(re, ce):
         r = int(re.get())
         c = int(ce.get())
         if r <= 0 or c <= 0:
-            err = "cannot be lower than 1"
+            err = "input cannot be lower than 1"
 
     else:
-        err = "not digit"
+        err = "input has to be an integer"
     if err == "":
         asset["fixedmat_r"] = r
         asset["fixedmat_c"] = c
         # transit("fixedmat2")
-        transit("main")
+        transit("fixedmat_two")
     else:
         re.delete(0, END)
         ce.delete(0, END)
         print("show msg box err")
+        messagebox.showerror(title="Create Matrix Error", message=err)
 
 
 def show_createmat():
@@ -164,6 +234,8 @@ def summon():
         show_matlist()
     elif stage == "matfunc":
         show_matfunc()
+    elif stage == "fixedmat_two":
+        show_fixedmat_two()
 
 
 if __name__ == '__main__':
@@ -173,6 +245,7 @@ if __name__ == '__main__':
     urow = 0
     ucol = 0
     asset = {}
+    asset["all_mat"] = []
     stage = "main"
     summon()
     def_btn()
