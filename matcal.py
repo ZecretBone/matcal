@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 import numpy as np
 import random
+import pyperclip as pc
 
 
 def save_pastemat(cd, rd, ent, name):
@@ -29,8 +30,16 @@ def save_pastemat(cd, rd, ent, name):
         return
 
 
+def paste_pastemat(ent):
+    global root, scr, urow, ucol, stage, asset
+    if ent.get("1.0", END) != "":
+        ent.delete("1.0", END)
+    ent.insert('end', str(pc.paste()))
+
+
 def show_pastemat():
     global root, scr, urow, ucol, stage, asset
+    root.title("Matrix Calculator: Create Paste Matrix")
     cd = ","
     rd = ";"
     paste_ent = Text(root, width=30, height=10)
@@ -38,9 +47,12 @@ def show_pastemat():
     name_ent = Entry(root, width=7)
     save_btn = Button(root, text="Save",
                       command=lambda: save_pastemat(cd, rd, paste_ent, name_ent))
-    home_btn = Button(root, text="Home",
+    home_btn = Button(root, text="Cancel",
                       command=lambda: transit("main"))
+    paste_btn = Button(root, text="Paste",
+                       command=lambda: paste_pastemat(paste_ent))
     paste_ent.grid(row=urow, column=ucol)
+    paste_btn.grid(row=mr(), column=ucol)
     name_ent.grid(row=mr(), column=ucol)
     save_btn.grid(row=mr(), column=ucol)
     home_btn.grid(row=mr(), column=ucol)
@@ -48,6 +60,7 @@ def show_pastemat():
     scr.append(name_ent)
     scr.append(save_btn)
     scr.append(home_btn)
+    scr.append(paste_btn)
 
 
 def export_mat(m):
@@ -92,6 +105,9 @@ def disp_matlist(listb, lab, opt):
                 mat = asset["all_mat"][i][1]
         if opt == "export":
             b = export_mat(mat)
+            pc.copy(b)
+            messagebox.showinfo(title="Export Matrix Success",
+                                message="Selected Matrix is copied to clipboard")
         else:
             b = beauty_mat(mat)
         lab.config(text=b)
@@ -405,6 +421,14 @@ def exitProg():
     root.destroy()
 
 
+def def_mat():
+    global root, scr, urow, ucol, stage, asset
+    a = np.array(np.mat('1,2,3;4,5,6'))
+    b = np.array(np.mat('1,2,0;0,1,3'))
+    asset["all_mat"].append(["matrix_A", a])
+    asset["all_mat"].append(["matrix_B", b])
+
+
 def dummy():
     print("hello debug...")
 
@@ -479,5 +503,6 @@ if __name__ == '__main__':
     stage = "main"
     summon()
     def_btn()
+    def_mat()
 
     root.mainloop()
