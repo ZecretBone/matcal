@@ -4,6 +4,70 @@ import numpy as np
 import random
 
 
+def save_pastemat(cd, rd, ent, name):
+    global root, scr, urow, ucol, stage, asset
+    if name.get() == "":
+        messagebox.showerror(title="Create Matrix Error",
+                             message="Matrix name must not be empty")
+        return
+    e = ent.get("1.0", END)
+    # e = ent.get()
+    print(e)
+    try:
+        newm = np.array(np.mat(e))
+        print(newm)
+        print(newm[1, 2])
+        newname = namer_fixedmat(name.get())
+        print(newname)
+        asset["all_mat"].append([newname, newm])
+        messagebox.showinfo(title="Create Matrix Success",
+                            message="Your new matrix has been created !")
+        transit("main")
+    except:
+        messagebox.showerror(title="Create Matrix Error",
+                             message="Invalid input, please check your paste text")
+        return
+
+
+def show_pastemat():
+    global root, scr, urow, ucol, stage, asset
+    cd = ","
+    rd = ";"
+    paste_ent = Text(root, width=30, height=10)
+    # paste_ent = Entry(root, width=30)
+    name_ent = Entry(root, width=7)
+    save_btn = Button(root, text="Save",
+                      command=lambda: save_pastemat(cd, rd, paste_ent, name_ent))
+    home_btn = Button(root, text="Home",
+                      command=lambda: transit("main"))
+    paste_ent.grid(row=urow, column=ucol)
+    name_ent.grid(row=mr(), column=ucol)
+    save_btn.grid(row=mr(), column=ucol)
+    home_btn.grid(row=mr(), column=ucol)
+    scr.append(paste_ent)
+    scr.append(name_ent)
+    scr.append(save_btn)
+    scr.append(home_btn)
+
+
+def export_mat(m):
+    b = "["
+    rc = m.shape
+    r = rc[0]
+    c = rc[1]
+    # b = m
+    # export matrix
+    for i in range(r):
+        for j in range(c):
+            b += str(m[i, j])
+            if j != c-1:
+                b += ","
+        if i != r-1:
+            b += ";"
+    b += "]"
+    return b
+
+
 def beauty_mat(m):
     b = ""
     rc = m.shape
@@ -18,15 +82,22 @@ def beauty_mat(m):
     return b
 
 
-def disp_matlist(listb, lab):
+def disp_matlist(listb, lab, opt):
     global root, scr, urow, ucol, stage, asset
     an = listb.get(ANCHOR)
     mat = None
-    for i in range(len(asset["all_mat"])):
-        if asset["all_mat"][i][0] == an:
-            mat = asset["all_mat"][i][1]
-    b = beauty_mat(mat)
-    lab.config(text=b)
+    if an != "":
+        for i in range(len(asset["all_mat"])):
+            if asset["all_mat"][i][0] == an:
+                mat = asset["all_mat"][i][1]
+        if opt == "export":
+            b = export_mat(mat)
+        else:
+            b = beauty_mat(mat)
+        lab.config(text=b)
+    else:
+        messagebox.showerror(title="Display/Export Matrix Error",
+                             message="Please select any matrix first")
 
 
 def random_fixedmat(all_ent):
@@ -41,22 +112,27 @@ def random_fixedmat(all_ent):
 
 def show_matlist():
     global root, scr, urow, ucol, stage, asset
+    root.title("Matrix Calculator: Matrix List")
     mat_lb = Listbox(root)
     mat_lab = Label(root, text="")
     mat_show = Button(root, text="Display",
-                      command=lambda: disp_matlist(mat_lb, mat_lab))
+                      command=lambda: disp_matlist(mat_lb, mat_lab, "disp"))
+    mat_export = Button(root, text="Export",
+                        command=lambda: disp_matlist(mat_lb, mat_lab, "export"))
     for i in range(len(asset["all_mat"])):
         print(asset["all_mat"][i][0])
         mat_lb.insert(END, asset["all_mat"][i][0])
     back_btn = Button(root, text="Back", command=lambda: transit("main"))
-    mat_lb.grid(row=0, column=0)
-    mat_show.grid(row=1, column=0)
-    back_btn.grid(row=2, column=0)
-    mat_lab.grid(row=3, column=0)
+    mat_lb.grid(row=urow, column=0)
+    mat_show.grid(row=mr(), column=0)
+    mat_export.grid(row=mr(), column=0)
+    back_btn.grid(row=mr(), column=0)
+    mat_lab.grid(row=mr(), column=0)
     scr.append(mat_lb)
     scr.append(back_btn)
     scr.append(mat_lab)
     scr.append(mat_show)
+    scr.append(mat_export)
 
 
 def validate_fixedmat(t):
@@ -94,9 +170,13 @@ def save_fixedmat(all_ent, name):
                 have_err = True
     if have_err:
         messagebox.showerror(title="Create Matrix Error",
-                             message="Invalid input, please re-enter your input")
+                             message="Invalid input, please re-enter your matrix input")
     else:
         newname = namer_fixedmat(name.get())
+        if newname == "":
+            messagebox.showerror(title="Create Matrix Error",
+                                 message="Invalid input, Matrix name must not be empty")
+            return
         asset["all_mat"].append([newname, a])
         print(a)
         print(asset["all_mat"])
@@ -145,12 +225,83 @@ def show_fixedmat_two():
     scr.append(random_btn)
 
 
-def show_matdisp():
-    print("in progress")
+def validate_matfunc(mat_lb):
+    global root, scr, urow, ucol, stage, asset
+    cm = mat_lb.get(ANCHOR)
+    asset["current_matname"] = ""
+    if cm == "":
+        messagebox.showerror(title="Matrix Function Error",
+                             message="Please select any matrix first")
+        return
+    for i in range(len(asset["all_mat"])):
+        if asset["all_mat"][i][0] == cm:
+            asset["current_matname"] = cm
+            asset["current_mat"] = asset["all_mat"][i][1]
+    if asset["current_matname"] != "":
+        transit("matfunc3")
+    else:
+        messagebox.showerror(title="Matrix Function Error",
+                             message="Something went wrong")
+
+
+def show_matfunc3():
+    global root, scr, urow, ucol, stage, asset
+
+
+def show_matfunc2():
+    global root, scr, urow, ucol, stage, asset
+    root.title("Matrix Calculator: Functions >> Select Matrix")
+    mat_lb = Listbox(root)
+    home_btn = Button(root, text="Home", command=lambda: transit("main"))
+    mat_lab = Label(root, text="")
+    mat_show = Button(root, text="Preview Matrix",
+                      command=lambda: disp_matlist(mat_lb, mat_lab, "disp"))
+    next_btn = Button(root, text="Next",
+                      command=lambda: validate_matfunc(mat_lb))
+    for i in range(len(asset["all_mat"])):
+        mat_lb.insert(END, asset["all_mat"][i][0])
+    scr.append(home_btn)
+    scr.append(mat_lb)
+    scr.append(mat_lab)
+    scr.append(mat_show)
+    scr.append(next_btn)
+    mat_lb.grid(row=mr(), column=ucol)
+    mat_show.grid(row=mr(), column=ucol)
+    next_btn.grid(row=mr(), column=ucol)
+    home_btn.grid(row=mr(), column=ucol)
+    mat_lab.grid(row=mr(), column=ucol)
+
+
+def next1_matfunc(f):
+    global root, scr, urow, ucol, stage, asset
+    sf = f.get(ANCHOR)
+    asset["current_func"] = ""
+    if sf == "":
+        messagebox.showerror(title="Matrix Function Error",
+                             message="Please select any function first")
+        return
+    for i in range(len(asset["all_func"])):
+        if asset["all_func"][i] == sf:
+            asset["current_func"] = sf
+    if asset["current_func"] != "":
+        transit("matfunc2")
 
 
 def show_matfunc():
     print("in progress")
+    root.title("Matrix Calculator: Functions >> Select Function")
+    func_lb = Listbox(root)
+    back_btn = Button(root, text="Back", command=lambda: transit("main"))
+    next_btn = Button(root, text="Next",
+                      command=lambda: next1_matfunc(func_lb))
+    for i in range(len(asset["all_func"])):
+        func_lb.insert(END, asset["all_func"][i])
+    func_lb.grid(row=urow, column=ucol)
+    next_btn.grid(row=mr(), column=ucol)
+    back_btn.grid(row=mr(), column=ucol)
+    scr.append(back_btn)
+    scr.append(next_btn)
+    scr.append(func_lb)
 
 
 def show_fixedmat():
@@ -210,7 +361,8 @@ def show_createmat():
     fixedmat_btn = Button(root, text="Fixed Matrix Size",
                           command=lambda: transit("fixedmat"))
     dynamicmat_btn = Button(root, text="Dynamic Matrix Size", command=dummy)
-    pastemat_btn = Button(root, text="Paste Matrix", command=dummy)
+    pastemat_btn = Button(root, text="Paste Matrix",
+                          command=lambda: transit("pastemat"))
     back_btn = Button(root, text="Back", command=lambda: transit("main"))
     scr.append(fixedmat_btn)
     scr.append(dynamicmat_btn)
@@ -224,8 +376,8 @@ def show_welcome():
     global root, scr, urow, ucol, stage, asset
     root.title("Matrix Calculator: Main Menu")
     root.geometry("500x500")
-    hilabel = Label(root, text="Welcome to matrix calculator")
-    creatorlabel = Label(root, text="created by Naphat and Samita")
+    hilabel = Label(root, text="Welcome to Matrix Calculator")
+    creatorlabel = Label(root, text="Created by Naphat and Samita")
     matter_btn = Button(root, text="Create Matrix",
                         command=lambda: transit("createmat"))
     matlist_btn = Button(root, text="Matrix List",
@@ -307,17 +459,23 @@ def summon():
         show_matfunc()
     elif stage == "fixedmat_two":
         show_fixedmat_two()
+    elif stage == "matfunc2":
+        show_matfunc2()
+    elif stage == "matfunc3":
+        show_matfunc3()
+    elif stage == "pastemat":
+        show_pastemat()
 
 
 if __name__ == '__main__':
     root = Tk()
-
     scr = []
     allmat = []
     urow = 0
     ucol = 0
     asset = {}
     asset["all_mat"] = []
+    asset["all_func"] = ["Elementary", "Invert"]
     stage = "main"
     summon()
     def_btn()
