@@ -42,9 +42,10 @@ def show_pastemat():
     root.title("Matrix Calculator: Create Paste Matrix")
     cd = ","
     rd = ";"
-    paste_ent = Text(root, width=30, height=10)
+    paste_ent = Text(root, width=30, height=10, bg="#EEEEEE")
     # paste_ent = Entry(root, width=30)
     name_ent = Entry(root, width=7)
+    name_lab = Label(root, text="Matrix Name: ")
     save_btn = Button(root, text="Save",
                       command=lambda: save_pastemat(cd, rd, paste_ent, name_ent))
     home_btn = Button(root, text="Cancel",
@@ -54,6 +55,7 @@ def show_pastemat():
     paste_ent.grid(row=urow, column=ucol)
     paste_btn.grid(row=mr(), column=ucol)
     name_ent.grid(row=mr(), column=ucol)
+    # name_ent.grid(row=urow, column=ucol)
     save_btn.grid(row=mr(), column=ucol)
     home_btn.grid(row=mr(), column=ucol)
     scr.append(paste_ent)
@@ -61,6 +63,7 @@ def show_pastemat():
     scr.append(save_btn)
     scr.append(home_btn)
     scr.append(paste_btn)
+    scr.append(name_lab)
 
 
 def export_mat(m):
@@ -431,6 +434,8 @@ def def_mat():
 
 def dummy():
     print("hello debug...")
+    messagebox.showwarning(title="Matrix Calculator: Debug Warning",
+                           message="This function is not available yet")
 
 
 def clearer():
@@ -493,6 +498,7 @@ def summon():
 
 if __name__ == '__main__':
     root = Tk()
+    # root.configure(bg="#DDDDDD")
     scr = []
     allmat = []
     urow = 0
