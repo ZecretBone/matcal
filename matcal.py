@@ -3,6 +3,7 @@ from tkinter import messagebox
 import numpy as np
 import random
 import pyperclip as pc
+# from textwrap import wrap
 
 
 def save_pastemat(cd, rd, ent, name):
@@ -13,7 +14,7 @@ def save_pastemat(cd, rd, ent, name):
         return
     e = ent.get("1.0", END)
     # e = ent.get()
-    print(e)
+    # print(e)
     try:
         newm = np.array(np.mat(e))
         print(newm)
@@ -111,6 +112,15 @@ def disp_matlist(listb, lab, opt):
             pc.copy(b)
             messagebox.showinfo(title="Export Matrix Success",
                                 message="Selected Matrix is copied to clipboard")
+            print(len(mat))
+            if len(mat) > 10:
+                n = 100
+                b = [b[i:i+n] for i in range(0, len(b), n)]
+                print(b)
+                b = '\n'.join(b)
+                print("after join")
+                # print(b)
+
         else:
             b = beauty_mat(mat)
         lab.config(text=b)
@@ -139,7 +149,7 @@ def show_matlist():
     mat_export = Button(root, text="Export",
                         command=lambda: disp_matlist(mat_lb, mat_lab, "export"))
     for i in range(len(asset["all_mat"])):
-        print(asset["all_mat"][i][0])
+        # print(asset["all_mat"][i][0])
         mat_lb.insert(END, asset["all_mat"][i][0])
     back_btn = Button(root, text="Back", command=lambda: transit("main"))
     mat_lb.grid(row=urow, column=0)
@@ -183,7 +193,7 @@ def save_fixedmat(all_ent, name):
     for r, row in enumerate(all_ent):
         for c, entry in enumerate(row):
             text = entry.get()
-            print(text)
+            # print(text)
             a[r, c], err = validate_fixedmat(text)
             if err != "":
                 have_err = True
@@ -197,8 +207,8 @@ def save_fixedmat(all_ent, name):
                                  message="Invalid input, Matrix name must not be empty")
             return
         asset["all_mat"].append([newname, a])
-        print(a)
-        print(asset["all_mat"])
+        # print(a)
+        # print(asset["all_mat"])
         transit("main")
         messagebox.showinfo(title="Create Matrix Success",
                             message="Your new matrix has been created !")
@@ -394,7 +404,7 @@ def show_createmat():
 def show_welcome():
     global root, scr, urow, ucol, stage, asset
     root.title("Matrix Calculator: Main Menu")
-    root.geometry("500x500")
+    root.geometry("1000x700")
     hilabel = Label(root, text="Welcome to Matrix Calculator")
     creatorlabel = Label(root, text="Created by Naphat and Samita")
     matter_btn = Button(root, text="Create Matrix",
