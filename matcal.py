@@ -278,11 +278,56 @@ def validate_matfunc(mat_lb):
                              message="Something went wrong")
 
 
+def show_elementary2():
+    global root, scr, urow, ucol, stage, asset
+    result = elemental(asset["current_mat"], asset["current_ans"])
+    print(result)
+
+
+def validate_elementary(all_ent):
+    global root, scr, urow, ucol, stage, asset
+    asset["current_ans"] = []
+    er = False
+    for i in all_ent:
+        try:
+            x = float(i.get())
+            asset["current_ans"].append(x)
+        except:
+            er = True
+    if er:
+        messagebox.showerror(title="Matrix Function Error",
+                             message="Invalid input")
+    else:
+        transit("elementary2")
+
+
 def show_elementary():
     global root, scr, urow, ucol, stage, asset
-    print("solvong elementary")
-    result = elemental(asset["current_mat"])
-    print(result)
+    print("solving elementary")
+    total = asset["current_mat"].shape
+    all_ent = []
+    for i in range(total[0]):
+        urow += 1
+        ucol = 0
+        for j in range(total[1]):
+            new_lab = Label(root, text=str(asset["current_mat"][i, j]))
+            new_lab.grid(row=urow, column=mc())
+            scr.append(new_lab)
+        new_ent = Entry(root, width=5)
+        new_ent.grid(row=urow, column=mc())
+        scr.append(new_ent)
+        all_ent.append(new_ent)
+
+    solve_btn = Button(root, text="Solve",
+                       command=lambda: validate_elementary(all_ent))
+    cancel_btn = Button(root, text="Cancel", command=lambda: transit("main"))
+    scr.append(solve_btn)
+    scr.append(cancel_btn)
+    solve_btn.grid(row=mr(), column=0)
+    cancel_btn.grid(row=mr(), column=0)
+    # add another input
+    # result = elemental(asset["current_mat"])
+    # print(result)
 
 
 def show_matfunc2():
@@ -512,6 +557,8 @@ def summon():
         show_elementary()
     elif stage == "pastemat":
         show_pastemat()
+    elif stage == "elementary2":
+        show_elementary2()
 
 
 if __name__ == '__main__':

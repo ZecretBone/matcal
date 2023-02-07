@@ -2,9 +2,9 @@ import numpy as np
 from matele import *
 
 
-def elemental(a):
+def elemental(a, an):
     print(a)
-    x = initial_element(a)
+    x = initial_element(a, an)
     return x
 
 
