@@ -112,6 +112,12 @@ def ridzero(e, i, j, a):
     return e, a
 
 
+def findval(e, n, a):
+    sr = a["allr"]
+    sc = a["allc"]
+    # i =
+
+
 def square(e, an):
     total = e.shape
     srow = total[0]
@@ -158,7 +164,6 @@ def square(e, an):
     else:
         print("new bp")
         bp = np.matmul(tom, an)
-        print(bp)
     print(bp)
 
     return e
