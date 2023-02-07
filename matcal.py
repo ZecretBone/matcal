@@ -4,6 +4,7 @@ import numpy as np
 import random
 import pyperclip as pc
 # from textwrap import wrap
+from matfunc import *
 
 
 def save_pastemat(cd, rd, ent, name):
@@ -267,14 +268,21 @@ def validate_matfunc(mat_lb):
             asset["current_matname"] = cm
             asset["current_mat"] = asset["all_mat"][i][1]
     if asset["current_matname"] != "":
-        transit("matfunc3")
+        # transit("matfunc3")
+        print("using func")
+        if asset["current_func"] == "Elementary":
+            print("elementary func..")
+            transit("elementary")
     else:
         messagebox.showerror(title="Matrix Function Error",
                              message="Something went wrong")
 
 
-def show_matfunc3():
+def show_elementary():
     global root, scr, urow, ucol, stage, asset
+    print("solvong elementary")
+    result = elemental(asset["current_mat"])
+    print(result)
 
 
 def show_matfunc2():
@@ -500,8 +508,8 @@ def summon():
         show_fixedmat_two()
     elif stage == "matfunc2":
         show_matfunc2()
-    elif stage == "matfunc3":
-        show_matfunc3()
+    elif stage == "elementary":
+        show_elementary()
     elif stage == "pastemat":
         show_pastemat()
 
