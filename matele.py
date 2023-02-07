@@ -36,7 +36,18 @@ def notzero(e):
     return index
 
 
-def swapper(e, i, j):
+def swapper(e, i, j, a):
+    srow = a["allr"]
+    scol = a["allc"]
+    m = i
+    while e[m, j] == 0 or srow <= i:
+        if e[m, j] != 0:
+            e[(i, m)] = e[(m, i)]
+            print("swapped")
+            print(e)
+            break
+        m += 1
+
     return e
 
 
@@ -50,21 +61,27 @@ def square(e):
     answer = {}
     answer["original"] = e
     answer["eye"] = []
-    if e[0, 0] == 0:
-        i = 0
-        swap = False
-        while e[i, 0] == 0 and i != srow:
-            i += 1
-        if e[i, 0] != 0:
-            swap = True
-        if swap:
-            print(i)
-            e[(0, i)] = e[(i, 0)]
-            print(e)
-            print("end swap")
-            answer["swapped"] = e
+    answer["allr"] = srow
+    answer["allc"] = scol
+    # if e[0, 0] == 0:
+    #     i = 0
+    #     swap = False
+    #     while e[i, 0] == 0 and i != srow:
+    #         i += 1
+    #     if e[i, 0] != 0:
+    #         swap = True
+    #     if swap:
+    #         print(i)
+    #         e[(0, i)] = e[(i, 0)]
+    #         print(e)
+    #         print("end swap")
+    #         answer["swapped"] = e
+    ccol = -1
     while not checkzero(e):
         x = notzero(e)
+        if x[1] != ccol:
+            ccol = x[1]
+            swapper(e, x[0], x[1], answer)
 
     return e
 
