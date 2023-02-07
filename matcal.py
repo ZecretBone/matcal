@@ -445,7 +445,7 @@ def exitProg():
 def def_mat():
     global root, scr, urow, ucol, stage, asset
     a = np.array(np.mat('1,2,3;4,5,6'))
-    b = np.array(np.mat('1,2,0;0,1,3'))
+    b = np.array(np.mat('1,2,0;0,1,3;2,2,1'))
     asset["all_mat"].append(["matrix_A", a])
     asset["all_mat"].append(["matrix_B", b])
 
