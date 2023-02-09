@@ -332,11 +332,30 @@ def show_elementary2():
             s2.grid(row=urow, column=mc())
             next_lab.grid(row=urow, column=mc())
             jj = 0
-    ns_lab2 = Label(root, text="NEXT STEP:")
-    scr.append(ns_lab2)
-    ns_lab2.grid(row=mr(), column=ucol)
-    r3 = result["finalmat"]
-    b_ans = beauty_mat(asset["current_ans"])
+    print(result["firstans"])
+    b_ans = beauty_mat(result["firstans"])
+    b_lab = Label(root, text=b_ans)
+    scr.append(b_lab)
+    if result["togetans"] != []:
+        ucol = 0
+        x_lab = Label(root, text="x")
+        next_lab = Label(root, text=">>")
+        scr.append(x_lab)
+        scr.append(next_lab)
+        ns_lab2 = Label(root, text="GET NEW ANSWER SET:")
+        scr.append(ns_lab2)
+        ns_lab2.grid(row=mr(), column=ucol)
+        r3 = beauty_mat(result["newans"])
+        r3_lab = Label(root, text=r3)
+        scr.append(r3_lab)
+        nl2 = beauty_mat(re[-1])
+        s2 = Label(root, text=nl2)
+        scr.append(s2)
+        s2.grid(row=urow, column=mc())
+        x_lab.grid(row=urow, column=mc())
+        b_lab.grid(row=urow, column=mc())
+        next_lab.grid(row=urow, column=mc())
+        r3_lab.grid(row=urow, column=mc())
 
     # for i in range(len())
     # print(result)
@@ -349,13 +368,14 @@ def validate_elementary(all_ent):
     for i in all_ent:
         try:
             x = float(i.get())
-            asset["current_ans"].append(x)
+            asset["current_ans"].append([x])
         except:
             er = True
     if er:
         messagebox.showerror(title="Matrix Function Error",
                              message="Invalid input")
     else:
+        asset["current_ans"] = np.array(asset["current_ans"])
         transit("elementary2")
 
 

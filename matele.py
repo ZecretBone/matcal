@@ -168,14 +168,18 @@ def square(e, an):
     print("nearly")
     print(e)
     tom = multback(answer)
+    answer["togetans"] = []
     if tom == []:
         print("same bp")
         bp = an
     else:
         print("new bp")
+        answer["togetans"] = tom
         bp = np.matmul(tom, an)
     print(bp)
-    answer["finalmat"] = bp
+    answer["firstans"] = an
+    answer["newans"] = bp
+    answer["newone"] = e
 
     return answer
 
