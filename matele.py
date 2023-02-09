@@ -131,6 +131,7 @@ def square(e, an):
     answer["entire"] = []
     answer["allr"] = srow
     answer["allc"] = scol
+    answer["entire2"] = []
     # if e[0, 0] == 0:
     #     i = 0
     #     swap = False

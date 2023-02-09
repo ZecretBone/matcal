@@ -311,7 +311,11 @@ def show_elementary2():
         scr.append(next_lab)
         onlyr[m].grid(row=urow, column=mc())
         ucol = 0
-
+    ns_lab = Label(root,text="NEXT STEP")
+    scr.append(ns_lab)
+    ns_lab.grid(row = mr(),column=ucol)
+    re = result["entire2"]
+    #for i in range(len())
     # print(result)
 
 
