@@ -128,6 +128,7 @@ def square(e, an):
     answer = {}
     answer["original"] = e
     answer["eye"] = []
+    answer["entire"] = []
     answer["allr"] = srow
     answer["allc"] = scol
     # if e[0, 0] == 0:
@@ -150,11 +151,15 @@ def square(e, an):
         if x[1] != ccol:
             ccol = x[1]
             e, answer = swapper(e, x[1], x[1], answer)
+        answer["entire"].append(e)
         e, answer = ridzero(e, x[0], x[1], answer)
         print("NEW")
         print(e)
         print("IDENT")
         print(answer["eye"][-1])
+        answer["entire"].append(answer["eye"][-1])
+        answer["entire"].append(e)
+
     print("nearly")
     print(e)
     tom = multback(answer)
@@ -166,7 +171,7 @@ def square(e, an):
         bp = np.matmul(tom, an)
     print(bp)
 
-    return e
+    return answer
 
 
 def rectangle(e):

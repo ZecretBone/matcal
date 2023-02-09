@@ -281,7 +281,38 @@ def validate_matfunc(mat_lb):
 def show_elementary2():
     global root, scr, urow, ucol, stage, asset
     result = elemental(asset["current_mat"], asset["current_ans"])
-    print(result)
+    r = result["entire"]
+    onlye = []
+    onlym = []
+    onlyr = []
+    j = 0
+
+    for i in range(len(r)):
+        nl = beauty_mat(r[i])
+        nt = Label(root, text=nl)
+        scr.append(nt)
+        if j == 0:
+            onlym.append(nt)
+            j += 1
+        elif j == 1:
+            onlye.append(nt)
+            j += 1
+        else:
+            onlyr.append(nt)
+            j = 0
+    for m in range(len(onlye)):
+        onlye[m].grid(row=mr(), column=ucol)
+        x_lab = Label(root, text="x")
+        x_lab.grid(row=urow, column=mc())
+        scr.append(x_lab)
+        onlym[m].grid(row=urow, column=mc())
+        next_lab = Label(root, text=">>")
+        next_lab.grid(row=urow, column=mc())
+        scr.append(next_lab)
+        onlyr[m].grid(row=urow, column=mc())
+        ucol = 0
+
+    # print(result)
 
 
 def validate_elementary(all_ent):
@@ -490,7 +521,7 @@ def exitProg():
 def def_mat():
     global root, scr, urow, ucol, stage, asset
     a = np.array(np.mat('1,2,3;4,5,6'))
-    b = np.array(np.mat('1,2,0;0,1,3;2,2,1'))
+    b = np.array(np.mat('2,1,1;6,4,5;4,1,3'))
     asset["all_mat"].append(["matrix_A", a])
     asset["all_mat"].append(["matrix_B", b])
 
