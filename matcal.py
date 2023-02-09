@@ -311,11 +311,34 @@ def show_elementary2():
         scr.append(next_lab)
         onlyr[m].grid(row=urow, column=mc())
         ucol = 0
-    ns_lab = Label(root,text="NEXT STEP")
+    ns_lab = Label(root, text="NEXT STEP:")
     scr.append(ns_lab)
-    ns_lab.grid(row = mr(),column=ucol)
+    ns_lab.grid(row=mr(), column=ucol)
     re = result["entire2"]
-    #for i in range(len())
+    jj = 0
+    for k in range(len(re)):
+        nl2 = beauty_mat(re[k])
+        s2 = Label(root, text=nl2)
+        scr.append(s2)
+        if jj == 0:
+            s2.grid(row=urow, column=mc())
+            jj += 1
+        elif jj == 1:
+            x_lab = Label(root, text="x")
+            next_lab = Label(root, text=">>")
+            scr.append(x_lab)
+            scr.append(next_lab)
+            x_lab.grid(row=urow, column=mc())
+            s2.grid(row=urow, column=mc())
+            next_lab.grid(row=urow, column=mc())
+            jj = 0
+    ns_lab2 = Label(root, text="NEXT STEP:")
+    scr.append(ns_lab2)
+    ns_lab2.grid(row=mr(), column=ucol)
+    r3 = result["finalmat"]
+    b_ans = beauty_mat(asset["current_ans"])
+
+    # for i in range(len())
     # print(result)
 
 

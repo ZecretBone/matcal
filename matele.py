@@ -7,14 +7,18 @@ def multback(a):
     if len(a["eye"]) <= 0:
         return []
     elif len(a["eye"]) == 1:
+        a["entire2"].append(a["eye"][0])
         return a["eye"][0]
     else:
         print("more than 1")
         i = len(a["eye"])-1
         print(i)
         n = a["eye"][i]
+        a["entire2"].append(n)
         while i > 0:
             n = np.matmul(n, a["eye"][i-1])
+            a["entire2"].append(a["eye"][i-1])
+            a["entire2"].append(n)
             print(n)
             i -= 1
         return n
@@ -171,6 +175,7 @@ def square(e, an):
         print("new bp")
         bp = np.matmul(tom, an)
     print(bp)
+    answer["finalmat"] = bp
 
     return answer
 
