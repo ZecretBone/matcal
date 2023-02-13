@@ -28,7 +28,7 @@ def save_pastemat(cd, rd, ent, name):
         transit("main")
     except:
         messagebox.showerror(title="Create Matrix Error",
-                             message="Invalid input, please check your paste text")
+                             message="Invalid input, please check your pasted text")
         return
 
 

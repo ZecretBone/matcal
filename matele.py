@@ -205,6 +205,10 @@ def square(e, an):
     answer = varback(e, bp, answer)
     print("all var backward")
     print(answer["var"])
+    answer["havenan"] = False
+    for c in answer["var"]:
+        if np.isnan(c):
+            answer["havenan"] = True
 
     return answer
 
