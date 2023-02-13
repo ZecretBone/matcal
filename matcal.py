@@ -280,6 +280,7 @@ def validate_matfunc(mat_lb):
 
 def show_elementary2():
     global root, scr, urow, ucol, stage, asset
+    root.title("Matrix Calculator: Functions >> Result (Elementary)")
     result = elemental(asset["current_mat"], asset["current_ans"])
     r = result["entire"]
     onlye = []
@@ -368,6 +369,8 @@ def show_elementary2():
         vt += "x"+str(iiv)+" = "+str(result["var"][iv])
         if iv != 0:
             vt += ", "
+        if len(vt) > 30:
+            vt += "\n"
         iv -= 1
         iiv += 1
     var_lab = Label(root, text=vt)
