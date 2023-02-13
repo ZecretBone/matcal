@@ -1,6 +1,28 @@
 import numpy as np
 
 
+def varback(x, y, a):
+    a["var"] = []
+    n = len(y)
+    i = 0
+    xr = len(x)-1
+    xc = len(x[0])-1
+    while i < n:
+        j = 0
+        m = len(a["var"])
+        equalto = y[n-(1+i), 0]
+        xc = len(x[0])-1
+        while j < m:
+            equalto -= a["var"][j]*x[xr, xc]
+            xc -= 1
+            j += 1
+        newv = equalto/x[xr, xc]
+        a["var"].append(newv)
+        i += 1
+        xr -= 1
+    return a
+
+
 def multback(a):
     print("len multback")
     print(a["eye"])
@@ -180,6 +202,9 @@ def square(e, an):
     answer["firstans"] = an
     answer["newans"] = bp
     answer["newone"] = e
+    answer = varback(e, bp, answer)
+    print("all var backward")
+    print(answer["var"])
 
     return answer
 

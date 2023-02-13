@@ -357,6 +357,28 @@ def show_elementary2():
         next_lab.grid(row=urow, column=mc())
         r3_lab.grid(row=urow, column=mc())
 
+    ivar_lab = Label(root, text="ALL VARIABLES: ")
+    scr.append(ivar_lab)
+    ucol = 0
+    ivar_lab.grid(row=mr(), column=ucol)
+    iv = len(result["var"])-1
+    iiv = 1
+    vt = ""
+    while iv >= 0:
+        vt += "x"+str(iiv)+" = "+str(result["var"][iv])
+        if iv != 0:
+            vt += ", "
+        iv -= 1
+        iiv += 1
+    var_lab = Label(root, text=vt)
+    scr.append(var_lab)
+    var_lab.grid(row=urow, column=mc())
+
+    ucol = 0
+    home_btn = Button(root, text="Home", command=lambda: transit("main"))
+    scr.append(home_btn)
+    home_btn.grid(row=mr(), column=ucol)
+
     # for i in range(len())
     # print(result)
 
@@ -648,7 +670,7 @@ if __name__ == '__main__':
     ucol = 0
     asset = {}
     asset["all_mat"] = []
-    asset["all_func"] = ["Elementary", "Invert"]
+    asset["all_func"] = ["Elementary", "Inverse"]
     stage = "main"
     summon()
     def_btn()

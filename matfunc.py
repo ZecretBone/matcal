@@ -8,6 +8,6 @@ def elemental(a, an):
     return x
 
 
-def invert(a):
+def inverse(a):
     print(a)
     return [1, 2]
