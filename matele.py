@@ -158,19 +158,6 @@ def square(e, an):
     answer["allr"] = srow
     answer["allc"] = scol
     answer["entire2"] = []
-    # if e[0, 0] == 0:
-    #     i = 0
-    #     swap = False
-    #     while e[i, 0] == 0 and i != srow:
-    #         i += 1
-    #     if e[i, 0] != 0:
-    #         swap = True
-    #     if swap:
-    #         print(i)
-    #         e[(0, i)] = e[(i, 0)]
-    #         print(e)
-    #         print("end swap")
-    #         answer["swapped"] = e
     ccol = -1
     print("start")
     while not checkzero(e):
@@ -211,6 +198,41 @@ def square(e, an):
             answer["havenan"] = True
 
     return answer
+
+
+def isconsist(e):
+    carrier = {}
+    total = e.shape
+    srow = total[0]
+    scol = total[1]
+    # [tzero, getswap, stayrow]
+    carrier["gather"] = []
+    carrier["eye"] = []
+    # three results
+    # loop col
+    i = 0
+    tr = 0
+    while i < scol:
+        gather = [None, None, None]
+        j1 = tr
+        if 0 == e[j1, i]:
+            gather[0] = True
+            while j1 < srow:
+                gather[1] = False
+                if 0 != e[j1, i]:
+                    gather[1] = True
+                j1 += 1
+        else:
+            gather[0] = False
+
+        i += 1
+
+    # first run to swap
+    # loop row
+
+    while not True:
+        break
+    return
 
 
 def rectangle(e):
