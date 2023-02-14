@@ -104,6 +104,7 @@ def swapper(e, i, j, a):
         swap = False
         if e[m, j] != 0:
             # e[(i, m)] = e[(m, i)]
+            # emerge row,col in eye
             y = np.eye(srow)
             y[(i, m)] = y[(m, i)]
             a["eye"].append(y)
@@ -208,23 +209,38 @@ def isconsist(e):
     # [tzero, getswap, stayrow]
     carrier["gather"] = []
     carrier["eye"] = []
+    carrier["consist"] = True
     # three results
     # loop col
     i = 0
     tr = 0
     while i < scol:
-        gather = [None, None, None]
+        gather = [False, False, False]
         j1 = tr
+        top = tr
         if 0 == e[j1, i]:
             gather[0] = True
             while j1 < srow:
                 gather[1] = False
                 if 0 != e[j1, i]:
+                    y = np.eye(srow, scol)
+                    y[(j1, top)] = y[(top, j1)]
+                    carrier["eye"].append(y)
+                    e = np.matmul(y, e)
                     gather[1] = True
+
+                if gather[1]:
+                    break
                 j1 += 1
+            if not gather[1]:
+                gather[2] = True
         else:
             gather[0] = False
 
+        if not gather[0] or gather[1]:
+            tr += 1
+
+        carrier["gather"].append(gather)
         i += 1
 
     # first run to swap
