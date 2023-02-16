@@ -217,14 +217,13 @@ def isconsist(e):
     while i < scol:
         gather = [False, False, False]
         j1 = tr
-        top = tr
         if 0 == e[j1, i]:
             gather[0] = True
             while j1 < srow:
                 gather[1] = False
                 if 0 != e[j1, i]:
                     y = np.eye(srow, scol)
-                    y[(j1, top)] = y[(top, j1)]
+                    y[(j1, tr)] = y[(tr, j1)]
                     carrier["eye"].append(y)
                     e = np.matmul(y, e)
                     gather[1] = True
@@ -237,17 +236,16 @@ def isconsist(e):
         else:
             gather[0] = False
 
-        if not gather[0] or gather[1]:
+        if not gather[0] or not gather[2]:
+            # run mul
+            j2 = tr+1
+            while j2 < srow:
+                j2 += 1
             tr += 1
 
         carrier["gather"].append(gather)
         i += 1
 
-    # first run to swap
-    # loop row
-
-    while not True:
-        break
     return
 
 
