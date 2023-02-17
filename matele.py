@@ -153,6 +153,7 @@ def square(e, an):
     print("print identity")
     print(h1)
     answer = {}
+    answer["isconsist"] = True
     answer["original"] = e
     answer["eye"] = []
     answer["entire"] = []
@@ -298,6 +299,9 @@ def isconsist(e, a):
         if not carrier["consist"]:
             break
         k += 1
+    print("check consistency done")
+    print("isconsist: "+str(carrier["consist"]))
+    print("freevar: "+str(carrier["freevar"]))
 
     return carrier
 
@@ -312,7 +316,9 @@ def initial_element(e, an):
     srow = total[0]
     scol = total[1]
     print("row: "+str(srow)+" col: "+str(scol))
-
+    consist = isconsist(e, an)
+    if not consist["consist"]:
+        return consist
     if srow == scol:
         result = square(e, an)
     else:

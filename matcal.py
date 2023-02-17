@@ -282,6 +282,9 @@ def show_elementary2():
     global root, scr, urow, ucol, stage, asset
     root.title("Matrix Calculator: Functions >> Result (Elementary)")
     result = elemental(asset["current_mat"], asset["current_ans"])
+    if not result["isconsist"]:
+        return
+
     r = result["entire"]
     onlye = []
     onlym = []
