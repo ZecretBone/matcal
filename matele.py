@@ -201,7 +201,7 @@ def square(e, an):
     return answer
 
 
-def isconsist(e):
+def isconsist(e, a):
     carrier = {}
     total = e.shape
     srow = total[0]
@@ -210,6 +210,7 @@ def isconsist(e):
     carrier["gather"] = []
     carrier["eye"] = []
     carrier["consist"] = True
+    carrier["freevar"] = []
     # three results
     # loop col
     i = 0
@@ -226,6 +227,8 @@ def isconsist(e):
                     y[(j1, tr)] = y[(tr, j1)]
                     carrier["eye"].append(y)
                     e = np.matmul(y, e)
+                    print("swapped: ")
+                    print(e)
                     gather[1] = True
 
                 if gather[1]:
@@ -233,6 +236,8 @@ def isconsist(e):
                 j1 += 1
             if not gather[1]:
                 gather[2] = True
+            if gather[2]:
+                carrier["freevar"].append(i)
         else:
             gather[0] = False
 
@@ -240,13 +245,61 @@ def isconsist(e):
             # run mul
             j2 = tr+1
             while j2 < srow:
+                tomult = -1*(e[j2, i]/e[tr, i])
+                print(tomult)
+                y = np.eye(srow, scol)
+                y[j2, i] = tomult
+                print(y)
+                carrier["eye"].append(y)
+                e = np.matmul(y, e)
+                print("after mult e: ")
+                print(e)
                 j2 += 1
             tr += 1
 
         carrier["gather"].append(gather)
         i += 1
+    print("multback eye")
+    newa = []
+    if len(carrier["eye"]) <= 0:
+        newa = []
+    elif len(carrier["eye"]) == 1:
+        # a["entire2"].append(a["eye"][0])
+        newa = carrier["eye"][0]
+    else:
+        print("more than 1")
+        i = len(carrier["eye"])-1
+        print(i)
+        n = carrier["eye"][i]
+        # a["entire2"].append(n)
+        while i > 0:
+            n = np.matmul(n, carrier["eye"][i-1])
+            # a["entire2"].append(a["eye"][i-1])
+            # a["entire2"].append(n)
+            print(n)
+            i -= 1
+        newa = n
+    if newa != []:
+        a = np.matmul(newa, a)
+    print("time for consistency")
+    print("check every row")
+    k = 0
+    while k < srow:
+        l = 0
+        stack = 0
+        while l < scol:
+            if e[k, l] == 0:
+                stack += 1
+            l += 1
+        if stack == scol:
+            if a[k] != 0:
+                carrier["consist"] = False
+                break
+        if not carrier["consist"]:
+            break
+        k += 1
 
-    return
+    return carrier
 
 
 def rectangle(e):
