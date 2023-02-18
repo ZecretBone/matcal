@@ -229,6 +229,7 @@ def isconsist(e, a):
                     carrier["eye"].append(y)
                     e = np.matmul(y, e)
                     print("swapped: ")
+
                     print(e)
                     gather[1] = True
 
