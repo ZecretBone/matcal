@@ -219,6 +219,7 @@ def isconsist(e, a):
     while i < scol:
         gather = [False, False, False]
         j1 = tr
+        print("checking row,col: "+str(j1)+", "+str(i))
         if 0 == e[j1, i]:
             gather[0] = True
             while j1 < srow:
@@ -228,6 +229,7 @@ def isconsist(e, a):
                     y[(j1, tr)] = y[(tr, j1)]
                     carrier["eye"].append(y)
                     e = np.matmul(y, e)
+                    a = np.matmul(y, a)
                     print("swapped: ")
 
                     print(e)
@@ -240,6 +242,7 @@ def isconsist(e, a):
                 gather[2] = True
             if gather[2]:
                 carrier["freevar"].append(i)
+
         else:
             gather[0] = False
 
@@ -247,44 +250,54 @@ def isconsist(e, a):
             # run mul
             j2 = tr+1
             while j2 < srow:
-                tomult = -1*(e[j2, i]/e[tr, i])
+                # tomult = -1*(e[j2, i]/e[tr, i])
+                tomult = (e[j2, i]/e[tr, i])
                 print(tomult)
-                y = np.eye(srow, scol)
-                y[j2, i] = tomult
-                print(y)
-                carrier["eye"].append(y)
-                e = np.matmul(y, e)
-                print("after mult e: ")
-                print(e)
+                # y = np.eye(srow, scol)
+                # y[j2, i] = tomult
+                # newsave = e[j2]-(e[tr]*tomult)
+                e[j2] = e[j2]-(e[tr]*tomult)
+                a[j2] = a[j2]-(a[tr]*tomult)
+                # print(y)
+                # carrier["eye"].append(y)
+                # e = np.matmul(y, e)
+                # print("after mult e: ")
+                # print(e)
                 j2 += 1
             tr += 1
+        print("END ROW")
+        print(e)
 
         carrier["gather"].append(gather)
         i += 1
-    print("multback eye")
-    newa = []
-    if len(carrier["eye"]) <= 0:
-        newa = []
-    elif len(carrier["eye"]) == 1:
-        # a["entire2"].append(a["eye"][0])
-        newa = carrier["eye"][0]
-    else:
-        print("more than 1")
-        i = len(carrier["eye"])-1
-        print(i)
-        n = carrier["eye"][i]
-        # a["entire2"].append(n)
-        while i > 0:
-            n = np.matmul(n, carrier["eye"][i-1])
-            # a["entire2"].append(a["eye"][i-1])
-            # a["entire2"].append(n)
-            print(n)
-            i -= 1
-        newa = n
-    if newa != []:
-        a = np.matmul(newa, a)
+    # print("multback eye")
+    # newa = []
+    # if len(carrier["eye"]) <= 0:
+    #     newa = []
+    # elif len(carrier["eye"]) == 1:
+    #     # a["entire2"].append(a["eye"][0])
+    #     newa = carrier["eye"][0]
+    # else:
+    #     print("more than 1")
+    #     i = len(carrier["eye"])-1
+    #     print(i)
+    #     n = carrier["eye"][i]
+    #     # a["entire2"].append(n)
+    #     while i > 0:
+    #         n = np.matmul(n, carrier["eye"][i-1])
+    #         # a["entire2"].append(a["eye"][i-1])
+    #         # a["entire2"].append(n)
+    #         print(n)
+    #         i -= 1
+    #     newa = n
+    # if newa != []:
+    #     a = np.matmul(newa, a)
     print("time for consistency")
     print("check every row")
+    print("current MAT")
+    print(e)
+    print("current ANS")
+    print(a)
     k = 0
     while k < srow:
         l = 0
@@ -319,10 +332,17 @@ def initial_element(e, an):
     print("row: "+str(srow)+" col: "+str(scol))
     consist = isconsist(e, an)
     if not consist["consist"]:
+        print("done with inconsist")
         return consist
+    if len(consist["freevar"]) > 0:
+        print("done with consist but have free var")
+        return consist
+    print("calculating consist and no free var")
     if srow == scol:
+        print("SQUARE VERSION INIT")
         result = square(e, an)
     else:
+        print("RECTANGLE VERSION INIT")
         result = rectangle(e)
 
     return result
