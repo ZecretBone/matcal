@@ -312,12 +312,22 @@ def isconsist(e, a):
             if a[k] != 0:
                 carrier["consist"] = False
                 break
+            else:
+                carrier["out"] = k
         if not carrier["consist"]:
             break
         k += 1
     print("check consistency done")
+
     print("isconsist: "+str(carrier["consist"]))
     print("freevar: "+str(carrier["freevar"]))
+
+    if carrier["consist"] and len(carrier["freevar"]) > 0:
+        print("finding var")
+        o = 0
+        while o < carrier["out"]:
+
+            o += 1
 
     return carrier
 
