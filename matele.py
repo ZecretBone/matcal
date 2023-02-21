@@ -167,12 +167,14 @@ def square(e, an):
         if x[1] != ccol:
             ccol = x[1]
             e, answer = swapper(e, x[1], x[1], answer)
+        print("appending entire")
         answer["entire"].append(e)
         e, answer = ridzero(e, x[0], x[1], answer)
         print("NEW")
         print(e)
         print("IDENT")
         print(answer["eye"][-1])
+        print("appending entire")
         answer["entire"].append(answer["eye"][-1])
         answer["entire"].append(e)
 
@@ -326,11 +328,14 @@ def rectangle(e):
 
 def initial_element(e, an):
     print(e)
+
     total = e.shape
     srow = total[0]
     scol = total[1]
+    fakeE = np.array(e)
+    fakeAN = np.array(an)
     print("row: "+str(srow)+" col: "+str(scol))
-    consist = isconsist(e, an)
+    consist = isconsist(fakeE, fakeAN)
     if not consist["consist"]:
         print("done with inconsist")
         return consist
@@ -338,6 +343,7 @@ def initial_element(e, an):
         print("done with consist but have free var")
         return consist
     print("calculating consist and no free var")
+    print(e)
     if srow == scol:
         print("SQUARE VERSION INIT")
         result = square(e, an)

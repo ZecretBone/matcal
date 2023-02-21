@@ -284,8 +284,10 @@ def show_elementary2():
     result = elemental(asset["current_mat"], asset["current_ans"])
     if not result["isconsist"]:
         return
-
+    print("generating step and result")
     r = result["entire"]
+    print("all r")
+    print(r)
     onlye = []
     onlym = []
     onlyr = []
