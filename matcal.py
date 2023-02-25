@@ -28,7 +28,7 @@ def save_pastemat(cd, rd, ent, name):
         transit("main")
     except:
         messagebox.showerror(title="Create Matrix Error",
-                             message="Invalid input, please check your paste text")
+                             message="Invalid input, please check your pasted text")
         return
 
 
@@ -280,8 +280,14 @@ def validate_matfunc(mat_lb):
 
 def show_elementary2():
     global root, scr, urow, ucol, stage, asset
+    root.title("Matrix Calculator: Functions >> Result (Elementary)")
     result = elemental(asset["current_mat"], asset["current_ans"])
+    if not result["isconsist"]:
+        return
+    print("generating step and result")
     r = result["entire"]
+    print("all r")
+    print(r)
     onlye = []
     onlym = []
     onlyr = []
@@ -356,6 +362,30 @@ def show_elementary2():
         b_lab.grid(row=urow, column=mc())
         next_lab.grid(row=urow, column=mc())
         r3_lab.grid(row=urow, column=mc())
+
+    ivar_lab = Label(root, text="ALL VARIABLES: ")
+    scr.append(ivar_lab)
+    ucol = 0
+    ivar_lab.grid(row=mr(), column=ucol)
+    iv = len(result["var"])-1
+    iiv = 1
+    vt = ""
+    while iv >= 0:
+        vt += "x"+str(iiv)+" = "+str(result["var"][iv])
+        if iv != 0:
+            vt += ", "
+        if len(vt) > 30:
+            vt += "\n"
+        iv -= 1
+        iiv += 1
+    var_lab = Label(root, text=vt)
+    scr.append(var_lab)
+    var_lab.grid(row=urow, column=mc())
+
+    ucol = 0
+    home_btn = Button(root, text="Home", command=lambda: transit("main"))
+    scr.append(home_btn)
+    home_btn.grid(row=mr(), column=ucol)
 
     # for i in range(len())
     # print(result)
@@ -648,7 +678,7 @@ if __name__ == '__main__':
     ucol = 0
     asset = {}
     asset["all_mat"] = []
-    asset["all_func"] = ["Elementary", "Invert"]
+    asset["all_func"] = ["Elementary", "Inverse"]
     stage = "main"
     summon()
     def_btn()

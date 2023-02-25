@@ -14,6 +14,20 @@ if __name__ == '__main__':
     #         print(i)
     #         print("j")
     #         print(j)
-    b = np.array(np.mat('2,1,1;6,4,5;4,1,3'))
-    an = np.array(np.mat('2;8;11'))
+
+    # incon
+    b = np.array(
+        np.mat('[1 1 1 1 1;-1 -1 0 0 1;-2 -2 0 0 3; 0 0 1 1 3;1 1 2 2 4]'))
+    an = np.array(np.mat('[1; -1; 1; -1; 1]'))
+
+    # con but free var
+    b = np.array(
+        np.mat('[1 1 1 1 1; -1 -1 0 0 1; -2 -2 0 0 3; 0 0 1 1 3; 1 1 2 2 4]'))
+    an = np.array(np.mat('[1; -1; 1; 3; 4]'))
+
+    print("init MAT")
+    print(b)
+    print("init ANS")
+    print(an)
+    print("done init")
     print(test_element(b, an))
