@@ -300,6 +300,7 @@ def isconsist(e, a):
     print(e)
     print("current ANS")
     print(a)
+    carrier["out"] = -999
     k = 0
     while k < srow:
         l = 0
@@ -313,7 +314,8 @@ def isconsist(e, a):
                 carrier["consist"] = False
                 break
             else:
-                carrier["out"] = k
+                if carrier["out"] == -999:
+                    carrier["out"] = k
         if not carrier["consist"]:
             break
         k += 1
