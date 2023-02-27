@@ -23,6 +23,16 @@ def varback(x, y, a):
     return a
 
 
+def getfree(n):
+    v = ""
+    free = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l"]
+    if n >= 12:
+        v = "r"*n
+    else:
+        v = free[n]
+    return v
+
+
 def multback(a):
     print("len multback")
     print(a["eye"])
@@ -326,10 +336,13 @@ def isconsist(e, a):
 
     if carrier["consist"] and len(carrier["freevar"]) > 0:
         print("finding var")
-        o = 0
-        while o < carrier["out"]:
-
-            o += 1
+        o = carrier["out"]-1
+        while o >= 0:
+            p = 0
+            while p > 100:
+                if p in carrier["freevar"]:
+                    print("free var replace")
+            o -= 1
 
     return carrier
 
