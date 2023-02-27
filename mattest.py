@@ -15,6 +15,8 @@ if __name__ == '__main__':
     #         print("j")
     #         print(j)
 
+    print("a"*7)
+
     # incon
     b = np.array(
         np.mat('[1 1 1 1 1;-1 -1 0 0 1;-2 -2 0 0 3; 0 0 1 1 3;1 1 2 2 4]'))
