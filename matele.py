@@ -226,6 +226,7 @@ def isconsist(e, a):
     carrier["freevar"] = []
     # three results
     # loop col
+    pout = False
     i = 0
     tr = 0
     while i < scol:
@@ -261,6 +262,8 @@ def isconsist(e, a):
         if not gather[0] or not gather[2]:
             # run mul
             j2 = tr+1
+            if j2 == srow:
+                pout = True
             while j2 < srow:
                 # tomult = -1*(e[j2, i]/e[tr, i])
                 tomult = (e[j2, i]/e[tr, i])
