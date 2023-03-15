@@ -214,6 +214,15 @@ def square(e, an):
     return answer
 
 
+# def iscolzero(e, a):
+#     total = e.shape
+#     srow = total[0]
+#     scol = total[1]
+#     i = 0
+#     while i < scol:
+
+#         i += 1
+
 def isconsist(e, a):
     carrier = {}
     total = e.shape
@@ -224,67 +233,71 @@ def isconsist(e, a):
     carrier["eye"] = []
     carrier["consist"] = True
     carrier["freevar"] = []
+    carrier["novar"] = []
     # three results
     # loop col
     pout = False
     i = 0
     tr = 0
     while i < scol:
-        gather = [False, False, False]
-        j1 = tr
-        print("checking row,col: "+str(j1)+", "+str(i))
-        if 0 == e[j1, i]:
-            gather[0] = True
-            while j1 < srow:
-                gather[1] = False
-                if 0 != e[j1, i]:
-                    y = np.eye(srow, scol)
-                    y[(j1, tr)] = y[(tr, j1)]
-                    carrier["eye"].append(y)
-                    e = np.matmul(y, e)
-                    a = np.matmul(y, a)
-                    print("swapped: ")
+        if not pout:
+            gather = [False, False, False]
+            j1 = tr
+            print("checking row,col: "+str(j1)+", "+str(i))
+            if 0 == e[j1, i]:
+                gather[0] = True
+                while j1 < srow:
+                    gather[1] = False
+                    if 0 != e[j1, i]:
+                        y = np.eye(srow, scol)
+                        y[(j1, tr)] = y[(tr, j1)]
+                        carrier["eye"].append(y)
+                        e = np.matmul(y, e)
+                        a = np.matmul(y, a)
+                        print("swapped: ")
 
-                    print(e)
-                    gather[1] = True
+                        print(e)
+                        gather[1] = True
 
-                if gather[1]:
-                    break
-                j1 += 1
-            if not gather[1]:
-                gather[2] = True
-            if gather[2]:
-                carrier["freevar"].append(i)
+                    if gather[1]:
+                        break
+                    j1 += 1
+                if not gather[1]:
+                    gather[2] = True
+                if gather[2]:
+                    carrier["freevar"].append(i)
 
+            else:
+                gather[0] = False
+
+            if not gather[0] or not gather[2]:
+                # run mul
+                j2 = tr+1
+                if j2 == srow:
+                    pout = True
+                while j2 < srow:
+                    # tomult = -1*(e[j2, i]/e[tr, i])
+                    tomult = (e[j2, i]/e[tr, i])
+                    print(tomult)
+                    # y = np.eye(srow, scol)
+                    # y[j2, i] = tomult
+                    # newsave = e[j2]-(e[tr]*tomult)
+                    e[j2] = e[j2]-(e[tr]*tomult)
+                    a[j2] = a[j2]-(a[tr]*tomult)
+                    # print(y)
+                    # carrier["eye"].append(y)
+                    # e = np.matmul(y, e)
+                    # print("after mult e: ")
+                    # print(e)
+                    j2 += 1
+                tr += 1
+            print("END ROW")
+            print(e)
+
+            carrier["gather"].append(gather)
+            i += 1
         else:
-            gather[0] = False
-
-        if not gather[0] or not gather[2]:
-            # run mul
-            j2 = tr+1
-            if j2 == srow:
-                pout = True
-            while j2 < srow:
-                # tomult = -1*(e[j2, i]/e[tr, i])
-                tomult = (e[j2, i]/e[tr, i])
-                print(tomult)
-                # y = np.eye(srow, scol)
-                # y[j2, i] = tomult
-                # newsave = e[j2]-(e[tr]*tomult)
-                e[j2] = e[j2]-(e[tr]*tomult)
-                a[j2] = a[j2]-(a[tr]*tomult)
-                # print(y)
-                # carrier["eye"].append(y)
-                # e = np.matmul(y, e)
-                # print("after mult e: ")
-                # print(e)
-                j2 += 1
-            tr += 1
-        print("END ROW")
-        print(e)
-
-        carrier["gather"].append(gather)
-        i += 1
+            carrier["freevar"].append(i)
     # print("multback eye")
     # newa = []
     # if len(carrier["eye"]) <= 0:
@@ -334,8 +347,22 @@ def isconsist(e, a):
         k += 1
     print("check consistency done")
 
+    print("check all no var")
+    i = 0
+    while i < scol:
+        j = 0
+        allzero = True
+        while j < srow:
+            if e(i, j) != 0:
+                allzero = False
+            j += 1
+        if allzero:
+            carrier["novar"].append(i)
+        i += 1
+
     print("isconsist: "+str(carrier["consist"]))
     print("freevar: "+str(carrier["freevar"]))
+    print("novar: "+str(carrier["novar"]))
 
     if carrier["consist"] and len(carrier["freevar"]) > 0:
         print("finding var")
