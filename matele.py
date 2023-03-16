@@ -365,15 +365,51 @@ def isconsist(e, a):
     print("novar: "+str(carrier["novar"]))
     print("current MAT: "+str(e))
     carrier["result_text"] = ""
-
+    carrier["answer_opt"] = 1
+    carrier["firster"] = 0
+    carrier["colpos"] = []
     if carrier["consist"] and len(carrier["freevar"]) > 0:
+        carrier["answer_opt"] = 2
         print("finding var")
+        l = 0
+        while l < scol:
+            if l in carrier["freevar"]:
+                carrier["colpos"].append(False)
+            else:
+                carrier["colpos"].append(True)
+                carrier["firster"] = l
+            l += 1
+
         o = carrier["out"]-1
+        cl = carrier["firster"]
         while o >= 0:
-            p = 0
-            while p > 100:
-                if p in carrier["freevar"]:
-                    print("free var replace")
+            carrier["result_text"] += "\n"
+            carrier["result_text"] += "x"+str(cl-1)+" = "
+            cd = e[o, cl]
+            ci = cl+1
+            carrier["result_text"] += str(a[o]/cd)
+            while ci < scol:
+                if ci in carrier["novar"]:
+                    print("current var = 0")
+                elif carrier["colpos"][ci]:
+                    if e[o, ci]/cd < 0:
+                        mark = "+"
+                        carrier["result_text"] += mark+str(abs(e[o, ci]/cd))
+                    elif e[o, ci]/cd > 0:
+                        mark = "-"
+                        carrier["result_text"] += mark+str(abs(e[o, ci]/cd))
+
+                else:
+                    if e[o, ci]/cd < 0:
+                        mark = "+"
+                        carrier["result_text"] += mark + \
+                            str(abs(e[o, ci]/cd))+str(getfree(ci))
+                    elif e[o, ci]/cd > 0:
+                        mark = "-"
+                        carrier["result_text"] += mark + \
+                            str(abs(e[o, ci]/cd))+str(getfree(ci))
+                ci += 1
+
             o -= 1
 
     return carrier
