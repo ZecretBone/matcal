@@ -416,13 +416,17 @@ def isconsist(e, a):
                     if ci in carrier["novar"]:
                         print("current var = 0")
                     else:
-                        carrier["result_text"] += "-("
+                        carrier["result_text"] += "-"
+                        carrier["result_text"] += str(e[o, ci])
+                        carrier["result_text"] += "("
                         carrier["result_text"] += str(getvar(
                             carrier["vardict"], ci))
                         carrier["result_text"] += ")/"
                         carrier["result_text"] += str(cd)
 
                         current_text += "-("
+                        current_text += str(e[o, ci])
+                        current_text += "("
                         current_text += str(getvar(carrier["vardict"], ci))
                         current_text += ")/"
                         current_text += str(cd)
