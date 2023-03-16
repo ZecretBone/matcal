@@ -364,7 +364,7 @@ def isconsist(e, a):
         j = 0
         allzero = True
         while j < srow:
-            if e[i, j] != 0:
+            if e[j, i] != 0:
                 allzero = False
             j += 1
         if allzero:

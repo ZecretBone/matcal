@@ -27,9 +27,9 @@ if __name__ == '__main__':
         np.mat('[1 1 1 1 1; -1 -1 0 0 1; -2 -2 0 0 3; 0 0 1 1 3; 1 1 2 2 4]'))
     an = np.array(np.mat('[1; -1; 1; 3; 4]'))
 
-    b = np.array(
-        np.mat('[1 1 1 1 1; 0 0 1 1 2; 0 0 0 0 0; 0 0 0 0 0; 0 0 0 0 0]'))
-    an = np.array(np.mat('[1; 0; 0; 0; 0]'))
+    # b = np.array(
+    #     np.mat('[1 1 1 1 1; 0 0 1 1 2; 0 0 0 0 0; 0 0 0 0 0; 0 0 0 0 0]'))
+    # an = np.array(np.mat('[1; 0; 0; 0; 0]'))
 
     print("init MAT")
     print(b)
