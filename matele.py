@@ -353,7 +353,7 @@ def isconsist(e, a):
         j = 0
         allzero = True
         while j < srow:
-            if e(i, j) != 0:
+            if e[i, j] != 0:
                 allzero = False
             j += 1
         if allzero:
@@ -382,35 +382,48 @@ def isconsist(e, a):
 
         o = carrier["out"]-1
         cl = carrier["firster"]
+        print("checking all var")
+        print("first not all zero for var: "+str(cl))
+        print("first row not all zero: "+str(o))
         while o >= 0:
             carrier["result_text"] += "\n"
-            carrier["result_text"] += "x"+str(cl-1)+" = "
-            cd = e[o, cl]
-            ci = cl+1
-            carrier["result_text"] += str(a[o]/cd)
-            while ci < scol:
-                if ci in carrier["novar"]:
-                    print("current var = 0")
-                elif carrier["colpos"][ci]:
-                    if e[o, ci]/cd < 0:
-                        mark = "+"
-                        carrier["result_text"] += mark+str(abs(e[o, ci]/cd))
-                    elif e[o, ci]/cd > 0:
-                        mark = "-"
-                        carrier["result_text"] += mark+str(abs(e[o, ci]/cd))
+            if not cl in carrier["freevar"]:
+                carrier["result_text"] += "x"+str(cl+1)+" = "
+                cd = e[o, cl]
+                ci = cl+1
+                carrier["result_text"] += str(a[o, 0]/cd)
+                print(a[o, 0]/cd)
+                while ci < scol:
+                    if ci in carrier["novar"]:
+                        print("current var = 0")
+                    elif carrier["colpos"][ci]:
+                        if e[o, ci]/cd < 0:
+                            mark = "+"
+                            carrier["result_text"] += mark + \
+                                str(abs(e[o, ci]/cd))
+                        elif e[o, ci]/cd > 0:
+                            mark = "-"
+                            carrier["result_text"] += mark + \
+                                str(abs(e[o, ci]/cd))
 
-                else:
-                    if e[o, ci]/cd < 0:
-                        mark = "+"
-                        carrier["result_text"] += mark + \
-                            str(abs(e[o, ci]/cd))+str(getfree(ci))
-                    elif e[o, ci]/cd > 0:
-                        mark = "-"
-                        carrier["result_text"] += mark + \
-                            str(abs(e[o, ci]/cd))+str(getfree(ci))
-                ci += 1
+                    else:
+                        if e[o, ci]/cd < 0:
+                            mark = "+"
+                            carrier["result_text"] += mark + \
+                                str(abs(e[o, ci]/cd))+str(getfree(ci))
+                        elif e[o, ci]/cd > 0:
+                            mark = "-"
+                            carrier["result_text"] += mark + \
+                                str(abs(e[o, ci]/cd))+str(getfree(ci))
+                    ci += 1
+                o -= 1
 
-            o -= 1
+            else:
+                carrier["result_text"] += "x"+str(cl+1)+" = "+str(getfree(cl))
+            cl -= 1
+
+        print("printing result...")
+        print(carrier["result_text"])
 
     return carrier
 
