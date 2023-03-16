@@ -363,6 +363,8 @@ def isconsist(e, a):
     print("isconsist: "+str(carrier["consist"]))
     print("freevar: "+str(carrier["freevar"]))
     print("novar: "+str(carrier["novar"]))
+    print("current MAT: "+str(e))
+    carrier["result_text"] = ""
 
     if carrier["consist"] and len(carrier["freevar"]) > 0:
         print("finding var")
