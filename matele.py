@@ -223,6 +223,17 @@ def square(e, an):
 
 #         i += 1
 
+def getvar(n, t):
+    i = 0
+    s = 0
+    while i < len(n):
+        if n[i][0] == t:
+            s = n[i][1]
+            break
+        i += 1
+    return s
+
+
 def isconsist(e, a):
     carrier = {}
     total = e.shape
@@ -368,6 +379,8 @@ def isconsist(e, a):
     carrier["answer_opt"] = 1
     carrier["firster"] = 0
     carrier["colpos"] = []
+    carrier["vardict"] = []
+
     if carrier["consist"] and len(carrier["freevar"]) > 0:
         carrier["answer_opt"] = 2
         print("finding var")
@@ -379,7 +392,12 @@ def isconsist(e, a):
                 carrier["colpos"].append(True)
                 carrier["firster"] = l
             l += 1
-
+        ll = scol-1
+        while ll > carrier["firster"]:
+            carrier["result_text"] += "\n"
+            carrier["result_text"] += "x"+str(ll+1)+" = "+str(getfree(ll))
+            carrier["vardict"].append([ll, getfree(ll)])
+            ll -= 1
         o = carrier["out"]-1
         cl = carrier["firster"]
         print("checking all var")
@@ -392,34 +410,55 @@ def isconsist(e, a):
                 cd = e[o, cl]
                 ci = cl+1
                 carrier["result_text"] += str(a[o, 0]/cd)
+                current_text = str(a[o, 0]/cd)
                 print(a[o, 0]/cd)
                 while ci < scol:
                     if ci in carrier["novar"]:
                         print("current var = 0")
-                    elif carrier["colpos"][ci]:
-                        if e[o, ci]/cd < 0:
-                            mark = "+"
-                            carrier["result_text"] += mark + \
-                                str(abs(e[o, ci]/cd))
-                        elif e[o, ci]/cd > 0:
-                            mark = "-"
-                            carrier["result_text"] += mark + \
-                                str(abs(e[o, ci]/cd))
-
                     else:
-                        if e[o, ci]/cd < 0:
-                            mark = "+"
-                            carrier["result_text"] += mark + \
-                                str(abs(e[o, ci]/cd))+str(getfree(ci))
-                        elif e[o, ci]/cd > 0:
-                            mark = "-"
-                            carrier["result_text"] += mark + \
-                                str(abs(e[o, ci]/cd))+str(getfree(ci))
+                        carrier["result_text"] += "-("
+                        carrier["result_text"] += str(getvar(
+                            carrier["vardict"], ci))
+                        carrier["result_text"] += ")/"
+                        carrier["result_text"] += str(cd)
+
+                        current_text += "-("
+                        current_text += str(getvar(carrier["vardict"], ci))
+                        current_text += ")/"
+                        current_text += str(cd)
+
+                    # elif carrier["colpos"][ci]:
+                    #     if e[o, ci]/cd < 0:
+                    #         mark = "+"
+                    #         carrier["result_text"] += mark + \
+                    #             str(abs(e[o, ci]/cd))
+                    #     elif e[o, ci]/cd > 0:
+                    #         mark = "-"
+                    #         carrier["result_text"] += mark + \
+                    #             str(abs(e[o, ci]/cd))
+
+                    # else:
+                    #     if e[o, ci]/cd < 0:
+                    #         mark = "+"
+                    #         carrier["result_text"] += mark + \
+                    #             str(abs(e[o, ci]/cd))+str(getfree(ci))
+                    #     elif e[o, ci]/cd > 0:
+                    #         mark = "-"
+                    #         carrier["result_text"] += mark + \
+                    #             str(abs(e[o, ci]/cd))+str(getfree(ci))
                     ci += 1
+                current_text = "("+current_text+")"
+                carrier["vardict"].append([cl, current_text])
                 o -= 1
 
             else:
-                carrier["result_text"] += "x"+str(cl+1)+" = "+str(getfree(cl))
+                if cl in carrier["novar"]:
+                    carrier["result_text"] += "x"+str(cl+1)+" = 0"
+                    carrier["vardict"].append([cl, str(0)])
+                else:
+                    carrier["result_text"] += "x" + \
+                        str(cl+1)+" = "+str(getfree(cl))
+                    carrier["vardict"].append([cl, str(getfree(cl))])
             cl -= 1
 
         print("printing result...")
