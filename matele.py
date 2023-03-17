@@ -4,9 +4,31 @@ import numpy as np
 def varback(x, y, a):
     a["var"] = []
     n = len(y)
+    nn = len(y)
     i = 0
     xr = len(x)-1
     xc = len(x[0])-1
+    # cleaning row all zero
+    l = 0
+    print("var finding")
+    print(nn)
+    while l < nn:
+        # print("row run")
+        stack = 0
+        ll = 0
+        while ll < len(x[0]):
+            # print("col run")
+            if x[l, ll] == 0:
+                stack += 1
+            ll += 1
+        # print("stack: "+str(stack))
+        # print("len col: "+str(len(x[0])))
+        if stack != len(x[0]):
+            # print("switch to row: "+str(l))
+            xr = l
+            n = l+1
+        l += 1
+    print("var back from row: "+str(n))
     while i < n:
         j = 0
         m = len(a["var"])
@@ -251,6 +273,7 @@ def isconsist(e, a):
     i = 0
     tr = 0
     while i < scol:
+        print("running col")
         if not pout:
             gather = [False, False, False]
             j1 = tr
@@ -260,7 +283,7 @@ def isconsist(e, a):
                 while j1 < srow:
                     gather[1] = False
                     if 0 != e[j1, i]:
-                        y = np.eye(srow, scol)
+                        y = np.eye(srow)
                         y[(j1, tr)] = y[(tr, j1)]
                         carrier["eye"].append(y)
                         e = np.matmul(y, e)
@@ -288,6 +311,7 @@ def isconsist(e, a):
                     pout = True
                 while j2 < srow:
                     # tomult = -1*(e[j2, i]/e[tr, i])
+                    print("running row")
                     tomult = (e[j2, i]/e[tr, i])
                     print(tomult)
                     # y = np.eye(srow, scol)
@@ -309,6 +333,7 @@ def isconsist(e, a):
             i += 1
         else:
             carrier["freevar"].append(i)
+            i += 1
     # print("multback eye")
     # newa = []
     # if len(carrier["eye"]) <= 0:
@@ -346,13 +371,17 @@ def isconsist(e, a):
             if e[k, l] == 0:
                 stack += 1
             l += 1
-        if stack == scol:
-            if a[k] != 0:
-                carrier["consist"] = False
-                break
-            else:
-                if carrier["out"] == -999:
-                    carrier["out"] = k
+        # if stack == scol:
+        #     if a[k] != 0:
+        #         carrier["consist"] = False
+        #         break
+        #     else:
+        #         if carrier["out"] == -999:
+        #             carrier["out"] = k
+        if (stack == scol) and (a[k]) != 0:
+            carrier["consist"] = False
+        elif stack != scol:
+            carrier["out"] = k
         if not carrier["consist"]:
             break
         k += 1
@@ -395,10 +424,15 @@ def isconsist(e, a):
         ll = scol-1
         while ll > carrier["firster"]:
             carrier["result_text"] += "\n"
-            carrier["result_text"] += "x"+str(ll+1)+" = "+str(getfree(ll))
-            carrier["vardict"].append([ll, getfree(ll)])
+
+            if ll in carrier["novar"]:
+                carrier["vardict"].append([ll, "0"])
+                carrier["result_text"] += "x"+str(ll+1)+" = 0"
+            else:
+                carrier["vardict"].append([ll, getfree(ll)])
+                carrier["result_text"] += "x"+str(ll+1)+" = "+str(getfree(ll))
             ll -= 1
-        o = carrier["out"]-1
+        o = carrier["out"]
         cl = carrier["firster"]
         print("checking all var")
         print("first not all zero for var: "+str(cl))
@@ -498,6 +532,8 @@ def initial_element(e, an):
         result = square(e, an)
     else:
         print("RECTANGLE VERSION INIT")
-        result = rectangle(e)
+        print("row > col only")
+        result = square(e, an)
+        # result = rectangle(e,an)
 
     return result

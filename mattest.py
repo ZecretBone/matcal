@@ -23,13 +23,24 @@ if __name__ == '__main__':
     an = np.array(np.mat('[1; -1; 1; -1; 1]'))
 
     # con but free var
-    b = np.array(
-        np.mat('[1 1 1 1 1; -1 -1 0 0 1; -2 -2 0 0 3; 0 0 1 1 3; 1 1 2 2 4]'))
-    an = np.array(np.mat('[1; -1; 1; 3; 4]'))
+    # b = np.array(
+    #     np.mat('[1 1 1 1 1; -1 -1 0 0 1; -2 -2 0 0 3; 0 0 1 1 3; 1 1 2 2 4]'))
+    # an = np.array(np.mat('[1; -1; 1; 3; 4]'))
 
+    # con but free var2
+    # b = np.array(
+    #     np.mat('[1 1 1 1 1; 0 0 1 1 2; 0 0 0 0 0; 0 0 0 0 0; 0 0 0 0 0]'))
+    # an = np.array(np.mat('[1; 0; 0; 0; 0]'))
+
+    # con but free var 3
+    # b = np.array(
+    #     np.mat('[1 2 0 0; 0 3 0 0]'))
+    # an = np.array(np.mat('[5; 3]'))
+
+    # rectangle row > col
     b = np.array(
-        np.mat('[1 1 1 1 1; 0 0 1 1 2; 0 0 0 0 0; 0 0 0 0 0; 0 0 0 0 0]'))
-    an = np.array(np.mat('[1; 0; 0; 0; 0]'))
+        np.mat('[2 0 0;2 3 0;2 0 -3; 2 0 0]'))
+    an = np.array(np.mat('[2; -3; 3; 2]'))
 
     print("init MAT")
     print(b)
