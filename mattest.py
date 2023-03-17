@@ -42,6 +42,8 @@ if __name__ == '__main__':
         np.mat('[2 0 0;2 3 0;2 0 -3; 2 0 0]'))
     an = np.array(np.mat('[2; -3; 3; 2]'))
 
+    print(str(b))
+
     print("init MAT")
     print(b)
     print("init ANS")

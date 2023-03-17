@@ -371,13 +371,6 @@ def isconsist(e, a):
             if e[k, l] == 0:
                 stack += 1
             l += 1
-        # if stack == scol:
-        #     if a[k] != 0:
-        #         carrier["consist"] = False
-        #         break
-        #     else:
-        #         if carrier["out"] == -999:
-        #             carrier["out"] = k
         if (stack == scol) and (a[k]) != 0:
             carrier["consist"] = False
         elif stack != scol:
