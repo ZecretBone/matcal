@@ -282,6 +282,7 @@ def show_elementary2():
     global root, scr, urow, ucol, stage, asset
     root.title("Matrix Calculator: Functions >> Result (Elementary)")
     result = elemental(asset["current_mat"], asset["current_ans"])
+    # disp consist check
     if not result["consist"]:
         return
     if len(result["freevar"]) > 0:
