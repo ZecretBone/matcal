@@ -7,6 +7,11 @@ def test_element(e, an):
     return x
 
 
+def test_inv(e):
+    x = inverse(e)
+    return x
+
+
 if __name__ == '__main__':
     # for i in range(2):
     #     for j in range(i+1, 3):
@@ -49,4 +54,9 @@ if __name__ == '__main__':
     print("init ANS")
     print(an)
     print("done init")
+    print("testing element")
     print(test_element(b, an))
+    print("done test element")
+    print("testing invert")
+    print(test_inv(b))
+    print("done test invert")

@@ -1,5 +1,6 @@
 import numpy as np
 from matele import *
+from matinv import *
 
 
 def elemental(a, an):
@@ -10,4 +11,5 @@ def elemental(a, an):
 
 def inverse(a):
     print(a)
-    return [1, 2]
+    x = init_invert(a)
+    return x
