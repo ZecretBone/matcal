@@ -78,8 +78,25 @@ def make_det(m, a):
     return a
 
 
-def make_rref():
+# def make_rref(e, a):
+#     print("rrefing...")
+#     a["rreflog"] = []
+
+
+def inverter(e, a):
+    print("adding E")
+
+    total = e.shape
+    srow = total[0]
+    scol = total[1]
+    y = np.eye(srow)
+    print(y)
+    e = np.concatenate((e, y), axis=1)
+    a["invlog"].append(e)
+    print(e)
     print("rrefing...")
+    a["rreflog"] = []
+    return a
 
 
 def init_invert(e):
@@ -97,7 +114,10 @@ def init_invert(e):
     ans["det"] = 0
     fakeE = np.array(e)
     ans = make_det(fakeE, ans)
-    if ans["det"] != 0:
+    print(ans)
+    if ans["det"] == 0:
         ans["invertible"] = False
         ans["reason"] = "Since determinant equal to 0 so it is not invertible"
         return ans
+    print("inverting...")
+    ans = inverter(e, ans)

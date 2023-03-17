@@ -47,6 +47,10 @@ if __name__ == '__main__':
         np.mat('[2 0 0;2 3 0;2 0 -3; 2 0 0]'))
     an = np.array(np.mat('[2; -3; 3; 2]'))
 
+    b = np.array(
+        np.mat('[2 0 0;2 3 0;2 0 -3]'))
+    an = np.array(np.mat('[2; -3; 3; 2]'))
+
     print(str(b))
 
     print("init MAT")
@@ -55,7 +59,7 @@ if __name__ == '__main__':
     print(an)
     print("done init")
     print("testing element")
-    print(test_element(b, an))
+    # print(test_element(b, an))
     print("done test element")
     print("testing invert")
     print(test_inv(b))
