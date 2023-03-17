@@ -284,6 +284,9 @@ def show_elementary2():
     result = elemental(asset["current_mat"], asset["current_ans"])
     if not result["consist"]:
         return
+    if len(result["freevar"]) > 0:
+
+        return
     print("generating step and result")
     r = result["entire"]
     print("all r")
