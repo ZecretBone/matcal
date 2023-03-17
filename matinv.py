@@ -29,7 +29,7 @@ def make_det(m, a):
                     m = np.matmul(y, m)
                     swap += 1
                     print("swapped: "+str(swap))
-                    a["detlog"].append(str(np.array(m)))
+                    a["detlog"].append(m)
                     print("Row swapped")
                     jj = srow + 1
                 jj += 1
@@ -48,7 +48,7 @@ def make_det(m, a):
                 tomult = (m[j, i]/m[nr, i])
                 print(tomult)
                 m[j] = m[j]-(m[nr]*tomult)
-                a["detlog"].append(str(np.array(m)))
+                a["detlog"].append(m)
                 j += 1
             i += 1
             nr += 1
@@ -72,7 +72,9 @@ def make_det(m, a):
             dettext += "* (-1)"
             det = det*(-1)
         dettext += "= "+str(det)
-    a["detlog"].append(dettext)
+    a["detresult"] = dettext
+    print("printing detlog")
+    print(a["detresult"])
     a["det"] = det
 
     return a
