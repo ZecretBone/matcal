@@ -177,14 +177,14 @@ def findval(e, n, a):
     # i =
 
 
-def square(e, an):
+def square(e, an, answer):
     total = e.shape
     srow = total[0]
     scol = total[1]
     h1 = np.eye(srow)
     print("print identity")
     print(h1)
-    answer = {}
+    # answer = {}
     answer["isconsist"] = True
     answer["original"] = e
     answer["eye"] = []
@@ -256,7 +256,7 @@ def getvar(n, t):
     return s
 
 
-def isconsist(e, a):
+def isconsist(e, a, carrier):
     carrier = {}
     total = e.shape
     srow = total[0]
@@ -504,29 +504,29 @@ def rectangle(e):
 
 def initial_element(e, an):
     print(e)
-
+    output = {}
     total = e.shape
     srow = total[0]
     scol = total[1]
     fakeE = np.array(e)
     fakeAN = np.array(an)
     print("row: "+str(srow)+" col: "+str(scol))
-    consist = isconsist(fakeE, fakeAN)
-    if not consist["consist"]:
+    output = isconsist(fakeE, fakeAN, output)
+    if not output["consist"]:
         print("done with inconsist")
-        return consist
-    if len(consist["freevar"]) > 0:
+        return output
+    if len(output["freevar"]) > 0:
         print("done with consist but have free var")
-        return consist
+        return output
     print("calculating consist and no free var")
     print(e)
     if srow == scol:
         print("SQUARE VERSION INIT")
-        result = square(e, an)
+        output = square(e, an, output)
     else:
         print("RECTANGLE VERSION INIT")
         print("row > col only")
-        result = square(e, an)
+        output = square(e, an, output)
         # result = rectangle(e,an)
 
-    return result
+    return output

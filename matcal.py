@@ -282,7 +282,7 @@ def show_elementary2():
     global root, scr, urow, ucol, stage, asset
     root.title("Matrix Calculator: Functions >> Result (Elementary)")
     result = elemental(asset["current_mat"], asset["current_ans"])
-    if not result["isconsist"]:
+    if not result["consist"]:
         return
     print("generating step and result")
     r = result["entire"]
@@ -317,7 +317,7 @@ def show_elementary2():
         scr.append(next_lab)
         onlyr[m].grid(row=urow, column=mc())
         ucol = 0
-    ns_lab = Label(root, text="NEXT STEP:")
+    ns_lab = Label(root, text="Making E matrix:")
     scr.append(ns_lab)
     ns_lab.grid(row=mr(), column=ucol)
     re = result["entire2"]
@@ -348,7 +348,7 @@ def show_elementary2():
         next_lab = Label(root, text=">>")
         scr.append(x_lab)
         scr.append(next_lab)
-        ns_lab2 = Label(root, text="GET NEW ANSWER SET:")
+        ns_lab2 = Label(root, text="Making new answer matrix:")
         scr.append(ns_lab2)
         ns_lab2.grid(row=mr(), column=ucol)
         r3 = beauty_mat(result["newans"])
@@ -363,7 +363,7 @@ def show_elementary2():
         next_lab.grid(row=urow, column=mc())
         r3_lab.grid(row=urow, column=mc())
 
-    ivar_lab = Label(root, text="ALL VARIABLES: ")
+    ivar_lab = Label(root, text="All variables value: ")
     scr.append(ivar_lab)
     ucol = 0
     ivar_lab.grid(row=mr(), column=ucol)
