@@ -284,23 +284,85 @@ def show_inverse():
     result = inverse(asset["current_mat"])
 
     # checking if its rectangle
-
+    if result["reason"] == "Since it is rectangle matrix so it is not invertible":
+        r_label = Label(root, text=result["reason"])
+        scr.append(r_label)
+        r_label.grid(row=mr(), column=ucol)
+        home_btn = Button(root, text="Home", command=lambda: transit("main"))
+        scr.append(home_btn)
+        home_btn.grid(row=mr(), column=ucol)
+        return
     # check det
-    consist_lab = Label(root, text="Finding Determinant: ")
-    consist_lab.grid(row=urow, column=ucol)
-    scr.append(consist_lab)
+    det_lab = Label(root, text="Finding Determinant: ")
+    det_lab.grid(row=urow, column=ucol)
+    scr.append(det_lab)
     # disp detlog
+    urow += 1
+    limitcol = 7
+    for i in range(len(result["detlog"])):
+        if ucol >= limitcol:
+            urow += 1
+            ucol = 0
+        detlog = beauty_mat(result["detlog"][i])
+        det_log = Label(root, text=detlog)
+        scr.append(det_log)
+        det_log.grid(row=urow, column=mc())
 
     # disp det result
-
+    urow += 1
+    ucol = 0
+    det_result = Label(root, text="Determinant Result: ")
+    det_result.grid(row=urow, column=ucol)
+    scr.append(det_result)
+    det_result2 = Label(root, text=result["detresult"])
+    det_result2.grid(row=urow, column=mc())
+    scr.append(det_result2)
     if not result["invertible"]:
+        ucol = 0
+        r_label = Label(root, text=result["reason"])
+        scr.append(r_label)
+        r_label.grid(row=mr(), column=ucol)
+        home_btn = Button(root, text="Home", command=lambda: transit("main"))
+        scr.append(home_btn)
+        home_btn.grid(row=mr(), column=ucol)
         return
 
     # disp +E
-
+    urow += 1
+    ucol = 0
+    E_result = Label(root, text="Concatenate with Identity matrix: ")
+    E_result.grid(row=urow, column=ucol)
+    scr.append(E_result)
+    E_result2 = Label(root, text=beauty_mat(result["invlog"][0]))
+    E_result2.grid(row=urow, column=mc())
+    scr.append(E_result2)
     # disp rref
-
+    urow += 1
+    ucol = 0
+    RE_result = Label(root, text="Doing Reduced Row Echelon Form: ")
+    RE_result.grid(row=urow, column=ucol)
+    scr.append(RE_result)
+    for i in range(len(result["rreflog"])):
+        if ucol >= limitcol:
+            urow += 1
+            ucol = 0
+        rrlog = beauty_mat(result["rreflog"][i])
+        rr_log = Label(root, text=rrlog)
+        scr.append(rr_log)
+        rr_log.grid(row=urow, column=mc())
     # disp final inv
+    urow += 1
+    ucol = 0
+    IE_result = Label(root, text="Inversed Matrix: ")
+    IE_result.grid(row=urow, column=ucol)
+    scr.append(IE_result)
+    IE_result2 = Label(root, text=beauty_mat(result["inverted"]))
+    IE_result2.grid(row=urow, column=mc())
+    scr.append(IE_result2)
+    ucol = 0
+    home_btn = Button(root, text="Home", command=lambda: transit("main"))
+    scr.append(home_btn)
+    home_btn.grid(row=mr(), column=ucol)
 
 
 def show_elementary2():

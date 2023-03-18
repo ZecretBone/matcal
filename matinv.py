@@ -59,7 +59,7 @@ def make_det(m, a):
     if not invertible:
         det = 0
         dettext = "determinant = 0"
-        a["reason"] = "No row to swap so it's not invertible"
+        a["reason"] = "Since there is no row to swap which make determinant equal to 0 so it's not invertible"
     else:
         l = 0
         dettext = "determinant = "
@@ -100,7 +100,7 @@ def inverter(e, a):
     y = np.eye(srow)
     print(y)
     e = np.concatenate((e, y), axis=1)
-    a["invlog"].append(e)
+    a["invlog"].append(np.array(e))
     print(e)
     total = e.shape
     srow = total[0]
@@ -192,3 +192,5 @@ def init_invert(e):
         return ans
     print("inverting...")
     ans = inverter(e, ans)
+    ans["reason"] = "Since determinant not equal to 0 so it's invertible"
+    return ans
