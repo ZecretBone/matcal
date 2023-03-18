@@ -29,9 +29,11 @@ def make_det(m, a):
                     m = np.matmul(y, m)
                     swap += 1
                     print("swapped: "+str(swap))
-                    a["detlog"].append(m)
+                    a["detlog"].append(np.array(m))
                     print("Row swapped")
                     jj = srow + 1
+                if swapped:
+                    break
                 jj += 1
             if not swapped:
                 invertible = False
@@ -45,10 +47,11 @@ def make_det(m, a):
             while j < srow:
                 # np.append(m[j],m[j,i])
                 # m[j] += m[j,i]
-                tomult = (m[j, i]/m[nr, i])
-                print(tomult)
-                m[j] = m[j]-(m[nr]*tomult)
-                a["detlog"].append(m)
+                if m[j, i] != 0:
+                    tomult = (m[j, i]/m[nr, i])
+                    print(tomult)
+                    m[j] = m[j]-(m[nr]*tomult)
+                    a["detlog"].append(np.array(m))
                 j += 1
             i += 1
             nr += 1
@@ -56,6 +59,7 @@ def make_det(m, a):
     if not invertible:
         det = 0
         dettext = "determinant = 0"
+        a["reason"] = "No row to swap so it's not invertible"
     else:
         l = 0
         dettext = "determinant = "
@@ -71,6 +75,8 @@ def make_det(m, a):
             print("Row swapped odd times so det = det*(-1)")
             dettext += "* (-1)"
             det = det*(-1)
+        if det == 0:
+            a["reason"] = "Since determinant equal to 0 so it is not invertible"
         dettext += "= "+str(det)
     a["detresult"] = dettext
     print("printing detlog")
@@ -96,8 +102,72 @@ def inverter(e, a):
     e = np.concatenate((e, y), axis=1)
     a["invlog"].append(e)
     print(e)
+    total = e.shape
+    srow = total[0]
+    scol = total[1]
     print("rrefing...")
     a["rreflog"] = []
+    # loop up to down have swap row
+    print("loop up to down have swap row")
+
+    i = 0
+    nr = 0
+    while i < (scol/2):
+        print("run col/2")
+        if e[nr, i] == 0:
+            jj = nr
+            swapped = False
+            while jj < srow:
+                if e[jj, i] != 0:
+                    swapped = True
+                    y = np.eye(srow)
+                    y[(nr, jj)] = y[(jj, nr)]
+                    e = np.matmul(y, e)
+                    a["rreflog"].append(np.array(e))
+                if swapped:
+                    break
+                jj += 1
+        j = nr+1
+        while j < srow:
+            if e[j, i] != 0:
+                tomult = (e[j, i]/e[nr, i])
+                print(tomult)
+                e[j] = e[j]-(e[nr]*tomult)
+                a["rreflog"].append(np.array(e))
+            j += 1
+        if e[nr, i] != 1:
+            e[nr] = e[nr]/e[nr, i]
+            a["rreflog"].append(np.array(e))
+        nr += 1
+        i += 1
+
+    print("loop down to up no swap row")
+    print(e)
+    i = int((scol/2)-1)
+    nr = srow-1
+    while i > -1:
+        j = nr-1
+        print(j)
+        print("i")
+        print(i)
+        while j > -1:
+            print("print j")
+            print(j)
+            if e[j, i] != 0:
+                tomult = (e[j, i]/e[nr, i])
+                print(tomult)
+                e[j] = e[j]-(e[nr]*tomult)
+                a["rreflog"].append(np.array(e))
+            j -= 1
+        nr -= 1
+        i -= 1
+    print("end invert")
+    print(e)
+    inv = np.array(e[0:srow, int(scol/2):int(scol)])
+    print("inverted")
+    print(inv)
+    a["inverted"] = inv
+
     return a
 
 
@@ -119,7 +189,6 @@ def init_invert(e):
     print(ans)
     if ans["det"] == 0:
         ans["invertible"] = False
-        ans["reason"] = "Since determinant equal to 0 so it is not invertible"
         return ans
     print("inverting...")
     ans = inverter(e, ans)

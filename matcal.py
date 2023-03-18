@@ -278,6 +278,31 @@ def validate_matfunc(mat_lb):
                              message="Something went wrong")
 
 
+def show_inverse():
+    global root, scr, urow, ucol, stage, asset
+    root.title("Matrix Calculator: Functions >> Result (Inverse)")
+    result = inverse(asset["current_mat"])
+
+    # checking if its rectangle
+
+    # check det
+    consist_lab = Label(root, text="Finding Determinant: ")
+    consist_lab.grid(row=urow, column=ucol)
+    scr.append(consist_lab)
+    # disp detlog
+
+    # disp det result
+
+    if not result["invertible"]:
+        return
+
+    # disp +E
+
+    # disp rref
+
+    # disp final inv
+
+
 def show_elementary2():
     global root, scr, urow, ucol, stage, asset
     root.title("Matrix Calculator: Functions >> Result (Elementary)")
