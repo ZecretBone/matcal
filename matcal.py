@@ -95,7 +95,8 @@ def beauty_mat(m):
     # export matrix
     for i in range(r):
         for j in range(c):
-            b += str(m[i, j]) + "  "
+            # b += str(m[i, j]) + "  "
+            b += str(round(m[i, j], 2)) + "  "
         b += "\n"
     return b
 
@@ -271,8 +272,11 @@ def validate_matfunc(mat_lb):
         # transit("matfunc3")
         print("using func")
         if asset["current_func"] == "Elementary":
-            print("elementary func..")
+            print("Elementary func..")
             transit("elementary")
+        if asset["current_func"] == "Inverse":
+            print("Inverse func..")
+            transit("inverse")
     else:
         messagebox.showerror(title="Matrix Function Error",
                              message="Something went wrong")
@@ -298,7 +302,7 @@ def show_inverse():
     scr.append(det_lab)
     # disp detlog
     urow += 1
-    limitcol = 7
+    limitcol = 4
     for i in range(len(result["detlog"])):
         if ucol >= limitcol:
             urow += 1
@@ -790,6 +794,8 @@ def summon():
         show_pastemat()
     elif stage == "elementary2":
         show_elementary2()
+    elif stage == "inverse":
+        show_inverse()
 
 
 if __name__ == '__main__':

@@ -179,6 +179,7 @@ def init_invert(e):
     total = e.shape
     srow = total[0]
     scol = total[1]
+    ans["invertible"] = True
     if srow != scol:
         ans["invertible"] = False
         ans["reason"] = "Since it is rectangle matrix so it is not invertible"
