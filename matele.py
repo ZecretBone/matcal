@@ -267,8 +267,11 @@ def isconsist(e, a, carrier):
     carrier["consist"] = True
     carrier["freevar"] = []
     carrier["novar"] = []
+    carrier["consistlog"] = []
     # three results
     # loop col
+    carrier["consistlog"].append(np.array(e))
+    carrier["consistlog"].append(np.array(a))
     pout = False
     i = 0
     tr = 0
@@ -290,6 +293,8 @@ def isconsist(e, a, carrier):
                         a = np.matmul(y, a)
                         print("swapped: ")
 
+                        carrier["consistlog"].append(np.array(e))
+                        carrier["consistlog"].append(np.array(a))
                         print(e)
                         gather[1] = True
 
@@ -319,6 +324,8 @@ def isconsist(e, a, carrier):
                     # newsave = e[j2]-(e[tr]*tomult)
                     e[j2] = e[j2]-(e[tr]*tomult)
                     a[j2] = a[j2]-(a[tr]*tomult)
+                    carrier["consistlog"].append(np.array(e))
+                    carrier["consistlog"].append(np.array(a))
                     # print(y)
                     # carrier["eye"].append(y)
                     # e = np.matmul(y, e)
@@ -356,6 +363,9 @@ def isconsist(e, a, carrier):
     #     newa = n
     # if newa != []:
     #     a = np.matmul(newa, a)
+    print("print consistlog")
+    print(carrier["consistlog"])
+    carrier["consistresult"] = []
     print("time for consistency")
     print("check every row")
     print("current MAT")
@@ -380,6 +390,17 @@ def isconsist(e, a, carrier):
         k += 1
     print("check consistency done")
 
+    consist_text = "It is "
+    if carrier["consist"]:
+        consist_text += "consistent"
+        if len(carrier["freevar"]) == 1:
+            consist_text += " but have 1 free variable"
+        elif len(carrier["freevar"]) > 1:
+            consist_text += " but have " + \
+                str(len(carrier["freevar"]))+" free variables"
+    else:
+        consist_text += "inconsistent"
+    carrier["consistresult"].append(consist_text)
     print("check all no var")
     i = 0
     while i < scol:

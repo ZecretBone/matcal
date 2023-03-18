@@ -283,10 +283,39 @@ def show_elementary2():
     root.title("Matrix Calculator: Functions >> Result (Elementary)")
     result = elemental(asset["current_mat"], asset["current_ans"])
     # disp consist check
+    consist_lab = Label(root, text="Checking consistency: ")
+    consist_lab.grid(row=urow, column=ucol)
+    scr.append(consist_lab)
+    # looping consist disp
+    conlog = result["consistlog"]
+    for i in range(len(conlog)):
+        ct = beauty_mat(conlog[i])
+        cl = Label(root, text=ct)
+        scr.append(cl)
+        cl.grid(row=urow, column=mc())
+    conresult = Label(root, text=result["consistresult"][0])
+    scr.append(conresult)
+    ucol = 0
+    conresult.grid(row=mr(), column=ucol)
+
     if not result["consist"]:
+        home_btn = Button(root, text="Home", command=lambda: transit("main"))
+        scr.append(home_btn)
+        home_btn.grid(row=mr(), column=ucol)
         return
     if len(result["freevar"]) > 0:
+        # looping var for free var
 
+        result_label = Label(root, text="All Variables value: ")
+        scr.append(result_label)
+        result_label.grid(row=mr(), column=ucol)
+        result_text = Label(root, text=result["result_text"])
+        scr.append(result_text)
+        result_text.grid(row=urow, column=mc())
+        home_btn = Button(root, text="Home", command=lambda: transit("main"))
+        scr.append(home_btn)
+        ucol = 0
+        home_btn.grid(row=mr(), column=ucol)
         return
     print("generating step and result")
     r = result["entire"]
@@ -296,7 +325,10 @@ def show_elementary2():
     onlym = []
     onlyr = []
     j = 0
-
+    elim_lab = Label(root, text="Eliminating using elementary: ")
+    elim_lab.grid(row=mr(), column=ucol)
+    scr.append(elim_lab)
+    urow += 1
     for i in range(len(r)):
         nl = beauty_mat(r[i])
         nt = Label(root, text=nl)
