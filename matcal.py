@@ -286,7 +286,7 @@ def show_inverse():
     global root, scr, urow, ucol, stage, asset
     root.title("Matrix Calculator: Functions >> Result (Inverse)")
     result = inverse(asset["current_mat"])
-
+    print(result)
     # checking if its rectangle
     if result["reason"] == "Since it is rectangle matrix so it is not invertible":
         r_label = Label(root, text=result["reason"])
@@ -373,6 +373,7 @@ def show_elementary2():
     global root, scr, urow, ucol, stage, asset
     root.title("Matrix Calculator: Functions >> Result (Elementary)")
     result = elemental(asset["current_mat"], asset["current_ans"])
+
     # disp consist check
     consist_lab = Label(root, text="Checking consistency: ")
     consist_lab.grid(row=urow, column=ucol)
@@ -491,6 +492,8 @@ def show_elementary2():
         r3_lab.grid(row=urow, column=mc())
 
     ivar_lab = Label(root, text="All variables value: ")
+    print("all var printing out loud")
+    print(result["var"])
     scr.append(ivar_lab)
     ucol = 0
     ivar_lab.grid(row=mr(), column=ucol)
@@ -686,7 +689,7 @@ def show_createmat():
     scr.append(pastemat_btn)
     scr.append(back_btn)
     for i in scr:
-        i.grid(row=mr(), column=ucol)
+        i.grid(row=mr(), column=ucol, sticky='news')
 
 
 def show_welcome():
@@ -703,12 +706,114 @@ def show_welcome():
                          command=lambda: transit("matfunc"))
     exit_btn = Button(root, text="Quit", command=exitProg)
 
-    hilabel.grid(row=urow, column=ucol)
-    creatorlabel.grid(row=mr(), column=ucol)
-    matter_btn.grid(row=mr(), column=ucol)
-    matlist_btn.grid(row=mr(), column=ucol)
-    matfunc_btn.grid(row=mr(), column=ucol)
-    exit_btn.grid(row=mr(), column=ucol)
+    hilabel.grid(row=urow, column=ucol, sticky='news')
+    creatorlabel.grid(row=mr(), column=ucol, sticky='news')
+    matter_btn.grid(row=mr(), column=ucol, sticky='news')
+    matlist_btn.grid(row=mr(), column=ucol, sticky='news')
+    matfunc_btn.grid(row=mr(), column=ucol, sticky='news')
+    exit_btn.grid(row=mr(), column=ucol, sticky='news')
+    # working area open
+    # # test 2
+    # master_frame = Frame(root, bd=3,
+    #                      relief=RIDGE)
+    # # master_frame = Frame(root, bg='Light Blue', bd=3,
+    # #                      relief=RIDGE)
+    # master_frame.grid(sticky=NSEW)
+    # master_frame.columnconfigure(0, weight=1)
+
+    # # label1 = Label(
+    # #     master_frame, text='Frame1 Contendasdsadddsadasdasdasdasdasadsadsadasdasdadats')
+    # # label1.grid(row=0, column=0, pady=5, sticky=NW)
+
+    # frame1 = Frame(master_frame, bg='Green', bd=2, relief=FLAT)
+    # frame1.grid(row=1, column=0, sticky=NW)
+
+    # # cb_var1 = IntVar()
+    # # checkbutton1 = Checkbutton(frame1, text='StartCheckBox', variable=cb_var1)
+    # # checkbutton1.grid(row=0, column=0, padx=0, pady=0)
+
+    # # label2 = Label(master_frame, text='Frame2 Contents')
+    # # label2.grid(row=2, column=0, pady=5, sticky=NW)
+
+    # # Create a frame for the canvas and scrollbar(s).
+    # # frame2 = Frame(master_frame, bg='Red', bd=2, relief=FLAT)
+    # # frame2.grid(row=3, column=0, sticky=NW)
+    # frame2 = Frame(master_frame, bd=2, relief=FLAT)
+    # frame2.grid(row=3, column=0, sticky=NW)
+
+    # # Add a canvas in that frame.
+    # canvas = Canvas(frame2, bg='Yellow')
+    # canvas.grid(row=0, column=0)
+
+    # # Create a vertical scrollbar linked to the canvas.
+    # vsbar = Scrollbar(frame2, orient=VERTICAL, command=canvas.yview)
+    # vsbar.grid(row=0, column=1, sticky=NS)
+    # canvas.configure(yscrollcommand=vsbar.set)
+
+    # # Create a horizontal scrollbar linked to the canvas.
+    # hsbar = Scrollbar(frame2, orient=HORIZONTAL, command=canvas.xview)
+    # hsbar.grid(row=1, column=0, sticky=EW)
+    # canvas.configure(xscrollcommand=hsbar.set)
+
+    # # Create a frame on the canvas to contain the grid of buttons.
+    # buttons_frame = Frame(canvas)
+    # ROWS, COLS = 40, 24  # Size of grid.
+    # ROWS_DISP = 12  # Number of rows to display.
+    # COLS_DISP = 16  # Number of columns to display.
+    # # ROWS, COLS = 10, 6  # Size of grid.
+    # # ROWS_DISP = 3  # Number of rows to display.
+    # # COLS_DISP = 4  # Number of columns to display.
+    # # , width=1000
+    # hilabel = Label(
+    #     buttons_frame, text="Welcome to Matrix Calculator")
+    # creatorlabel = Label(
+    #     buttons_frame, text="Created by Naphat and Samita")
+    # matter_btn = Button(buttons_frame, text="Create Matrix",
+    #                     command=lambda: transit("createmat"))
+    # matlist_btn = Button(buttons_frame, text="Matrix List",
+    #                      command=lambda: transit("matlist"))
+    # matfunc_btn = Button(buttons_frame, text="Do Functions",
+    #                      command=lambda: transit("matfunc"))
+    # exit_btn = Button(buttons_frame, text="Quit",
+    #                   command=exitProg)
+
+    # hilabel.grid(row=urow, column=ucol)
+    # creatorlabel.grid(row=mr(), column=ucol, sticky='news')
+    # matter_btn.grid(row=mr(), column=ucol, sticky='news')
+    # matlist_btn.grid(row=mr(), column=ucol, sticky='news')
+    # matfunc_btn.grid(row=mr(), column=ucol, sticky='news')
+    # exit_btn.grid(row=mr(), column=ucol, sticky='news')
+
+    # # Add the buttons to the frame.
+    # for i in range(1, ROWS+1):
+    #     for j in range(1, COLS+1):
+    #         button = Label(buttons_frame, padx=7, pady=7,
+    #                        activebackground='orange', text='')
+    #         button.grid(row=i, column=j, sticky='news')
+    #         # button = Button(buttons_frame, padx=7, pady=7, relief=RIDGE,
+    #         #                 activebackground='orange', text='[%d, %d]' % (i, j))
+    #         # button.grid(row=i, column=j, sticky='news')
+
+    # # Create canvas window to hold the buttons_frame.
+    # canvas.create_window((0, 0), window=buttons_frame, anchor=NW)
+
+    # buttons_frame.update_idletasks()  # Needed to make bbox info available.
+    # bbox = canvas.bbox(ALL)  # Get bounding box of canvas with Buttons.
+
+    # # Define the scrollable region as entire canvas with only the desired
+    # # number of rows and columns displayed.
+    # w, h = bbox[2]-bbox[1], bbox[3]-bbox[1]
+    # dw, dh = int((w/COLS) * COLS_DISP), int((h/ROWS) * ROWS_DISP)
+    # canvas.configure(scrollregion=bbox, width=dw, height=dh)
+    # # test
+    # # hilabel['yscrollcommand'] = set
+    # # creatorlabel['yscrollcommand'] = set
+    # # matter_btn['yscrollcommand'] = set
+    # # matlist_btn['yscrollcommand'] = set
+    # # matfunc_btn['yscrollcommand'] = set
+    # # exit_btn['yscrollcommand'] = set
+    # # test end
+    # working area end
     scr.append(hilabel)
     scr.append(creatorlabel)
     scr.append(matter_btn)
@@ -809,8 +914,179 @@ if __name__ == '__main__':
     asset["all_mat"] = []
     asset["all_func"] = ["Elementary", "Inverse"]
     stage = "main"
+
+    # frame = Frame(
+    #     root,
+    #     bg='#A8B9BF'
+    # )
+
+    # text_box = Text(
+    #     root,
+    #     height=13,
+    #     width=32,
+    #     font=(12)
+    # )
+
+    # text_box.grid(row=0, column=0)
+    # text_box.config(bg='#D9D8D7')
+
+    # sBar = Scrollbar(
+    #     root,
+    #     orient=VERTICAL
+    # )
+
+    # sBar.grid(row=0, column=1, sticky=NS)
+
+    # text_box.config(yscrollcommand=set)
+    # sBar.config(command=text_box.yview)
     summon()
     def_btn()
     def_mat()
+
+    # test 5
+
+    # test 4 with test
+
+    # root.resizable(False, False)
+    # root.title("Codeunderscored Scrollbar Widget Example")
+
+    # # apply the grid layout
+    # root.grid_columnconfigure(0, weight=1)
+    # root.grid_rowconfigure(0, weight=1)
+
+    # # create the text widget
+    # text = Text(root, height=10)
+    # text.grid(row=0, column=0, sticky='ew')
+
+    # # create a scrollbar widget and set its command to the text widget
+    # sBar = Scrollbar(root, orient='vertical', command=text.yview)
+    # sBar.grid(row=0, column=1, sticky='ns')
+
+    # #  communicate back to the scrollbar
+    # text['yscrollcommand'] = set
+
+    # root.mainloop()
+
+    # test 3
+    # main_frame = Frame(root)
+    # main_frame.grid(fill=BOTH, expand=1)
+
+    # # canvas
+    # my_canvas = Canvas(main_frame)
+    # my_canvas.grid(side=LEFT, fill=BOTH, expand=1)
+
+    # # scrollbar
+    # my_scrollbar = Scrollbar(
+    #     main_frame, orient=VERTICAL, command=my_canvas.yview)
+    # my_scrollbar.grid(side=RIGHT, fill=Y)
+
+    # btn1 = Button(main_frame,
+    #               text="Browse...",
+    #               compound="left",
+    #               fg="blue", width=22,
+    #               font=("bold", 10),
+    #               height=1,
+    #               )
+
+    # btn1.place(x=300, y=300)
+
+    # configure the canvas
+    # my_canvas.configure(yscrollcommand=my_scrollbar.set)
+    # my_canvas.bind('<Configure>', lambda e: my_canvas.configure(
+    #     scrollregion=my_canvas.bbox("all")))
+
+    # second_frame = Frame(my_canvas)
+
+    # my_canvas.create_window((0, 0), window=second_frame, anchor="nw")
+    # test
+
+    # main_frame = Frame(root)
+    # main_frame.pack(fill=BOTH, expand=1)
+
+    # # canvas
+    # my_canvas = Canvas(main_frame)
+    # my_canvas.pack(side=LEFT, fill=BOTH, expand=1)
+
+    # # scrollbar
+    # my_scrollbar = Scrollbar(
+    #     main_frame, orient=VERTICAL, command=my_canvas.yview)
+    # my_scrollbar.pack(side=RIGHT, fill=Y)
+
+    # btn1 = Button(main_frame,
+    #               text="Browse...",
+    #               compound="left",
+    #               fg="blue", width=22,
+    #               font=("bold", 10),
+    #               height=1,
+    #               )
+
+    # btn1.place(x=300, y=300)
+
+    # # configure the canvas
+    # my_canvas.configure(yscrollcommand=my_scrollbar.set)
+    # my_canvas.bind('<Configure>', lambda e: my_canvas.configure(
+    #     scrollregion=my_canvas.bbox("all")))
+
+    # second_frame = Frame(my_canvas)
+
+    # my_canvas.create_window((0, 0), window=second_frame, anchor="nw")
+
+    # test 2
+
+    # frame_main = Frame(root, bg="gray")
+    # frame_main.grid(sticky='news')
+
+    # # label1 = Label(frame_main, text="Label 1", fg="green")
+    # # label1.grid(row=0, column=0, pady=(5, 0), sticky='nw')
+
+    # # label2 = Label(frame_main, text="Label 2", fg="blue")
+    # # label2.grid(row=1, column=0, pady=(5, 0), sticky='nw')
+
+    # # label3 = Label(frame_main, text="Label 3", fg="red")
+    # # label3.grid(row=3, column=0, pady=5, sticky='nw')
+
+    # # Create a frame for the canvas with non-zero row&column weights
+    # frame_canvas = Frame(frame_main)
+    # frame_canvas.grid(row=2, column=0, pady=(5, 0), sticky='nw')
+    # frame_canvas.grid_rowconfigure(0, weight=1)
+    # frame_canvas.grid_columnconfigure(0, weight=1)
+    # # Set grid_propagate to False to allow 5-by-5 buttons resizing later
+    # frame_canvas.grid_propagate(False)
+
+    # # Add a canvas in that frame
+    # canvas = Canvas(frame_canvas, bg="yellow")
+    # canvas.grid(row=0, column=0, sticky="news")
+
+    # # Link a scrollbar to the canvas
+    # vsb = Scrollbar(frame_canvas, orient="vertical", command=canvas.yview)
+    # vsb.grid(row=0, column=1, sticky='ns')
+    # canvas.configure(yscrollcommand=vsb.set)
+
+    # # Create a frame to contain the buttons
+    # frame_buttons = Frame(canvas, bg="blue")
+    # canvas.create_window((0, 0), window=frame_buttons, anchor='nw')
+
+    # # Add 9-by-5 buttons to the frame
+    # rows = 9
+    # columns = 5
+    # buttons = [[Button() for j in range(columns)] for i in range(rows)]
+    # for i in range(0, rows):
+    #     for j in range(0, columns):
+    #         buttons[i][j] = Button(frame_buttons, text=("%d,%d" % (i+1, j+1)))
+    #         buttons[i][j].grid(row=i, column=j, sticky='news')
+
+    # # Update buttons frames idle tasks to let tkinter calculate buttons sizes
+    # frame_buttons.update_idletasks()
+
+    # # Resize the canvas frame to show exactly 5-by-5 buttons and the scrollbar
+    # first5columns_width = sum([buttons[0][j].winfo_width()
+    #                           for j in range(0, 5)])
+    # first5rows_height = sum([buttons[i][0].winfo_height()
+    #                         for i in range(0, 5)])
+    # frame_canvas.config(width=first5columns_width + vsb.winfo_width(),
+    #                     height=first5rows_height)
+
+    # # Set the canvas scrolling region
+    # canvas.config(scrollregion=canvas.bbox("all"))
 
     root.mainloop()

@@ -22,6 +22,7 @@ def make_det(m, a):
             jj = nr
             swapped = False
             while jj < srow:
+                print("det row swap at row: "+str(jj)+" col: "+str(i))
                 if m[jj, i] != 0:
                     swapped = True
                     y = np.eye(srow)
@@ -47,6 +48,7 @@ def make_det(m, a):
             while j < srow:
                 # np.append(m[j],m[j,i])
                 # m[j] += m[j,i]
+                print("det at row: "+str(j)+" col: "+str(i))
                 if m[j, i] != 0:
                     tomult = (m[j, i]/m[nr, i])
                     print(tomult)

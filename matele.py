@@ -87,13 +87,13 @@ def checkzero(e):
     for i in range(len(e[0])-1):
         print("i deep")
         print(i)
-        print(len(e[0])-2)
+        # print(len(e[0])-2)
         print("end i")
         d = False
         for j in range(i+1, len(e)):
             print("j deep ")
             print(j)
-            print(len(e)-1)
+            # print(len(e)-1)
             print("end j ")
             if e[j, i] != 0:
                 iszero = False
@@ -155,18 +155,18 @@ def swapper(e, i, j, a):
 def ridzero(e, i, j, a):
     tomult = -1*(e[i, j]/e[j, j])
     print("multer")
-    print(e[i, j])
-    print(e[j, j])
+    # print(e[i, j])
+    # print(e[j, j])
     print("to mult: ")
     print(tomult)
     srow = a["allr"]
     scol = a["allc"]
     y = np.eye(srow)
     y[i, j] = tomult
-    print(y)
+    # print(y)
     a["eye"].append(y)
     e = np.matmul(y, e)
-    print(e)
+    # print(e)
 
     return e, a
 
@@ -203,7 +203,7 @@ def square(e, an, answer):
         answer["entire"].append(e)
         e, answer = ridzero(e, x[0], x[1], answer)
         print("NEW")
-        print(e)
+        # print(e)
         print("IDENT")
         print(answer["eye"][-1])
         print("appending entire")
@@ -334,7 +334,7 @@ def isconsist(e, a, carrier):
                     j2 += 1
                 tr += 1
             print("END ROW")
-            print(e)
+            # print(e)
 
             carrier["gather"].append(gather)
             i += 1
