@@ -378,37 +378,121 @@ def show_elementary2():
     root.title("Matrix Calculator: Functions >> Result (Elementary)")
     result = elemental(asset["current_mat"], asset["current_ans"])
 
-    # disp consist check
-    consist_lab = Label(root, text="Checking consistency: ")
+    # testing area open
+
+    # test 2
+    master_frame = Frame(root, bd=3,
+                         relief=RIDGE)
+    # master_frame = Frame(root, bg='Light Blue', bd=3,
+    #                      relief=RIDGE)
+    master_frame.grid(sticky=NSEW)
+    master_frame.columnconfigure(0, weight=1)
+
+    # label1 = Label(
+    #     master_frame, text='Frame1 Contendasdsadddsadasdasdasdasdasadsadsadasdasdadats')
+    # label1.grid(row=0, column=0, pady=5, sticky=NW)
+
+    frame1 = Frame(master_frame, bg='Green', bd=2, relief=FLAT)
+    frame1.grid(row=1, column=0, sticky=NW)
+
+    # cb_var1 = IntVar()
+    # checkbutton1 = Checkbutton(frame1, text='StartCheckBox', variable=cb_var1)
+    # checkbutton1.grid(row=0, column=0, padx=0, pady=0)
+
+    # label2 = Label(master_frame, text='Frame2 Contents')
+    # label2.grid(row=2, column=0, pady=5, sticky=NW)
+
+    # Create a frame for the canvas and scrollbar(s).
+    # frame2 = Frame(master_frame, bg='Red', bd=2, relief=FLAT)
+    # frame2.grid(row=3, column=0, sticky=NW)
+    frame2 = Frame(master_frame, bd=2, relief=FLAT)
+    frame2.grid(row=3, column=0, sticky=NW)
+
+    # Add a canvas in that frame.
+    canvas = Canvas(frame2, bg='Yellow')
+    canvas.grid(row=0, column=0)
+
+    # Create a vertical scrollbar linked to the canvas.
+    vsbar = Scrollbar(frame2, orient=VERTICAL, command=canvas.yview)
+    vsbar.grid(row=0, column=1, sticky=NS)
+    canvas.configure(yscrollcommand=vsbar.set)
+
+    # Create a horizontal scrollbar linked to the canvas.
+    hsbar = Scrollbar(frame2, orient=HORIZONTAL, command=canvas.xview)
+    hsbar.grid(row=1, column=0, sticky=EW)
+    canvas.configure(xscrollcommand=hsbar.set)
+
+    # Create a frame on the canvas to contain the grid of buttons.
+    buttons_frame = Frame(canvas)
+
+    ROWS, COLS = 200, 10  # Size of grid.
+    ROWS_DISP = 3  # Number of rows to display.
+    COLS_DISP = 2  # Number of columns to display.
+    test_row = 10
+    if result["allr"] >= result["allc"]:
+        test_row = result["allr"]**2
+    else:
+        test_row = result["allc"]**2
+    ROWS = test_row
+    # ROWS, COLS = 10, 6  # Size of grid.
+    # ROWS_DISP = 3  # Number of rows to display.
+    # COLS_DISP = 4  # Number of columns to display.
+    # , width=1000
+    # showing area open
+    # hilabel = Label(
+    #     buttons_frame, text="Welcome to Matrix Calculator")
+    # creatorlabel = Label(
+    #     buttons_frame, text="Created by Naphat and Samita")
+    # matter_btn = Button(buttons_frame, text="Create Matrix",
+    #                     command=lambda: transit("createmat"))
+    # matlist_btn = Button(buttons_frame, text="Matrix List",
+    #                      command=lambda: transit("matlist"))
+    # matfunc_btn = Button(buttons_frame, text="Do Functions",
+    #                      command=lambda: transit("matfunc"))
+    # exit_btn = Button(buttons_frame, text="Quit",
+    #                   command=exitProg)
+
+    # hilabel.grid(row=urow, column=ucol)
+    # creatorlabel.grid(row=mr(), column=ucol, sticky='news')
+    # matter_btn.grid(row=mr(), column=ucol, sticky='news')
+    # matlist_btn.grid(row=mr(), column=ucol, sticky='news')
+    # matfunc_btn.grid(row=mr(), column=ucol, sticky='news')
+    # exit_btn.grid(row=mr(), column=ucol, sticky='news')
+    consist_lab = Label(buttons_frame, text="Checking consistency: ")
     consist_lab.grid(row=urow, column=ucol)
     scr.append(consist_lab)
     # looping consist disp
     conlog = result["consistlog"]
     for i in range(len(conlog)):
         ct = beauty_mat(conlog[i])
-        cl = Label(root, text=ct)
+        cl = Label(buttons_frame, text=ct)
         scr.append(cl)
+        if ucol >= 4:
+            urow += 1
+            ucol = 0
         cl.grid(row=urow, column=mc())
-    conresult = Label(root, text=result["consistresult"][0])
+    conresult = Label(buttons_frame, text=result["consistresult"][0])
     scr.append(conresult)
     ucol = 0
     conresult.grid(row=mr(), column=ucol)
 
     if not result["consist"]:
-        home_btn = Button(root, text="Home", command=lambda: transit("main"))
+        home_btn = Button(buttons_frame, text="Home",
+                          command=lambda: transit("main"))
         scr.append(home_btn)
         home_btn.grid(row=mr(), column=ucol)
         return
     if len(result["freevar"]) > 0:
         # looping var for free var
 
-        result_label = Label(root, text="All Variables value: ")
+        result_label = Label(buttons_frame, text="All Variables value: ")
         scr.append(result_label)
         result_label.grid(row=mr(), column=ucol)
-        result_text = Label(root, text=result["result_text"])
+        result_text = Label(buttons_frame, text=result["result_text"])
         scr.append(result_text)
         result_text.grid(row=urow, column=mc())
-        home_btn = Button(root, text="Home", command=lambda: transit("main"))
+        home_btn = Button(buttons_frame, text="Home",
+                          command=lambda: transit("main"))
         scr.append(home_btn)
         ucol = 0
         home_btn.grid(row=mr(), column=ucol)
@@ -421,13 +505,13 @@ def show_elementary2():
     onlym = []
     onlyr = []
     j = 0
-    elim_lab = Label(root, text="Eliminating using elementary: ")
+    elim_lab = Label(buttons_frame, text="Eliminating using elementary: ")
     elim_lab.grid(row=mr(), column=ucol)
     scr.append(elim_lab)
     urow += 1
     for i in range(len(r)):
         nl = beauty_mat(r[i])
-        nt = Label(root, text=nl)
+        nt = Label(buttons_frame, text=nl)
         scr.append(nt)
         if j == 0:
             onlym.append(nt)
@@ -440,54 +524,57 @@ def show_elementary2():
             j = 0
     for m in range(len(onlye)):
         onlye[m].grid(row=mr(), column=ucol)
-        x_lab = Label(root, text="x")
+        x_lab = Label(buttons_frame, text="x")
         x_lab.grid(row=urow, column=mc())
         scr.append(x_lab)
         onlym[m].grid(row=urow, column=mc())
-        next_lab = Label(root, text=">>")
+        next_lab = Label(buttons_frame, text=">>")
         next_lab.grid(row=urow, column=mc())
         scr.append(next_lab)
         onlyr[m].grid(row=urow, column=mc())
         ucol = 0
-    ns_lab = Label(root, text="Making E matrix:")
+    ns_lab = Label(buttons_frame, text="Making E matrix:")
     scr.append(ns_lab)
     ns_lab.grid(row=mr(), column=ucol)
     re = result["entire2"]
     jj = 0
     for k in range(len(re)):
         nl2 = beauty_mat(re[k])
-        s2 = Label(root, text=nl2)
+        s2 = Label(buttons_frame, text=nl2)
         scr.append(s2)
         if jj == 0:
             s2.grid(row=urow, column=mc())
             jj += 1
         elif jj == 1:
-            x_lab = Label(root, text="x")
-            next_lab = Label(root, text=">>")
+            x_lab = Label(buttons_frame, text="x")
+            next_lab = Label(buttons_frame, text=">>")
             scr.append(x_lab)
             scr.append(next_lab)
+            if ucol > 7:
+                urow += 1
+                ucol = 0
             x_lab.grid(row=urow, column=mc())
             s2.grid(row=urow, column=mc())
             next_lab.grid(row=urow, column=mc())
             jj = 0
     print(result["firstans"])
     b_ans = beauty_mat(result["firstans"])
-    b_lab = Label(root, text=b_ans)
+    b_lab = Label(buttons_frame, text=b_ans)
     scr.append(b_lab)
     if result["togetans"] != []:
         ucol = 0
-        x_lab = Label(root, text="x")
-        next_lab = Label(root, text=">>")
+        x_lab = Label(buttons_frame, text="x")
+        next_lab = Label(buttons_frame, text=">>")
         scr.append(x_lab)
         scr.append(next_lab)
-        ns_lab2 = Label(root, text="Making new answer matrix:")
+        ns_lab2 = Label(buttons_frame, text="Making new answer matrix:")
         scr.append(ns_lab2)
         ns_lab2.grid(row=mr(), column=ucol)
         r3 = beauty_mat(result["newans"])
-        r3_lab = Label(root, text=r3)
+        r3_lab = Label(buttons_frame, text=r3)
         scr.append(r3_lab)
         nl2 = beauty_mat(re[-1])
-        s2 = Label(root, text=nl2)
+        s2 = Label(buttons_frame, text=nl2)
         scr.append(s2)
         s2.grid(row=urow, column=mc())
         x_lab.grid(row=urow, column=mc())
@@ -495,7 +582,7 @@ def show_elementary2():
         next_lab.grid(row=urow, column=mc())
         r3_lab.grid(row=urow, column=mc())
 
-    ivar_lab = Label(root, text="All variables value: ")
+    ivar_lab = Label(buttons_frame, text="All variables value: ")
     print("all var printing out loud")
     print(result["var"])
     scr.append(ivar_lab)
@@ -505,24 +592,199 @@ def show_elementary2():
     iiv = 1
     vt = ""
     while iv >= 0:
-        vt += "x"+str(iiv)+" = "+str(result["var"][iv])
+        vt += "x"+str(iiv)+" = "+str(round(result["var"][iv], 2))
         if iv != 0:
             vt += ", "
-        if len(vt) > 30:
+        if len(vt) % 50 >= 1:
             vt += "\n"
         iv -= 1
         iiv += 1
-    var_lab = Label(root, text=vt)
+    var_lab = Label(buttons_frame, text=vt)
     scr.append(var_lab)
     var_lab.grid(row=urow, column=mc())
 
     ucol = 0
-    home_btn = Button(root, text="Home", command=lambda: transit("main"))
+    home_btn = Button(root, text="Home",
+                      command=lambda: transit("main"))
     scr.append(home_btn)
     home_btn.grid(row=mr(), column=ucol)
 
-    # for i in range(len())
-    # print(result)
+    # showing area end
+
+    # Add the buttons to the frame.
+    # for i in range(1, ROWS+1):
+    #     for j in range(1, COLS+1):
+    #         button = Label(buttons_frame, padx=7, pady=7,
+    #                        activebackground='orange', text='')
+    #         button.grid(row=i, column=j, sticky='news')
+    # button = Button(buttons_frame, padx=7, pady=7, relief=RIDGE,
+    #                 activebackground='orange', text='[%d, %d]' % (i, j))
+    # button.grid(row=i, column=j, sticky='news')
+
+    # Create canvas window to hold the buttons_frame.
+    canvas.create_window((0, 0), window=buttons_frame, anchor=NW)
+
+    buttons_frame.update_idletasks()  # Needed to make bbox info available.
+    bbox = canvas.bbox(ALL)  # Get bounding box of canvas with Buttons.
+
+    # Define the scrollable region as entire canvas with only the desired
+    # number of rows and columns displayed.
+    w, h = bbox[2]-bbox[1], bbox[3]-bbox[1]
+    dw, dh = int((w/COLS) * COLS_DISP), int((h/ROWS) * ROWS_DISP)
+    canvas.configure(scrollregion=bbox, width=dw, height=dh)
+
+    scr.append(canvas)
+    scr.append(buttons_frame)
+    scr.append(hsbar)
+    scr.append(vsbar)
+    scr.append(master_frame)
+    scr.append(frame1)
+    scr.append(frame2)
+
+    # testing area end
+
+    # # disp consist check
+    # consist_lab = Label(root, text="Checking consistency: ")
+    # consist_lab.grid(row=urow, column=ucol)
+    # scr.append(consist_lab)
+    # # looping consist disp
+    # conlog = result["consistlog"]
+    # for i in range(len(conlog)):
+    #     ct = beauty_mat(conlog[i])
+    #     cl = Label(root, text=ct)
+    #     scr.append(cl)
+    #     cl.grid(row=urow, column=mc())
+    # conresult = Label(root, text=result["consistresult"][0])
+    # scr.append(conresult)
+    # ucol = 0
+    # conresult.grid(row=mr(), column=ucol)
+
+    # if not result["consist"]:
+    #     home_btn = Button(root, text="Home", command=lambda: transit("main"))
+    #     scr.append(home_btn)
+    #     home_btn.grid(row=mr(), column=ucol)
+    #     return
+    # if len(result["freevar"]) > 0:
+    #     # looping var for free var
+
+    #     result_label = Label(root, text="All Variables value: ")
+    #     scr.append(result_label)
+    #     result_label.grid(row=mr(), column=ucol)
+    #     result_text = Label(root, text=result["result_text"])
+    #     scr.append(result_text)
+    #     result_text.grid(row=urow, column=mc())
+    #     home_btn = Button(root, text="Home", command=lambda: transit("main"))
+    #     scr.append(home_btn)
+    #     ucol = 0
+    #     home_btn.grid(row=mr(), column=ucol)
+    #     return
+    # print("generating step and result")
+    # r = result["entire"]
+    # print("all r")
+    # print(r)
+    # onlye = []
+    # onlym = []
+    # onlyr = []
+    # j = 0
+    # elim_lab = Label(root, text="Eliminating using elementary: ")
+    # elim_lab.grid(row=mr(), column=ucol)
+    # scr.append(elim_lab)
+    # urow += 1
+    # for i in range(len(r)):
+    #     nl = beauty_mat(r[i])
+    #     nt = Label(root, text=nl)
+    #     scr.append(nt)
+    #     if j == 0:
+    #         onlym.append(nt)
+    #         j += 1
+    #     elif j == 1:
+    #         onlye.append(nt)
+    #         j += 1
+    #     else:
+    #         onlyr.append(nt)
+    #         j = 0
+    # for m in range(len(onlye)):
+    #     onlye[m].grid(row=mr(), column=ucol)
+    #     x_lab = Label(root, text="x")
+    #     x_lab.grid(row=urow, column=mc())
+    #     scr.append(x_lab)
+    #     onlym[m].grid(row=urow, column=mc())
+    #     next_lab = Label(root, text=">>")
+    #     next_lab.grid(row=urow, column=mc())
+    #     scr.append(next_lab)
+    #     onlyr[m].grid(row=urow, column=mc())
+    #     ucol = 0
+    # ns_lab = Label(root, text="Making E matrix:")
+    # scr.append(ns_lab)
+    # ns_lab.grid(row=mr(), column=ucol)
+    # re = result["entire2"]
+    # jj = 0
+    # for k in range(len(re)):
+    #     nl2 = beauty_mat(re[k])
+    #     s2 = Label(root, text=nl2)
+    #     scr.append(s2)
+    #     if jj == 0:
+    #         s2.grid(row=urow, column=mc())
+    #         jj += 1
+    #     elif jj == 1:
+    #         x_lab = Label(root, text="x")
+    #         next_lab = Label(root, text=">>")
+    #         scr.append(x_lab)
+    #         scr.append(next_lab)
+    #         x_lab.grid(row=urow, column=mc())
+    #         s2.grid(row=urow, column=mc())
+    #         next_lab.grid(row=urow, column=mc())
+    #         jj = 0
+    # print(result["firstans"])
+    # b_ans = beauty_mat(result["firstans"])
+    # b_lab = Label(root, text=b_ans)
+    # scr.append(b_lab)
+    # if result["togetans"] != []:
+    #     ucol = 0
+    #     x_lab = Label(root, text="x")
+    #     next_lab = Label(root, text=">>")
+    #     scr.append(x_lab)
+    #     scr.append(next_lab)
+    #     ns_lab2 = Label(root, text="Making new answer matrix:")
+    #     scr.append(ns_lab2)
+    #     ns_lab2.grid(row=mr(), column=ucol)
+    #     r3 = beauty_mat(result["newans"])
+    #     r3_lab = Label(root, text=r3)
+    #     scr.append(r3_lab)
+    #     nl2 = beauty_mat(re[-1])
+    #     s2 = Label(root, text=nl2)
+    #     scr.append(s2)
+    #     s2.grid(row=urow, column=mc())
+    #     x_lab.grid(row=urow, column=mc())
+    #     b_lab.grid(row=urow, column=mc())
+    #     next_lab.grid(row=urow, column=mc())
+    #     r3_lab.grid(row=urow, column=mc())
+
+    # ivar_lab = Label(root, text="All variables value: ")
+    # print("all var printing out loud")
+    # print(result["var"])
+    # scr.append(ivar_lab)
+    # ucol = 0
+    # ivar_lab.grid(row=mr(), column=ucol)
+    # iv = len(result["var"])-1
+    # iiv = 1
+    # vt = ""
+    # while iv >= 0:
+    #     vt += "x"+str(iiv)+" = "+str(result["var"][iv])
+    #     if iv != 0:
+    #         vt += ", "
+    #     if len(vt) > 30:
+    #         vt += "\n"
+    #     iv -= 1
+    #     iiv += 1
+    # var_lab = Label(root, text=vt)
+    # scr.append(var_lab)
+    # var_lab.grid(row=urow, column=mc())
+
+    # ucol = 0
+    # home_btn = Button(root, text="Home", command=lambda: transit("main"))
+    # scr.append(home_btn)
+    # home_btn.grid(row=mr(), column=ucol)
 
 
 def validate_elementary(all_ent):
@@ -717,7 +979,7 @@ def show_welcome():
     matfunc_btn.grid(row=mr(), column=ucol, sticky='news')
     exit_btn.grid(row=mr(), column=ucol, sticky='news')
     # working area open
-    # # test 2
+    # test 2
     # master_frame = Frame(root, bd=3,
     #                      relief=RIDGE)
     # # master_frame = Frame(root, bg='Light Blue', bd=3,
@@ -809,14 +1071,22 @@ def show_welcome():
     # w, h = bbox[2]-bbox[1], bbox[3]-bbox[1]
     # dw, dh = int((w/COLS) * COLS_DISP), int((h/ROWS) * ROWS_DISP)
     # canvas.configure(scrollregion=bbox, width=dw, height=dh)
-    # # test
-    # # hilabel['yscrollcommand'] = set
-    # # creatorlabel['yscrollcommand'] = set
-    # # matter_btn['yscrollcommand'] = set
-    # # matlist_btn['yscrollcommand'] = set
-    # # matfunc_btn['yscrollcommand'] = set
-    # # exit_btn['yscrollcommand'] = set
-    # # test end
+
+    # scr.append(canvas)
+    # scr.append(buttons_frame)
+    # scr.append(hsbar)
+    # scr.append(vsbar)
+    # scr.append(master_frame)
+    # scr.append(frame1)
+    # scr.append(frame2)
+    # test
+    # hilabel['yscrollcommand'] = set
+    # creatorlabel['yscrollcommand'] = set
+    # matter_btn['yscrollcommand'] = set
+    # matlist_btn['yscrollcommand'] = set
+    # matfunc_btn['yscrollcommand'] = set
+    # exit_btn['yscrollcommand'] = set
+    # test end
     # working area end
     scr.append(hilabel)
     scr.append(creatorlabel)
