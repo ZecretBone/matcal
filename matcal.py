@@ -429,11 +429,13 @@ def show_elementary2():
     ROWS_DISP = 3  # Number of rows to display.
     COLS_DISP = 2  # Number of columns to display.
     test_row = 10
+    print("checking row col")
     if result["allr"] >= result["allc"]:
         test_row = result["allr"]**2
     else:
-        test_row = result["allc"]**2
+        test_row = result["allr"]**2
     ROWS = test_row
+    print("done checking")
     # ROWS, COLS = 10, 6  # Size of grid.
     # ROWS_DISP = 3  # Number of rows to display.
     # COLS_DISP = 4  # Number of columns to display.
@@ -477,10 +479,31 @@ def show_elementary2():
     conresult.grid(row=mr(), column=ucol)
 
     if not result["consist"]:
-        home_btn = Button(buttons_frame, text="Home",
+        home_btn = Button(root, text="Home",
                           command=lambda: transit("main"))
         scr.append(home_btn)
         home_btn.grid(row=mr(), column=ucol)
+
+        canvas.create_window((0, 0), window=buttons_frame, anchor=NW)
+
+        buttons_frame.update_idletasks()  # Needed to make bbox info available.
+        bbox = canvas.bbox(ALL)  # Get bounding box of canvas with Buttons.
+
+        # Define the scrollable region as entire canvas with only the desired
+        # number of rows and columns displayed.
+        # ROWS = 2
+        # COLS = 10
+        w, h = bbox[2]-bbox[1], bbox[3]-bbox[1]
+        dw, dh = int((w/COLS) * COLS_DISP), int((h/ROWS) * ROWS_DISP)
+        canvas.configure(scrollregion=bbox, width=dw, height=dh)
+
+        scr.append(canvas)
+        scr.append(buttons_frame)
+        scr.append(hsbar)
+        scr.append(vsbar)
+        scr.append(master_frame)
+        scr.append(frame1)
+        scr.append(frame2)
         return
     if len(result["freevar"]) > 0:
         # looping var for free var
@@ -488,14 +511,53 @@ def show_elementary2():
         result_label = Label(buttons_frame, text="All Variables value: ")
         scr.append(result_label)
         result_label.grid(row=mr(), column=ucol)
-        result_text = Label(buttons_frame, text=result["result_text"])
+        newresult = ""
+        cot = 0
+        for rt in range(len(result["result_text"])):
+            # print(newresult)
+            if cot >= 20:
+                newresult += "\n"
+                cot = 0
+            newresult += result["result_text"][rt]
+            cot += 1
+
+        result_text = Label(buttons_frame, text=newresult)
         scr.append(result_text)
         result_text.grid(row=urow, column=mc())
-        home_btn = Button(buttons_frame, text="Home",
+        home_btn = Button(root, text="Home",
                           command=lambda: transit("main"))
         scr.append(home_btn)
         ucol = 0
         home_btn.grid(row=mr(), column=ucol)
+
+        canvas.create_window((0, 0), window=buttons_frame, anchor=NW)
+
+        buttons_frame.update_idletasks()  # Needed to make bbox info available.
+        bbox = canvas.bbox(ALL)  # Get bounding box of canvas with Buttons.
+
+        # Define the scrollable region as entire canvas with only the desired
+        # number of rows and columns displayed.
+        if len(newresult) > 1000:
+            ROWS = int(len(newresult)/100)
+        elif len(newresult) > 300:
+            ROWS = int(len(newresult)/20)
+        else:
+            ROWS = 5
+
+        print("make row: ")
+        print(ROWS)
+        # COLS = 10
+        w, h = bbox[2]-bbox[1], bbox[3]-bbox[1]
+        dw, dh = int((w/COLS) * COLS_DISP), int((h/ROWS) * ROWS_DISP)
+        canvas.configure(scrollregion=bbox, width=dw, height=dh)
+
+        scr.append(canvas)
+        scr.append(buttons_frame)
+        scr.append(hsbar)
+        scr.append(vsbar)
+        scr.append(master_frame)
+        scr.append(frame1)
+        scr.append(frame2)
         return
     print("generating step and result")
     r = result["entire"]
@@ -640,6 +702,7 @@ def show_elementary2():
     scr.append(master_frame)
     scr.append(frame1)
     scr.append(frame2)
+    print("done elementary")
 
     # testing area end
 

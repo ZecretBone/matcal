@@ -536,14 +536,20 @@ def initial_element(e, an):
     total = e.shape
     srow = total[0]
     scol = total[1]
+    output["allc"] = scol
+    output["allr"] = srow
     fakeE = np.array(e)
     fakeAN = np.array(an)
     print("row: "+str(srow)+" col: "+str(scol))
     output = isconsist(fakeE, fakeAN, output)
     if not output["consist"]:
+        output["allc"] = scol
+        output["allr"] = srow
         print("done with inconsist")
         return output
     if len(output["freevar"]) > 0:
+        output["allc"] = scol
+        output["allr"] = srow
         print("done with consist but have free var")
         return output
     print("calculating consist and no free var")
