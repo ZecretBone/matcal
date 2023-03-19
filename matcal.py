@@ -96,7 +96,11 @@ def beauty_mat(m):
     for i in range(r):
         for j in range(c):
             # b += str(m[i, j]) + "  "
-            b += str(round(m[i, j], 2)) + "  "
+            if j == 0:
+                b += "| "
+            if round(m[i, j]) > 0:
+                b += "  "
+            b += str(round(m[i, j], 2)) + "  |"
         b += "\n"
     return b
 

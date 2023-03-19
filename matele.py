@@ -84,6 +84,7 @@ def mult(a, b):
 
 def checkzero(e):
     iszero = True
+    e = np.round(e, 30)
     for i in range(len(e[0])-1):
         print("i deep")
         print(i)
@@ -98,7 +99,7 @@ def checkzero(e):
             if e[j, i] != 0:
                 iszero = False
                 d = True
-                print("pos row: "+str(j)+" col: "+str(j) +
+                print("pos row: "+str(j)+" col: "+str(i) +
                       " which is "+str(e[j, i])+"is not zero yet")
                 break
         if d:
@@ -109,13 +110,14 @@ def checkzero(e):
 
 def notzero(e):
     index = []
+    e = np.round(e, 30)
     for i in range(len(e[0])-1):
         print(i)
         tobreak = False
         for j in range(i+1, len(e)):
             if e[j, i] != 0:
                 index = [j, i]
-                print("NOTZERO pos row: "+str(j)+" col: "+str(j) +
+                print("NOTZERO pos row: "+str(j)+" col: "+str(i) +
                       " which is "+str(e[j, i])+"is not zero yet")
                 tobreak = True
                 break
@@ -129,6 +131,7 @@ def swapper(e, i, j, a):
     srow = a["allr"]
     scol = a["allc"]
     m = i
+    e = np.round(e, 30)
     # notswap = True
     # print(e[m, j])
     # return
@@ -153,7 +156,11 @@ def swapper(e, i, j, a):
 
 
 def ridzero(e, i, j, a):
+    e = np.round(e, 30)
+    print("mult tester: ")
+    print(str(e[i, j]/e[j, j]))
     tomult = -1*(e[i, j]/e[j, j])
+    print("my mult : -1*"+str(e[i, j])+"/"+str(e[j, j]))
     print("multer")
     # print(e[i, j])
     # print(e[j, j])
@@ -203,7 +210,7 @@ def square(e, an, answer):
         answer["entire"].append(e)
         e, answer = ridzero(e, x[0], x[1], answer)
         print("NEW")
-        # print(e)
+        print(e)
         print("IDENT")
         print(answer["eye"][-1])
         print("appending entire")
@@ -549,5 +556,6 @@ def initial_element(e, an):
         print("row > col only")
         output = square(e, an, output)
         # result = rectangle(e,an)
-
+    print("all var checker: ")
+    print(output["var"])
     return output
