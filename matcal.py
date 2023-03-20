@@ -463,7 +463,14 @@ def show_inverse():
 def show_elementary2():
     global root, scr, urow, ucol, stage, asset
     root.title("Matrix Calculator: Functions >> Result (Elementary)")
+    firstleft = np.array(asset["current_mat"])
+    firstright = np.array(asset["current_ans"])
     result = elemental(asset["current_mat"], asset["current_ans"])
+    summa = ""
+    summa_ori = "Original Matrix\n"
+    summa_ori += beauty_mat(firstleft)
+    summa_ori += "\nOriginal Matrix\n"
+    summa_ori += beauty_mat(firstright)
 
     # testing area open
 
@@ -550,17 +557,22 @@ def show_elementary2():
     consist_lab = Label(buttons_frame, text="Checking consistency: ")
     consist_lab.grid(row=urow, column=ucol)
     scr.append(consist_lab)
+    summa_cons = "Consistency Validation\n"
     # looping consist disp
     conlog = result["consistlog"]
     for i in range(len(conlog)):
         ct = beauty_mat(conlog[i])
+        if i == len(conlog)-1:
+            summa_cons += ct
         cl = Label(buttons_frame, text=ct)
         scr.append(cl)
         if ucol >= 4:
             urow += 1
             ucol = 0
         cl.grid(row=urow, column=mc())
+
     conresult = Label(buttons_frame, text=result["consistresult"][0])
+    summa_cons += "\n"+str(result["consistresult"][0])
     scr.append(conresult)
     ucol = 0
     conresult.grid(row=mr(), column=ucol)
