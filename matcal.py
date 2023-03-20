@@ -286,6 +286,93 @@ def validate_matfunc(mat_lb):
                              message="Something went wrong")
 
 
+def save_setting(o, c, e, t, d, cat, rr):
+    global root, scr, urow, ucol, stage, asset
+    print("Saving setting...")
+    asset["o_set"] = o.get()
+    asset["cons_set"] = c.get()
+    asset["e_set"] = e.get()
+    asset["t_set"] = t.get()
+    asset["d_set"] = d.get()
+    asset["cat_set"] = cat.get()
+    asset["rr_set"] = rr.get()
+
+    print("go home")
+    transit("main")
+
+
+def init_setting(o, c, e, t, d, cat, rr):
+    global root, scr, urow, ucol, stage, asset
+    o = asset["o_set"]
+    c = asset["cons_set"]
+    e = asset["e_set"]
+    t = asset["t_set"]
+    d = asset["d_set"]
+    cat = asset["cat_set"]
+    rr = asset["rr_set"]
+
+
+def show_setting():
+    global root, scr, urow, ucol, stage, asset
+
+    root.title("Matrix Calculator: Summary Export Setting")
+
+    o_var = IntVar()
+    o_box = Checkbutton(root, text="Original Matrix", variable=o_var)
+
+    con_var = IntVar()
+    con_box = Checkbutton(
+        root, text="Consistency Validation", variable=con_var)
+
+    e_var = IntVar()
+    e_box = Checkbutton(root, text="E Matrix", variable=e_var)
+
+    tri_var = IntVar()
+    tri_box = Checkbutton(root, text="Triangular Matrix", variable=tri_var)
+
+    det_var = IntVar()
+    det_box = Checkbutton(root, text="Determinant", variable=det_var)
+
+    concat_var = IntVar()
+    concat_box = Checkbutton(
+        root, text="Concatenated Matrix", variable=concat_var)
+
+    rref_var = IntVar()
+    rref_box = Checkbutton(root, text="Reduced Row Echelon", variable=rref_var)
+
+    o_var.set(asset["o_set"])
+    con_var.set(asset["cons_set"])
+    e_var.set(asset["e_set"])
+    tri_var.set(asset["t_set"])
+    det_var.set(asset["d_set"])
+    concat_var.set(asset["cat_set"])
+    rref_var.set(asset["rr_set"])
+
+    scr.append(o_box)
+    scr.append(con_box)
+    scr.append(e_box)
+    scr.append(tri_box)
+    scr.append(det_box)
+    scr.append(concat_box)
+    scr.append(rref_box)
+    o_box.grid(row=mr(), column=0, sticky='news')
+    con_box.grid(row=mr(), column=0, sticky='news')
+    e_box.grid(row=mr(), column=0, sticky='news')
+    tri_box.grid(row=mr(), column=0, sticky='news')
+    det_box.grid(row=mr(), column=0, sticky='news')
+    concat_box.grid(row=mr(), column=0, sticky='news')
+    rref_box.grid(row=mr(), column=0, sticky='news')
+
+    save_btn = Button(root, text="Save", command=lambda: save_setting(
+        o_var, con_var, e_var, tri_var, det_var, concat_var, rref_var))
+    scr.append(save_btn)
+    save_btn.grid(row=mr(), column=0, sticky='news')
+
+    home_btn = Button(root, text="Cancel", command=lambda: transit("main"))
+    scr.append(home_btn)
+    home_btn.grid(row=mr(), column=0, sticky='news')
+
+
 def show_inverse():
     global root, scr, urow, ucol, stage, asset
     root.title("Matrix Calculator: Functions >> Result (Inverse)")
@@ -491,7 +578,7 @@ def show_elementary2():
 
         # Define the scrollable region as entire canvas with only the desired
         # number of rows and columns displayed.
-        # ROWS = 2
+        ROWS = 5
         # COLS = 10
         w, h = bbox[2]-bbox[1], bbox[3]-bbox[1]
         dw, dh = int((w/COLS) * COLS_DISP), int((h/ROWS) * ROWS_DISP)
@@ -1034,12 +1121,15 @@ def show_welcome():
     matfunc_btn = Button(root, text="Do Functions",
                          command=lambda: transit("matfunc"))
     exit_btn = Button(root, text="Quit", command=exitProg)
+    setting_btn = Button(root, text="Setting",
+                         command=lambda: transit("setting"))
 
     hilabel.grid(row=urow, column=ucol, sticky='news')
     creatorlabel.grid(row=mr(), column=ucol, sticky='news')
     matter_btn.grid(row=mr(), column=ucol, sticky='news')
     matlist_btn.grid(row=mr(), column=ucol, sticky='news')
     matfunc_btn.grid(row=mr(), column=ucol, sticky='news')
+    setting_btn.grid(row=mr(), column=ucol, sticky='news')
     exit_btn.grid(row=mr(), column=ucol, sticky='news')
     # working area open
     # test 2
@@ -1157,6 +1247,7 @@ def show_welcome():
     scr.append(exit_btn)
     scr.append(matlist_btn)
     scr.append(matfunc_btn)
+    scr.append(setting_btn)
 
 
 def exitProg():
@@ -1238,6 +1329,8 @@ def summon():
         show_elementary2()
     elif stage == "inverse":
         show_inverse()
+    elif stage == "setting":
+        show_setting()
 
 
 if __name__ == '__main__':
@@ -1251,6 +1344,13 @@ if __name__ == '__main__':
     asset["all_mat"] = []
     asset["all_func"] = ["Elementary", "Inverse"]
     stage = "main"
+    asset["o_set"] = 1
+    asset["cons_set"] = 1
+    asset["e_set"] = 1
+    asset["t_set"] = 1
+    asset["d_set"] = 1
+    asset["cat_set"] = 1
+    asset["rr_set"] = 1
 
     # frame = Frame(
     #     root,
