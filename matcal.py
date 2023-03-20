@@ -467,9 +467,9 @@ def show_elementary2():
     firstright = np.array(asset["current_ans"])
     result = elemental(asset["current_mat"], asset["current_ans"])
     summa = ""
-    summa_ori = "Original Matrix\n"
+    summa_ori = "\nOriginal Coefficient Matrix\n"
     summa_ori += beauty_mat(firstleft)
-    summa_ori += "\nOriginal Matrix\n"
+    summa_ori += "\nOriginal B Matrix\n"
     summa_ori += beauty_mat(firstright)
 
     # testing area open
@@ -562,7 +562,7 @@ def show_elementary2():
     conlog = result["consistlog"]
     for i in range(len(conlog)):
         ct = beauty_mat(conlog[i])
-        if i == len(conlog)-1:
+        if i == len(conlog)-2:
             summa_cons += ct
         cl = Label(buttons_frame, text=ct)
         scr.append(cl)
@@ -578,6 +578,14 @@ def show_elementary2():
     conresult.grid(row=mr(), column=ucol)
 
     if not result["consist"]:
+
+        if asset["o_set"] == 1:
+            summa += summa_ori
+        if asset["cons_set"] == 1:
+            summa += summa_cons
+        export_btn = Button(root, text="Export Summary",
+                            command=lambda: pc.copy(summa))
+        scr.append(export_btn)
         home_btn = Button(root, text="Home",
                           command=lambda: transit("main"))
         scr.append(home_btn)
@@ -595,7 +603,7 @@ def show_elementary2():
         w, h = bbox[2]-bbox[1], bbox[3]-bbox[1]
         dw, dh = int((w/COLS) * COLS_DISP), int((h/ROWS) * ROWS_DISP)
         canvas.configure(scrollregion=bbox, width=dw, height=dh)
-
+        pc.copy(summa)
         scr.append(canvas)
         scr.append(buttons_frame)
         scr.append(hsbar)
@@ -606,25 +614,39 @@ def show_elementary2():
         return
     if len(result["freevar"]) > 0:
         # looping var for free var
-
+        summa_free = "\n All Variables Value\n"
         result_label = Label(buttons_frame, text="All Variables value: ")
         scr.append(result_label)
         result_label.grid(row=mr(), column=ucol)
         newresult = ""
         cot = 0
+        summer = 0
         for rt in range(len(result["result_text"])):
             # print(newresult)
             if cot >= 20:
                 newresult += "\n"
                 cot = 0
+            if summer >= 100:
+                summer = 0
+                summa_free += "\n"
+            summa_free += result["result_text"][rt]
             newresult += result["result_text"][rt]
             cot += 1
 
         result_text = Label(buttons_frame, text=newresult)
         scr.append(result_text)
+        summa += summa_free
+        if asset["o_set"] == 1:
+            summa += summa_ori
+        if asset["cons_set"] == 1:
+            summa += summa_cons
         result_text.grid(row=urow, column=mc())
         home_btn = Button(root, text="Home",
                           command=lambda: transit("main"))
+        export_btn = Button(root, text="Export Summary",
+                            command=lambda: pc.copy(summa))
+        scr.append(export_btn)
+        export_btn.grid(row=mr(), column=ucol)
         scr.append(home_btn)
         ucol = 0
         home_btn.grid(row=mr(), column=ucol)
@@ -657,6 +679,7 @@ def show_elementary2():
         scr.append(master_frame)
         scr.append(frame1)
         scr.append(frame2)
+        pc.copy(summa)
         return
     print("generating step and result")
     r = result["entire"]
@@ -670,6 +693,7 @@ def show_elementary2():
     elim_lab.grid(row=mr(), column=ucol)
     scr.append(elim_lab)
     urow += 1
+    summa_tri = "\nTriangular Coefficient Matrix\n"
     for i in range(len(r)):
         nl = beauty_mat(r[i])
         nt = Label(buttons_frame, text=nl)
@@ -694,6 +718,8 @@ def show_elementary2():
         scr.append(next_lab)
         onlyr[m].grid(row=urow, column=mc())
         ucol = 0
+    summa_tri += beauty_mat(r[-1])
+    summa_e = "\nE Matrix\n"
     ns_lab = Label(buttons_frame, text="Making E matrix:")
     scr.append(ns_lab)
     ns_lab.grid(row=mr(), column=ucol)
@@ -718,10 +744,12 @@ def show_elementary2():
             s2.grid(row=urow, column=mc())
             next_lab.grid(row=urow, column=mc())
             jj = 0
+    summa_e += beauty_mat(re[-1])
     print(result["firstans"])
     b_ans = beauty_mat(result["firstans"])
     b_lab = Label(buttons_frame, text=b_ans)
     scr.append(b_lab)
+    summa_newans = "\nNew B Matrix\n"
     if result["togetans"] != []:
         ucol = 0
         x_lab = Label(buttons_frame, text="x")
@@ -732,6 +760,7 @@ def show_elementary2():
         scr.append(ns_lab2)
         ns_lab2.grid(row=mr(), column=ucol)
         r3 = beauty_mat(result["newans"])
+        summa_newans += beauty_mat(result["newans"])
         r3_lab = Label(buttons_frame, text=r3)
         scr.append(r3_lab)
         nl2 = beauty_mat(re[-1])
@@ -744,6 +773,7 @@ def show_elementary2():
         r3_lab.grid(row=urow, column=mc())
 
     ivar_lab = Label(buttons_frame, text="All variables value: ")
+    summa_var = "\nAll Variables Value\n"
     print("all var printing out loud")
     print(result["var"])
     scr.append(ivar_lab)
@@ -754,17 +784,36 @@ def show_elementary2():
     vt = ""
     while iv >= 0:
         vt += "x"+str(iiv)+" = "+str(round(result["var"][iv], 2))
+
         if iv != 0:
             vt += ", "
         if len(vt) % 50 >= 1:
             vt += "\n"
         iv -= 1
         iiv += 1
+    summa_var += vt
     var_lab = Label(buttons_frame, text=vt)
     scr.append(var_lab)
     var_lab.grid(row=urow, column=mc())
 
     ucol = 0
+    summa += summa_var
+    if asset["o_set"] == 1:
+        summa += summa_ori
+    if asset["cons_set"] == 1:
+        summa += summa_cons
+    if asset["t_set"] == 1:
+        summa += summa_tri
+    if asset["e_set"] == 1:
+        summa += summa_e
+    if asset["t_set"] == 1:
+        summa += summa_newans
+
+    export_btn = Button(root, text="Export Summary",
+                        command=lambda: pc.copy(summa))
+    scr.append(export_btn)
+    export_btn.grid(row=mr(), column=ucol)
+    pc.copy(summa)
     home_btn = Button(root, text="Home",
                       command=lambda: transit("main"))
     scr.append(home_btn)
