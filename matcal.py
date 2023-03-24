@@ -145,6 +145,14 @@ def random_fixedmat(all_ent):
             entry.insert('end', str(newf))
 
 
+def random_ansmat(all_ent):
+    global root, scr, urow, ucol, stage, asset
+    for c, entry in enumerate(all_ent):
+        newf = round(random.uniform(-100, 100), 2)
+        entry.delete(0, END)
+        entry.insert('end', str(newf))
+
+
 def show_matlist():
     global root, scr, urow, ucol, stage, asset
     root.title("Matrix Calculator: Matrix List")
@@ -1161,13 +1169,18 @@ def show_elementary():
         scr.append(new_ent)
         all_ent.append(new_ent)
 
+    random_btn = Button(root, text="Random Answer",
+                        command=lambda: random_ansmat(all_ent))
     solve_btn = Button(root, text="Solve",
                        command=lambda: validate_elementary(all_ent))
     cancel_btn = Button(root, text="Cancel", command=lambda: transit("main"))
     scr.append(solve_btn)
     scr.append(cancel_btn)
+    scr.append(random_btn)
+    random_btn.grid(row=mr(), column=0, sticky='news')
     solve_btn.grid(row=mr(), column=0, sticky='news')
     cancel_btn.grid(row=mr(), column=0, sticky='news')
+
     # add another input
     # result = elemental(asset["current_mat"])
     # print(result)
