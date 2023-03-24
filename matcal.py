@@ -319,7 +319,7 @@ def show_setting():
 
     o_var = IntVar()
     o_box = Checkbutton(root, text="Original Matrix", variable=o_var)
-
+    EL = Label(root, text=">> Elementary Setting")
     con_var = IntVar()
     con_box = Checkbutton(
         root, text="Consistency Validation", variable=con_var)
@@ -329,7 +329,7 @@ def show_setting():
 
     tri_var = IntVar()
     tri_box = Checkbutton(root, text="Triangular Matrix", variable=tri_var)
-
+    IL = Label(root, text=">> Inverse Setting")
     det_var = IntVar()
     det_box = Checkbutton(root, text="Determinant", variable=det_var)
 
@@ -355,10 +355,14 @@ def show_setting():
     scr.append(det_box)
     scr.append(concat_box)
     scr.append(rref_box)
+    scr.append(EL)
+    scr.append(IL)
     o_box.grid(row=mr(), column=0, sticky='news')
+    EL.grid(row=mr(), column=0, sticky='news')
     con_box.grid(row=mr(), column=0, sticky='news')
     e_box.grid(row=mr(), column=0, sticky='news')
     tri_box.grid(row=mr(), column=0, sticky='news')
+    IL.grid(row=mr(), column=0, sticky='news')
     det_box.grid(row=mr(), column=0, sticky='news')
     concat_box.grid(row=mr(), column=0, sticky='news')
     rref_box.grid(row=mr(), column=0, sticky='news')
@@ -376,19 +380,80 @@ def show_setting():
 def show_inverse():
     global root, scr, urow, ucol, stage, asset
     root.title("Matrix Calculator: Functions >> Result (Inverse)")
+    newm = np.array(asset["current_mat"])
+    tt = newm.shape
+    ar = tt[0]
+    ac = tt[1]
     result = inverse(asset["current_mat"])
     print(result)
     # checking if its rectangle
+    summa = ""
+
     if result["reason"] == "Since it is rectangle matrix so it is not invertible":
+        summa += "Since it is rectangle matrix so it is not invertible"
+        if asset["o_set"] == 1:
+            summa += "\n Original Matrix: \n"
+            summa += beauty_mat(newm)
         r_label = Label(root, text=result["reason"])
         scr.append(r_label)
         r_label.grid(row=mr(), column=ucol)
+
+        pc.copy(summa)
+        export_btn = Button(root, text="Export Summary",
+                            command=lambda: pc.copy(summa))
+        scr.append(export_btn)
+        export_btn.grid(row=mr(), column=ucol)
         home_btn = Button(root, text="Home", command=lambda: transit("main"))
         scr.append(home_btn)
         home_btn.grid(row=mr(), column=ucol)
+
         return
+
+    master_frame = Frame(root, bd=3,
+                         relief=RIDGE)
+    # master_frame = Frame(root, bg='Light Blue', bd=3,
+    #                      relief=RIDGE)
+    master_frame.grid(sticky=NSEW)
+    master_frame.columnconfigure(0, weight=1)
+
+    frame1 = Frame(master_frame, bg='Green', bd=2, relief=FLAT)
+    frame1.grid(row=1, column=0, sticky=NW)
+
+    frame2 = Frame(master_frame, bd=2, relief=FLAT)
+    frame2.grid(row=3, column=0, sticky=NW)
+
+    # Add a canvas in that frame.
+    canvas = Canvas(frame2, bg='Yellow')
+    canvas.grid(row=0, column=0)
+
+    # Create a vertical scrollbar linked to the canvas.
+    vsbar = Scrollbar(frame2, orient=VERTICAL, command=canvas.yview)
+    vsbar.grid(row=0, column=1, sticky=NS)
+    canvas.configure(yscrollcommand=vsbar.set)
+
+    # Create a horizontal scrollbar linked to the canvas.
+    hsbar = Scrollbar(frame2, orient=HORIZONTAL, command=canvas.xview)
+    hsbar.grid(row=1, column=0, sticky=EW)
+    canvas.configure(xscrollcommand=hsbar.set)
+
+    # Create a frame on the canvas to contain the grid of buttons.
+    buttons_frame = Frame(canvas)
+
+    ROWS, COLS = 200, 10  # Size of grid.
+    ROWS_DISP = 3  # Number of rows to display.
+    COLS_DISP = 2  # Number of columns to display.
+    test_row = 10
+
+    print("checking row col")
+    if ar >= ac:
+        test_row = ar**2
+    else:
+        test_row = ar**2
+    ROWS = test_row
+    print("done checking")
     # check det
-    det_lab = Label(root, text="Finding Determinant: ")
+    sumdet = "\nDeterminant Triangular Form: \n"
+    det_lab = Label(buttons_frame, text="Finding Determinant: ")
     det_lab.grid(row=urow, column=ucol)
     scr.append(det_lab)
     # disp detlog
@@ -399,42 +464,73 @@ def show_inverse():
             urow += 1
             ucol = 0
         detlog = beauty_mat(result["detlog"][i])
-        det_log = Label(root, text=detlog)
+        det_log = Label(buttons_frame, text=detlog)
         scr.append(det_log)
         det_log.grid(row=urow, column=mc())
-
+    sumdet += beauty_mat(result["detlog"][-1])
     # disp det result
     urow += 1
     ucol = 0
-    det_result = Label(root, text="Determinant Result: ")
+    sumdet += "\nDeterminant Result: \n"
+    det_result = Label(buttons_frame, text="Determinant Result: ")
     det_result.grid(row=urow, column=ucol)
     scr.append(det_result)
-    det_result2 = Label(root, text=result["detresult"])
+    sumdet += result["detresult"]
+    det_result2 = Label(buttons_frame, text=result["detresult"])
     det_result2.grid(row=urow, column=mc())
     scr.append(det_result2)
     if not result["invertible"]:
         ucol = 0
-        r_label = Label(root, text=result["reason"])
+        summa += result["reason"]
+        r_label = Label(buttons_frame, text=result["reason"])
         scr.append(r_label)
         r_label.grid(row=mr(), column=ucol)
+        if asset["o_set"] == 1:
+            summa += "\n Original Matrix: \n"
+            summa += beauty_mat(newm)
+        if asset["d_set"] == 1:
+            summa += sumdet
+        pc.copy(summa)
+        export_btn = Button(root, text="Export Summary",
+                            command=lambda: pc.copy(summa))
+        scr.append(export_btn)
+        export_btn.grid(row=mr(), column=ucol)
         home_btn = Button(root, text="Home", command=lambda: transit("main"))
         scr.append(home_btn)
         home_btn.grid(row=mr(), column=ucol)
+
+        canvas.create_window((0, 0), window=buttons_frame, anchor=NW)
+
+        buttons_frame.update_idletasks()  # Needed to make bbox info available.
+        bbox = canvas.bbox(ALL)  # Get bounding box of canvas with Buttons.
+        w, h = bbox[2]-bbox[1], bbox[3]-bbox[1]
+        dw, dh = int((w/COLS) * COLS_DISP), int((h/ROWS) * ROWS_DISP)
+        canvas.configure(scrollregion=bbox, width=dw, height=dh)
+        scr.append(canvas)
+        scr.append(buttons_frame)
+        scr.append(hsbar)
+        scr.append(vsbar)
+        scr.append(master_frame)
+        scr.append(frame1)
+        scr.append(frame2)
         return
 
     # disp +E
     urow += 1
     ucol = 0
-    E_result = Label(root, text="Concatenate with Identity matrix: ")
+    sume = "\nConcatenate with Identity matrix: \n"
+    E_result = Label(buttons_frame, text="Concatenate with Identity matrix: ")
     E_result.grid(row=urow, column=ucol)
     scr.append(E_result)
-    E_result2 = Label(root, text=beauty_mat(result["invlog"][0]))
+    sume += beauty_mat(result["invlog"][0])
+    E_result2 = Label(buttons_frame, text=beauty_mat(result["invlog"][0]))
     E_result2.grid(row=urow, column=mc())
     scr.append(E_result2)
     # disp rref
     urow += 1
     ucol = 0
-    RE_result = Label(root, text="Doing Reduced Row Echelon Form: ")
+    sumrref = "\nReduced Row Echelon Form:\n"
+    RE_result = Label(buttons_frame, text="Doing Reduced Row Echelon Form: ")
     RE_result.grid(row=urow, column=ucol)
     scr.append(RE_result)
     for i in range(len(result["rreflog"])):
@@ -442,22 +538,54 @@ def show_inverse():
             urow += 1
             ucol = 0
         rrlog = beauty_mat(result["rreflog"][i])
-        rr_log = Label(root, text=rrlog)
+        rr_log = Label(buttons_frame, text=rrlog)
         scr.append(rr_log)
         rr_log.grid(row=urow, column=mc())
     # disp final inv
+    sumrref += beauty_mat(result["rreflog"][-1])
     urow += 1
     ucol = 0
-    IE_result = Label(root, text="Inversed Matrix: ")
+    summa += "\n Inversed Matrix: \n"
+    IE_result = Label(buttons_frame, text="Inversed Matrix: ")
     IE_result.grid(row=urow, column=ucol)
     scr.append(IE_result)
-    IE_result2 = Label(root, text=beauty_mat(result["inverted"]))
+    IE_result2 = Label(buttons_frame, text=beauty_mat(result["inverted"]))
+    summa += beauty_mat(result["inverted"])
     IE_result2.grid(row=urow, column=mc())
     scr.append(IE_result2)
     ucol = 0
+
+    if asset["o_set"] == 1:
+        summa += "\n Original Matrix: \n"
+        summa += beauty_mat(newm)
+    if asset["d_set"] == 1:
+        summa += sumdet
+    if asset["cat_set"] == 1:
+        summa += sume
+    if asset["rr_set"] == 1:
+        summa += sumrref
+    pc.copy(summa)
+    export_btn = Button(root, text="Export Summary",
+                        command=lambda: pc.copy(summa))
+    scr.append(export_btn)
+    export_btn.grid(row=mr(), column=ucol)
     home_btn = Button(root, text="Home", command=lambda: transit("main"))
     scr.append(home_btn)
     home_btn.grid(row=mr(), column=ucol)
+
+    canvas.create_window((0, 0), window=buttons_frame, anchor=NW)
+    buttons_frame.update_idletasks()  # Needed to make bbox info available.
+    bbox = canvas.bbox(ALL)  # Get bounding box of canvas with Buttons.
+    w, h = bbox[2]-bbox[1], bbox[3]-bbox[1]
+    dw, dh = int((w/COLS) * COLS_DISP), int((h/ROWS) * ROWS_DISP)
+    canvas.configure(scrollregion=bbox, width=dw, height=dh)
+    scr.append(canvas)
+    scr.append(buttons_frame)
+    scr.append(hsbar)
+    scr.append(vsbar)
+    scr.append(master_frame)
+    scr.append(frame1)
+    scr.append(frame2)
 
 
 def show_elementary2():
