@@ -268,6 +268,13 @@ def show_fixedmat_two():
     scr.append(random_btn)
 
 
+def paste_ansmat(all_ent):
+    d = 1
+    # try convert mat
+    # loop all_ent
+    # paste each element in ent
+
+
 def validate_matfunc(mat_lb):
     global root, scr, urow, ucol, stage, asset
     cm = mat_lb.get(ANCHOR)
