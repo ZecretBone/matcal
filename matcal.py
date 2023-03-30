@@ -89,7 +89,11 @@ def export_mat(m):
 def beauty_mat(m):
     b = ""
     rc = m.shape
-    round(m, 2)
+    print("test d")
+    print(0)
+    print(round(0, 2))
+    print(len(str(round(0, 2))))
+    np.round(m, 2)
     r = rc[0]
     c = rc[1]
     mx = np.max(m)
@@ -109,7 +113,8 @@ def beauty_mat(m):
                 b += " "
             # if round(m[i, j]) > 0:
             #     b += "  "
-
+            if len(str(round(m[i, j], 2))) == len(str(m[i, j])):
+                b += "  "
             b += " "*(amx - len(str(round(m[i, j], 2))))
             b += str(round(m[i, j], 2)) + "  |"
         b += "\n"
