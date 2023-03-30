@@ -89,8 +89,15 @@ def export_mat(m):
 def beauty_mat(m):
     b = ""
     rc = m.shape
+    round(m, 2)
     r = rc[0]
     c = rc[1]
+    mx = np.max(m)
+    mn = np.min(m)
+    if len(str(round(mx, 2))) > len(str(round(mn, 2))):
+        amx = len(str(round(mx, 2)))
+    else:
+        amx = len(str(round(mn, 2)))
     # b = m
     # export matrix
     for i in range(r):
@@ -98,8 +105,12 @@ def beauty_mat(m):
             # b += str(m[i, j]) + "  "
             if j == 0:
                 b += "| "
-            if round(m[i, j]) > 0:
-                b += "  "
+            else:
+                b += " "
+            # if round(m[i, j]) > 0:
+            #     b += "  "
+
+            b += " "*(amx - len(str(round(m[i, j], 2))))
             b += str(round(m[i, j], 2)) + "  |"
         b += "\n"
     return b
@@ -861,7 +872,10 @@ def show_elementary2():
         scr.append(next_lab)
         onlyr[m].grid(row=urow, column=mc())
         ucol = 0
-    summa_tri += beauty_mat(r[-1])
+    if len(onlye) > 0:
+        summa_tri += beauty_mat(r[-1])
+    else:
+        summa_tri += "Original Matrix is already Triangular Matrix"
     summa_e = "\nE Matrix\n"
     ns_lab = Label(buttons_frame, text="Making E matrix:")
     scr.append(ns_lab)
@@ -887,7 +901,10 @@ def show_elementary2():
             s2.grid(row=urow, column=mc())
             next_lab.grid(row=urow, column=mc())
             jj = 0
-    summa_e += beauty_mat(re[-1])
+    if len(re) > 0:
+        summa_e += beauty_mat(re[-1])
+    else:
+        summa_e += "Original Matrix is already Triangular Matrix so no use of E Matrix"
     print(result["firstans"])
     b_ans = beauty_mat(result["firstans"])
     b_lab = Label(buttons_frame, text=b_ans)

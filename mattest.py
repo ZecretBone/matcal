@@ -60,6 +60,11 @@ if __name__ == '__main__':
     an = np.array(
         np.mat('[5.0;4.0;1.0;2.0;5.0;6.0;8.0;4.0;11.0;25.0;55.0;1.0;5.0;4.0;8.0]'))
 
+    b = np.array(
+        np.mat('[8]'))
+    an = np.array(
+        np.mat('[9]'))
+
     print(str(b))
 
     print("init MAT")
