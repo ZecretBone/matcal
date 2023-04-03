@@ -7,6 +7,40 @@ import pyperclip as pc
 from matfunc import *
 
 
+def ansvalid_pastemat(allent):
+    global root, scr, urow, ucol, stage, asset
+    p = str(pc.paste())
+    try:
+        newm = np.array(np.mat(p))
+        t = newm.shape
+        tr = t[0]
+        tc = t[1]
+        if tc != 1:
+            print("err")
+            messagebox.showerror(title="Paste Matrix Error",
+                                 message="Invalid number of column, please check your clipboard value")
+            return
+        if tr <= 0 or tr > len(allent):
+            print("err")
+            messagebox.showerror(title="Paste Matrix Error",
+                                 message="Invalid number of row, please check your clipboard value")
+            return
+        # loop allent to paste each index
+        i = 0
+        while i < len(allent):
+            # e = allent[i].get("1.0", END)
+            allent[i].delete(0, END)
+            allent[i].insert('end', str(newm[i, 0]))
+            i += 1
+        return
+
+    except:
+        print('ans paste err')
+        messagebox.showerror(title="Paste Matrix Error",
+                             message="Invalid input, please check your clipboard value")
+        return
+
+
 def save_pastemat(cd, rd, ent, name):
     global root, scr, urow, ucol, stage, asset
     if name.get() == "":
@@ -1200,13 +1234,17 @@ def show_elementary():
 
     random_btn = Button(root, text="Random Answer",
                         command=lambda: random_ansmat(all_ent))
+    pastemat_btn = Button(root, text="Paste Answer",
+                          command=lambda: ansvalid_pastemat(all_ent))
     solve_btn = Button(root, text="Solve",
                        command=lambda: validate_elementary(all_ent))
     cancel_btn = Button(root, text="Cancel", command=lambda: transit("main"))
     scr.append(solve_btn)
     scr.append(cancel_btn)
     scr.append(random_btn)
+    scr.append(pastemat_btn)
     random_btn.grid(row=mr(), column=0, sticky='news')
+    pastemat_btn.grid(row=mr(), column=0, sticky='news')
     solve_btn.grid(row=mr(), column=0, sticky='news')
     cancel_btn.grid(row=mr(), column=0, sticky='news')
 
