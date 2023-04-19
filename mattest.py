@@ -65,6 +65,10 @@ if __name__ == '__main__':
     an = np.array(
         np.mat('[9]'))
 
+    b = np.array(np.mat('[1 2 1; 2 -1 1; 4 3 3; 2 -1 3]'))
+    an = np.array(
+        np.mat('[1; 2; 4; 5]'))
+
     print(str(b))
 
     print("init MAT")

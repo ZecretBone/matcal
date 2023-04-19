@@ -38,6 +38,11 @@ def varback(x, y, a):
             equalto -= a["var"][j]*x[xr, xc]
             xc -= 1
             j += 1
+        print("bug check")
+        print(equalto)
+        print(x[xr, xc])
+        print(equalto/x[xr, xc])
+
         newv = equalto/x[xr, xc]
         a["var"].append(newv)
         i += 1
@@ -85,13 +90,16 @@ def mult(a, b):
 def checkzero(e):
     iszero = True
     e = np.round(e, 30)
-    for i in range(len(e[0])-1):
+    print("checkzero len 0 - before" + str(len(e[0])-1))
+    i = 0
+    while i <= len(e[0])-1:
         print("i deep")
         print(i)
         # print(len(e[0])-2)
         print("end i")
         d = False
-        for j in range(i+1, len(e)):
+        j = i+1
+        while j <= len(e)-1:
             print("j deep ")
             print(j)
             # print(len(e)-1)
@@ -102,7 +110,10 @@ def checkzero(e):
                 print("pos row: "+str(j)+" col: "+str(i) +
                       " which is "+str(e[j, i])+"is not zero yet")
                 break
+            j += 1
+        i += 1
         if d:
+            print("d breaker")
             break
 
     return iszero
@@ -111,18 +122,37 @@ def checkzero(e):
 def notzero(e):
     index = []
     e = np.round(e, 30)
-    for i in range(len(e[0])-1):
+    print("notzero len 0 - before" + str(len(e[0])-1))
+    # for i in range(len(e[0])-1):
+    #     print(i)
+    #     tobreak = False
+    #     for j in range(i+1, len(e)):
+    #         if e[j, i] != 0:
+    #             index = [j, i]
+    #             print("NOTZERO pos row: "+str(j)+" col: "+str(i) +
+    #                   " which is "+str(e[j, i])+"is not zero yet")
+    #             tobreak = True
+    #             break
+    #     if tobreak:
+    #         print("tobreak breaker")
+    #         break
+    i = 0
+    while i <= len(e[0])-1:
         print(i)
         tobreak = False
-        for j in range(i+1, len(e)):
+        j = i + 1
+        while j <= len(e)-1:
             if e[j, i] != 0:
                 index = [j, i]
                 print("NOTZERO pos row: "+str(j)+" col: "+str(i) +
                       " which is "+str(e[j, i])+"is not zero yet")
                 tobreak = True
                 break
+            j += 1
         if tobreak:
+            print("tobreak breaker")
             break
+        i += 1
 
     return index
 
@@ -135,22 +165,46 @@ def swapper(e, i, j, a):
     # notswap = True
     # print(e[m, j])
     # return
-    while e[m, j] == 0 or srow <= i:
-        swap = False
-        if e[m, j] != 0:
-            # e[(i, m)] = e[(m, i)]
-            # emerge row,col in eye
-            y = np.eye(srow)
-            y[(i, m)] = y[(m, i)]
-            a["eye"].append(y)
-            e = np.matmul(y, e)
-            print("swapped")
-            swap = True
-            print(e)
-            break
-        m += 1
-        if swap:
-            break
+    print("row swapping check")
+    print("starting at row: "+str(m)+" col: "+str(j))
+    if e[i, j] == 0:
+        print("have to swap")
+        sw = False
+        while m < srow:
+            print("s check at row: "+str(m)+" value: "+str(e[m, j]))
+            if e[m, j] != 0:
+                print("found row to swap")
+                y = np.eye(srow)
+                y[[i, m]] = y[[m, i]]
+                a["eye"].append(y)
+                e = np.matmul(y, e)
+                print("swapped")
+                sw = True
+                print(e)
+
+            if sw:
+                print("row swapped break")
+                break
+            m += 1
+    # while e[m, j] == 0 or srow <= i:
+    #     swap = False
+    #     print("s check at row: "+str(m)+" value: "+str(e[m, j]))
+
+    #     if e[m, j] != 0:
+    #         # e[(i, m)] = e[(m, i)]
+    #         # emerge row,col in eye
+    #         y = np.eye(srow)
+    #         y[[i, m]] = y[[m, i]]
+    #         a["eye"].append(y)
+    #         e = np.matmul(y, e)
+    #         print("swapped")
+    #         swap = True
+    #         print(e)
+    #         break
+    #     m += 1
+    #     if swap:
+    #         print("row swapped break")
+    #         break
 
     return e, a
 
@@ -288,13 +342,20 @@ def isconsist(e, a, carrier):
             gather = [False, False, False]
             j1 = tr
             print("checking row,col: "+str(j1)+", "+str(i))
+            print(e)
+            print(e[j1, i])
             if 0 == e[j1, i]:
                 gather[0] = True
                 while j1 < srow:
                     gather[1] = False
                     if 0 != e[j1, i]:
                         y = np.eye(srow)
-                        y[(j1, tr)] = y[(tr, j1)]
+                        print("j1 and tr")
+                        print(j1)
+                        print(tr)
+                        print(y)
+                        y[[j1, tr]] = y[[tr, j1]]
+                        print(y)
                         carrier["eye"].append(y)
                         e = np.matmul(y, e)
                         a = np.matmul(y, a)
@@ -396,18 +457,8 @@ def isconsist(e, a, carrier):
             break
         k += 1
     print("check consistency done")
+    print("combine text")
 
-    consist_text = "It is "
-    if carrier["consist"]:
-        consist_text += "consistent"
-        if len(carrier["freevar"]) == 1:
-            consist_text += " but have 1 free variable"
-        elif len(carrier["freevar"]) > 1:
-            consist_text += " but have " + \
-                str(len(carrier["freevar"]))+" free variables"
-    else:
-        consist_text += "inconsistent"
-    carrier["consistresult"].append(consist_text)
     print("check all no var")
     i = 0
     while i < scol:
@@ -420,6 +471,41 @@ def isconsist(e, a, carrier):
         if allzero:
             carrier["novar"].append(i)
         i += 1
+    consist_text = "It is "
+    if carrier["consist"]:
+        consist_text += "consistent"
+        if len(carrier["freevar"]) == 1:
+            if len(carrier["novar"]) == 1:
+                consist_text += " but have 1 free variable that is zero"
+            else:
+                consist_text += " but have 1 free variable"
+        elif len(carrier["freevar"]) > 1:
+            manys = 0
+            if len(carrier["freevar"]) - len(carrier["novar"]) > 0:
+                manys = 1
+                consist_text += " but have " + \
+                    str(len(carrier["freevar"]) -
+                        len(carrier["novar"]))+" free variables"
+
+            if len(carrier["novar"]) > 1:
+                if manys == 1:
+                    consist_text += " and "
+                else:
+                    consist_text += " but have "
+                consist_text += str(len(carrier["novar"])) + \
+                    " variables that are zero"
+            if len(carrier["novar"]) == 1:
+                if manys == 1:
+                    consist_text += " and "
+                else:
+                    consist_text += " but have "
+                consist_text += str(len(carrier["novar"])) + \
+                    " variable that is zero"
+            # consist_text += " but have " + \
+            #     str(len(carrier["freevar"]))+" free variables"
+    else:
+        consist_text += "inconsistent"
+    carrier["consistresult"].append(consist_text)
 
     print("isconsist: "+str(carrier["consist"]))
     print("freevar: "+str(carrier["freevar"]))
@@ -472,7 +558,11 @@ def isconsist(e, a, carrier):
                         print("current var = 0")
                     else:
                         carrier["result_text"] += "-"
+                        if e[o, ci] < 0:
+                            carrier["result_text"] += "("
                         carrier["result_text"] += str(e[o, ci])
+                        if e[o, ci] < 0:
+                            carrier["result_text"] += ")"
                         carrier["result_text"] += "("
                         carrier["result_text"] += str(getvar(
                             carrier["vardict"], ci))

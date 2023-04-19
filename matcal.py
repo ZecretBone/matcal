@@ -53,7 +53,7 @@ def save_pastemat(cd, rd, ent, name):
     try:
         newm = np.array(np.mat(e))
         print(newm)
-        print(newm[1, 2])
+        # print(newm[1, 2])
         newname = namer_fixedmat(name.get())
         print(newname)
         asset["all_mat"].append([newname, newm])
