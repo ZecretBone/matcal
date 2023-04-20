@@ -119,6 +119,10 @@ def checkzero(e):
     return iszero
 
 
+def rrefs(e, a):
+    print("rref time")
+
+
 def notzero(e):
     index = []
     e = np.round(e, 30)
