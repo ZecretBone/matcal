@@ -119,8 +119,78 @@ def checkzero(e):
     return iszero
 
 
-def rrefs(e, a):
+def rrefs(c):
     print("rref time")
+    em = np.array(c["ecopy"])
+    am = np.array(c["acopy"])
+    em = np.round(em, 30)
+    am = np.round(am, 30)
+    c["freeindex"] = []
+    c["allval"] = []
+    total = em.shape
+    srow = total[0]
+    scol = total[1]
+
+    i = 0
+    nr = 0
+    while i < scol:
+        print("running col")
+        if em[nr, i] == 0:
+            jj = nr
+            swapped = False
+            while jj < srow:
+                if em[jj, i] != 0:
+                    swapped = True
+                    y = np.eye(srow)
+                    y[(nr, jj)] = y[(jj, nr)]
+                    em = np.matmul(y, em)
+                    am = np.matmul(y, am)
+                    print("rref MAT: ", em)
+                    print("rref ANS MAT: ", am)
+                if swapped:
+                    break
+                jj += 1
+            # add free var index
+            c["freeindex"].append(i)
+        j = nr+1
+        while j < srow:
+            if em[j, i] != 0:
+                tomult = (em[j, i]/em[nr, i])
+                print(tomult)
+                em[j] = em[j]-(em[nr]*tomult)
+                am[j] = am[j]-(am[nr]*tomult)
+                print("rref MAT: ", em)
+                print("rref ANS MAT: ", am)
+            j += 1
+        if em[nr, i] != 1:
+            em[nr] = em[nr]/em[nr, i]
+            am[nr] = am[nr]/em[nr, i]
+            print("rref MAT: ", em)
+            print("rref ANS MAT: ", am)
+        nr += 1
+        i += 1
+    i = int((scol/2)-1)
+    nr = srow-1
+    while i > -1:
+        if i not in c["freeindex"]:
+            j = nr-1
+            while j > -1:
+                if em[j, i] != 0:
+                    tomult = (em[j, i]/em[nr, i])
+                    print(tomult)
+                    em[j] = em[j]-(em[nr]*tomult)
+                    am[j] = am[j]-(am[nr]*tomult)
+                    print("rref MAT: ", em)
+                    print("rref ANS MAT: ", am)
+                j -= 1
+        nr -= 1
+        i -= 1
+    print("end rrefs")
+
+    print("finding vars val and free vars")
+
+    print("returning rrefs result with var val")
+    return c
 
 
 def notzero(e):
@@ -476,6 +546,9 @@ def isconsist(e, a, carrier):
             carrier["novar"].append(i)
         i += 1
     consist_text = "It is "
+    if len(carrier["freevar"]) > 0:
+        print("doing rref for deep values")
+        carrier = rrefs(carrier)
     if carrier["consist"]:
         consist_text += "consistent"
         if len(carrier["freevar"]) == 1:
@@ -627,6 +700,10 @@ def rectangle(e):
 def initial_element(e, an):
     print(e)
     output = {}
+    firstecopy = np.array(e)
+    output["ecopy"] = firstecopy
+    firstacopy = np.array(an)
+    output["acopy"] = firstacopy
     total = e.shape
     srow = total[0]
     scol = total[1]
