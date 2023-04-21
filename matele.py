@@ -52,8 +52,9 @@ def varback(x, y, a):
 
 def getfree(n):
     v = ""
-    free = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l"]
-    if n >= 12:
+    free = ["a", "b", "c", "d", "e", "f", "g", "h",
+            "i", "j", "k", "l", "m", "n", "o", "p"]
+    if n >= 16:
         v = "r"*n
     else:
         v = free[n]
@@ -120,13 +121,14 @@ def checkzero(e):
 
 
 def rrefs(c):
-    print("rref time")
+    print("rref time hello world")
     em = np.array(c["ecopy"])
     am = np.array(c["acopy"])
     em = np.round(em, 30)
     am = np.round(am, 30)
     c["freeindex"] = []
     c["allval"] = []
+    c["rowindex"] = {}
     total = em.shape
     srow = total[0]
     scol = total[1]
@@ -134,7 +136,9 @@ def rrefs(c):
     i = 0
     nr = 0
     while i < scol:
-        print("running col")
+        print("running col rref index: ", i)
+        skip = 1
+        skipped = 0
         if em[nr, i] == 0:
             jj = nr
             swapped = False
@@ -148,34 +152,46 @@ def rrefs(c):
                     print("rref MAT: ", em)
                     print("rref ANS MAT: ", am)
                 if swapped:
+                    skip = 0
                     break
                 jj += 1
-            # add free var index
-            c["freeindex"].append(i)
-        j = nr+1
-        while j < srow:
-            if em[j, i] != 0:
-                tomult = (em[j, i]/em[nr, i])
-                print(tomult)
-                em[j] = em[j]-(em[nr]*tomult)
-                am[j] = am[j]-(am[nr]*tomult)
+            if skip == 1:
+                # add free var index
+                skipped = 1
+                c["freeindex"].append(i)
+        if skipped == 0:
+            j = nr+1
+            while j < srow:
+                if em[j, i] != 0:
+                    print("multing: ", em[j, i], " / ", em[nr, i])
+                    tomult = (em[j, i]/em[nr, i])
+                    print(tomult)
+                    em[j] = em[j]-(em[nr]*tomult)
+                    am[j] = am[j]-(am[nr]*tomult)
+                    print("rref MAT: ", em)
+                    print("rref ANS MAT: ", am)
+                j += 1
+            if em[nr, i] != 1:
+                em[nr] = em[nr]/em[nr, i]
+                am[nr] = am[nr]/em[nr, i]
                 print("rref MAT: ", em)
                 print("rref ANS MAT: ", am)
-            j += 1
-        if em[nr, i] != 1:
-            em[nr] = em[nr]/em[nr, i]
-            am[nr] = am[nr]/em[nr, i]
-            print("rref MAT: ", em)
-            print("rref ANS MAT: ", am)
-        nr += 1
+
+            c["rowindex"][i] = nr
+            nr += 1
         i += 1
-    i = int((scol/2)-1)
+    i = int((scol)-1)
     nr = srow-1
+    print("running down to up")
     while i > -1:
         if i not in c["freeindex"]:
+            nr = c["rowindex"][i]
             j = nr-1
             while j > -1:
                 if em[j, i] != 0:
+                    print("above col: ", i, " row: ", j)
+                    print("below col: ", i, " row: ", nr)
+                    print("multing: ", em[j, i], " / ", em[nr, i])
                     tomult = (em[j, i]/em[nr, i])
                     print(tomult)
                     em[j] = em[j]-(em[nr]*tomult)
@@ -188,7 +204,46 @@ def rrefs(c):
     print("end rrefs")
 
     print("finding vars val and free vars")
+    print(em)
+    print(am)
+    i = scol-1
+    while i > -1:
+        print("running col finding var")
+        if i in c["freeindex"]:
+            print("setting free var")
+            fv = getfree(i)
+            c["allval"].append(fv)
+        else:
+            print("setting non free var")
+            nv = ""
+            idx = c["rowindex"][i]
+            ans = am[idx, 0]
+            nv += str(ans)
+            # running col for that var
+            ii = 0
+            while ii < scol:
+                print("running ii ")
+                if em[idx, ii] != 0 and ii != i:
+                    fvm = (em[idx, ii])*-1
+                    sfvm = str(fvm)
+                    fv = getfree(ii)
+                    fvt = ""
+                    if fvm == -1:
+                        sfvm = "-"
+                    elif fvm == 1:
+                        sfvm = ""
 
+                    if fvm >= 0:
+                        fvt += "+"
+                    fvt += sfvm+fv
+                    nv += fvt
+
+                ii += 1
+
+            c["allval"].append(nv)
+        i -= 1
+    print("printing all val")
+    print(c["allval"])
     print("returning rrefs result with var val")
     return c
 
@@ -391,8 +446,10 @@ def getvar(n, t):
     return s
 
 
-def isconsist(e, a, carrier):
+def isconsist(e, a, carrier, fcarrier):
     carrier = {}
+    carrier["ecopy"] = fcarrier["ecopy"]
+    carrier["acopy"] = fcarrier["acopy"]
     total = e.shape
     srow = total[0]
     scol = total[1]
@@ -548,6 +605,7 @@ def isconsist(e, a, carrier):
     consist_text = "It is "
     if len(carrier["freevar"]) > 0:
         print("doing rref for deep values")
+        print(carrier["ecopy"])
         carrier = rrefs(carrier)
     if carrier["consist"]:
         consist_text += "consistent"
@@ -618,11 +676,23 @@ def isconsist(e, a, carrier):
             ll -= 1
         o = carrier["out"]
         cl = carrier["firster"]
+        print(cl)
         print("checking all var")
         print("first not all zero for var: "+str(cl))
         print("first row not all zero: "+str(o))
+        print("before rev")
+        print(carrier["allval"])
+        if len(carrier["freevar"]) > 0:
+            print("after rev")
+
+            carrier["allval"].reverse()
+            print(carrier["allval"])
         while o >= 0:
             carrier["result_text"] += "\n"
+            print("current o")
+            print(o)
+            print("current cl")
+            print(cl)
             if not cl in carrier["freevar"]:
                 carrier["result_text"] += "x"+str(cl+1)+" = "
                 cd = e[o, cl]
@@ -645,35 +715,21 @@ def isconsist(e, a, carrier):
                             carrier["vardict"], ci))
                         carrier["result_text"] += ")/"
                         carrier["result_text"] += str(cd)
-
+                        # carrier["result_text"] += "donea"
                         current_text += "-("
                         current_text += str(e[o, ci])
                         current_text += "("
                         current_text += str(getvar(carrier["vardict"], ci))
                         current_text += ")/"
                         current_text += str(cd)
-
-                    # elif carrier["colpos"][ci]:
-                    #     if e[o, ci]/cd < 0:
-                    #         mark = "+"
-                    #         carrier["result_text"] += mark + \
-                    #             str(abs(e[o, ci]/cd))
-                    #     elif e[o, ci]/cd > 0:
-                    #         mark = "-"
-                    #         carrier["result_text"] += mark + \
-                    #             str(abs(e[o, ci]/cd))
-
-                    # else:
-                    #     if e[o, ci]/cd < 0:
-                    #         mark = "+"
-                    #         carrier["result_text"] += mark + \
-                    #             str(abs(e[o, ci]/cd))+str(getfree(ci))
-                    #     elif e[o, ci]/cd > 0:
-                    #         mark = "-"
-                    #         carrier["result_text"] += mark + \
-                    #             str(abs(e[o, ci]/cd))+str(getfree(ci))
+                    # carrier["result_text"] += "doneb"
                     ci += 1
                 current_text = "("+current_text+")"
+                # current_text += "[finishing]"
+                # current_text += "= "+carrier["allval"][o]
+                print("print o: ", o, " val: ", carrier["allval"][o])
+
+                # carrier["result_text"] += " = " + carrier["allval"][o]
                 carrier["vardict"].append([cl, current_text])
                 o -= 1
 
@@ -685,10 +741,22 @@ def isconsist(e, a, carrier):
                     carrier["result_text"] += "x" + \
                         str(cl+1)+" = "+str(getfree(cl))
                     carrier["vardict"].append([cl, str(getfree(cl))])
+            if cl not in carrier["freevar"]:
+                carrier["result_text"] += " = " + carrier["allval"][cl]
             cl -= 1
+        print("adding new free var")
+        print(carrier["vardict"])
+
+        # if len(carrier["freevar"]) > 0:
+        #     xrx = 0
+        #     while xrx < len(carrier["vardict"]):
+        #         if xrx not in carrier["novar"]:
+        #             carrier["vardict"][xrx] += carrier["allval"][xrx]
+        #         xrx += 1
 
         print("printing result...")
         print(carrier["result_text"])
+        print("done result")
 
     return carrier
 
@@ -712,7 +780,7 @@ def initial_element(e, an):
     fakeE = np.array(e)
     fakeAN = np.array(an)
     print("row: "+str(srow)+" col: "+str(scol))
-    output = isconsist(fakeE, fakeAN, output)
+    output = isconsist(fakeE, fakeAN, output, output)
     if not output["consist"]:
         output["allc"] = scol
         output["allr"] = srow
