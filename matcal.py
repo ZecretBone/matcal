@@ -52,20 +52,29 @@ def save_pastemat(cd, rd, ent, name):
     e = ent.get("1.0", END)
     # e = ent.get()
     # print(e)
+    err = ""
     try:
         newm = np.array(np.mat(e))
         print(newm)
-        # print(newm[1, 2])
+    except:
+        err = "Invalid input, please check your pasted text"
+
+    if err == "":
+        sh = newm.shape
+        if sh[0] > 15 or sh[1] > 15:
+            err = "Invalid Matrix Size (15x15 Limitation Exceeded), Please use Quick function instead"
+
+    if err == "":
         newname = namer_fixedmat(name.get())
         print(newname)
         asset["all_mat"].append([newname, newm])
         messagebox.showinfo(title="Create Matrix Success",
-                            message="Your new matrix has been created !")
+                            message=err)
         transit("main")
-    except:
+
+    if err != "":
         messagebox.showerror(title="Create Matrix Error",
                              message="Invalid input, please check your pasted text")
-        return
 
 
 def paste_pastemat(ent):
@@ -92,8 +101,8 @@ def show_pastemat():
                        command=lambda: paste_pastemat(paste_ent))
     paste_ent.grid(row=urow, column=ucol, sticky='news')
     paste_btn.grid(row=mr(), column=ucol, sticky='news')
-    name_ent.grid(row=mr(), column=ucol, sticky='news')
-    # name_ent.grid(row=urow, column=ucol)
+    name_lab.grid(row=mr(), column=ucol, sticky='news')
+    name_ent.grid(row=urow, column=ucol+1, sticky='news')
     save_btn.grid(row=mr(), column=ucol, sticky='news')
     home_btn.grid(row=mr(), column=ucol, sticky='news')
     scr.append(paste_ent)
@@ -667,43 +676,49 @@ def show_quickelem2():
     res_text = "\n Quick Elementary Result Summary\n"
 
     res_text += "\n"+str(result["consistresult"][0])+"\n"
-    if len(result["freevar"]) > 0:
-        # looping var for free var
-        summa_free = "\n All Variables Value\n"
-        newresult = ""
-        cot = 0
-        summer = 0
-        for rt in range(len(result["result_text"])):
-            # print(newresult)
-            if cot >= 20:
-                newresult += "\n"
-                cot = 0
-            if summer >= 100:
-                summer = 0
-                summa_free += "\n"
-            summa_free += result["result_text"][rt]
-            newresult += result["result_text"][rt]
-            cot += 1
-        res_text += summa_free
+    if result["consist"]:
+        if len(result["freevar"]) > 0:
+            # looping var for free var
+            summa_free = "\n All Variables Value\n"
+            newresult = ""
+            cot = 0
+            summer = 0
+            for rt in range(len(result["result_text"])):
+                # print(newresult)
+                if cot >= 20:
+                    newresult += "\n"
+                    cot = 0
+                if summer >= 100:
+                    summer = 0
+                    summa_free += "\n"
+                summa_free += result["result_text"][rt]
+                newresult += result["result_text"][rt]
+                cot += 1
+            res_text += summa_free
 
-        res_text += "\n Original Matrix\n"
-        res_text += str(firstleft)
-        res_text += "\n Answer(B) Matrix\n"
-        res_text += str(firstright)
+            res_text += "\n Original Matrix\n"
+            res_text += str(firstleft)
+            res_text += "\n Answer(B) Matrix\n"
+            res_text += str(firstright)
+        else:
+            iv = len(result["var"])-1
+            iiv = 1
+            vt = ""
+            while iv >= 0:
+                vt += "x"+str(iiv)+" = "+str(round(result["var"][iv], 2))
+
+                if iv != 0:
+                    vt += ", "
+                if len(vt) % 50 >= 1:
+                    vt += "\n"
+                iv -= 1
+                iiv += 1
+            res_text += vt
+            res_text += "\n Original Matrix\n"
+            res_text += str(firstleft)
+            res_text += "\n Answer(B) Matrix\n"
+            res_text += str(firstright)
     else:
-        iv = len(result["var"])-1
-        iiv = 1
-        vt = ""
-        while iv >= 0:
-            vt += "x"+str(iiv)+" = "+str(round(result["var"][iv], 2))
-
-            if iv != 0:
-                vt += ", "
-            if len(vt) % 50 >= 1:
-                vt += "\n"
-            iv -= 1
-            iiv += 1
-        res_text += vt
         res_text += "\n Original Matrix\n"
         res_text += str(firstleft)
         res_text += "\n Answer(B) Matrix\n"
@@ -786,25 +801,52 @@ def solve_pastequick(ent):
         transit("quickelem_result")
 
 
+def solve_augmented():
+    err = ""
+    try:
+        augm = np.array(np.mat(pc.paste()))
+    except:
+        err = "Invalid Augmented Matrix, Please check your clipboard value"
+    if err == "":
+        sh = augm.shape
+        if sh[1] <= 1:
+            err = "Augmented Matrix insufficient column, It should be more than 1 column"
+        else:
+            newm = augm[:, :-1]
+            newa = augm[:, -1].reshape(-1, 1)
+    if err != "":
+        messagebox.showerror(title="Solve Pasted AugmentedMatrix Error",
+                             message=err)
+    else:
+        print("solving pastequick")
+        asset["quick_mat"] = newm
+        asset["quick_ansmat"] = newa
+        transit("quickelem_result")
+
+
 def show_quickelem():
     global root, scr, urow, ucol, stage, asset
     root.title("Matrix Calculator: Functions >> Quick Elementary")
     # paste --> m_ent,a_ent,pastem_btn,pastea_btn,solve_pasted_btn
     paste_lab = Label(root, text="Paste Matrix")
+    augpaste_btn = Button(root, text="Paste as Augmented Matrix and Solve",
+                          command=lambda: solve_augmented())
     mpaste_ent = Text(root, width=30, height=10, bg="#EEEEEE")
     # apaste_ent = Text(root, width=30, height=10, bg="#EEEEEE")
     mpaste_btn = Button(root, text="Paste Coefficient Matrix",
                         command=lambda: paste_pastemat(mpaste_ent))
+
     apaste_btn = Button(root, text="Paste B Matrix And Solve",
                         command=lambda: solve_pastequick(mpaste_ent))
-
     scr.append(paste_lab)
+    scr.append(augpaste_btn)
     scr.append(mpaste_ent)
     # scr.append(apaste_ent)
     scr.append(mpaste_btn)
     scr.append(apaste_btn)
 
     paste_lab.grid(row=mr(), column=ucol)
+    augpaste_btn.grid(row=mr(), column=ucol)
     mpaste_ent.grid(row=mr(), column=ucol)
     mpaste_btn.grid(row=mr(), column=ucol)
     apaste_btn.grid(row=mr(), column=ucol)
@@ -1535,7 +1577,7 @@ def next1_fixedmat(re, ce):
         if r <= 0 or c <= 0:
             err = "Input cannot be lower than 1"
         if r > 15 or c > 15:
-            err = "Input exceeded 15x15 matrix"
+            err = "Input exceeded limitation (15x15 matrix), Use Quick function instead"
 
     else:
         err = "Input has to be an integer"
@@ -1806,7 +1848,8 @@ if __name__ == '__main__':
     ucol = 0
     asset = {}
     asset["all_mat"] = []
-    asset["all_func"] = ["Elementary", "Inverse", "Quick Elementary"]
+    asset["all_func"] = ["Elementary", "Inverse",
+                         "Quick Elementary", "Quick Inverse"]
     stage = "main"
     asset["o_set"] = 1
     asset["cons_set"] = 1

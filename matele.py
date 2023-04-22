@@ -174,6 +174,9 @@ def rrefs(c):
                     print("running down at val of: ",
                           em[j, i], " j: ", j, " i: ", i)
                     if em[j, i] != 0:
+                        #fix float
+                        em = em.astype(float)
+                        am = am.astype(float)
                         print("j: ", j, " i: ", i, " nr: ", nr)
                         print("multing: ", em[j, i], " / ", em[nr, i])
                         tomult = (em[j, i]/em[nr, i])
@@ -218,6 +221,9 @@ def rrefs(c):
             j = nr-1
             while j > -1:
                 if em[j, i] != 0:
+                    #fix float
+                    em = em.astype(float)
+                    am = am.astype(float)
                     print("above col: ", i, " row: ", j)
                     print("below col: ", i, " row: ", nr)
                     print("multing: ", em[j, i], " / ", em[nr, i])
@@ -518,11 +524,11 @@ def isconsist(e, a, carrier, fcarrier):
                         carrier["eye"].append(y)
                         e = np.matmul(y, e)
                         a = np.matmul(y, a)
-                        # print("swapped: ")
+                        print("swapped: ")
 
                         carrier["consistlog"].append(np.array(e))
                         carrier["consistlog"].append(np.array(a))
-                        # print(e)
+                        print(e)
                         gather[1] = True
 
                     if gather[1]:
@@ -544,8 +550,11 @@ def isconsist(e, a, carrier, fcarrier):
                 while j2 < srow:
                     # tomult = -1*(e[j2, i]/e[tr, i])
                     # print("running row")
+                    e = e.astype(float)
+                    a = a.astype(float)
                     tomult = (e[j2, i]/e[tr, i])
-                    # print(tomult)
+                    print("j2: ", j2, " i: ", i, " tr: ", tr)
+                    print("tomult", tomult)
                     # y = np.eye(srow, scol)
                     # y[j2, i] = tomult
                     # newsave = e[j2]-(e[tr]*tomult)
@@ -557,7 +566,8 @@ def isconsist(e, a, carrier, fcarrier):
                     # carrier["eye"].append(y)
                     # e = np.matmul(y, e)
                     # print("after mult e: ")
-                    # print(e)
+                    print(e)
+                    print(a)
                     j2 += 1
                 tr += 1
             # print("END ROW")

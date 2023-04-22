@@ -50,6 +50,8 @@ def make_det(m, a):
                 # m[j] += m[j,i]
                 print("det at row: "+str(j)+" col: "+str(i))
                 if m[j, i] != 0:
+                    # fix float
+                    m = m.astype(float)
                     tomult = (m[j, i]/m[nr, i])
                     print(tomult)
                     m[j] = m[j]-(m[nr]*tomult)
@@ -132,6 +134,8 @@ def inverter(e, a):
         j = nr+1
         while j < srow:
             if e[j, i] != 0:
+                # fix float
+                e = e.astype(float)
                 tomult = (e[j, i]/e[nr, i])
                 print(tomult)
                 e[j] = e[j]-(e[nr]*tomult)
@@ -156,6 +160,8 @@ def inverter(e, a):
             print("print j")
             print(j)
             if e[j, i] != 0:
+                # fix float
+                e = e.astype(float)
                 tomult = (e[j, i]/e[nr, i])
                 print(tomult)
                 e[j] = e[j]-(e[nr]*tomult)
