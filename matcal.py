@@ -6,6 +6,8 @@ import pyperclip as pc
 # from textwrap import wrap
 from matfunc import *
 
+np.set_printoptions(threshold=np.inf, linewidth=np.inf)
+
 
 def ansvalid_pastemat(allent):
     global root, scr, urow, ucol, stage, asset
@@ -755,25 +757,29 @@ def solve_pastequick(ent):
     print("solve paste quick")
     err = ""
     coef = ent.get("1.0", END)
-    cango = False
     try:
         newm = np.array(np.mat(coef))
-        cango = True
     except:
-        cango = False
         err = "Coefficient Text Invalid, Please check your input"
     ans = str(pc.paste())
 
     try:
         newa = np.array(np.mat(ans))
-        cango = True
     except:
-        cango = False
+
         err = "Answer(B) Text Invalid, Please check your clipboard value"
+    if err == "":
+        print("we can go")
+        snewa = newa.shape
+        snewm = newm.shape
+        if snewa[0] != snewm[0]:
+            err = "Number of Coefficient and Answer(B) Matrix Rows mismatched, Please check your input"
+        if snewa[1] != 1:
+            err = "Number of Answer(B) Matrix Column invalid"
     if err != "":
         messagebox.showerror(title="Solve Pasted Matrix Error",
                              message=err)
-    elif cango:
+    else:
         print("solving pastequick")
         asset["quick_mat"] = newm
         asset["quick_ansmat"] = newa

@@ -184,11 +184,23 @@ def rrefs(c):
                         print("rref ANS MAT: ", am)
                     j += 1
                 if em[nr, i] != 1:
+                    newem = np.array(em[nr, i])
+                    enewem = newem
                     print(" i: ", i, " nr: ", nr)
-                    print("multing m: ", em[nr], " / ", em[nr, i])
-                    print("multing a: ", am[nr], " / ", em[nr, i])
-                    em[nr] = em[nr]/em[nr, i]
-                    am[nr] = am[nr]/em[nr, i]
+                    print("multing m: ", em[nr], " / ", enewem)
+                    print("multing a: ", am[nr, 0], " / ", enewem)
+
+                    # em[nr] = em[nr]/em[nr, i]
+                    # am[nr] = am[nr, 0]/em[nr, i]
+                    am = am.astype(float)
+                    em = em.astype(float)
+                    # test end
+                    print("a result", am[nr, 0]/enewem)
+
+                    am[nr, 0] /= enewem
+                    print("done with a: ", am)
+                    em[nr] = em[nr]/enewem
+
                     print("rref MAT: ", em)
                     print("rref ANS MAT: ", am)
 
