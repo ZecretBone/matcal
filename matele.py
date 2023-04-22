@@ -139,46 +139,57 @@ def rrefs(c):
         print("running col rref index: ", i)
         skip = 1
         skipped = 0
-        if em[nr, i] == 0:
-            jj = nr
-            swapped = False
-            while jj < srow:
-                if em[jj, i] != 0:
-                    swapped = True
-                    y = np.eye(srow)
-                    y[(nr, jj)] = y[(jj, nr)]
-                    em = np.matmul(y, em)
-                    am = np.matmul(y, am)
+        if nr < srow:
+            print("check if have to swap of val: ",em[nr, i]," where nr: ",nr," i: ",i)
+            if em[nr, i] == 0:
+                jj = nr
+                swapped = False
+                while jj < srow:
+                    print("check can swap of val: ",em[jj, i]," where jj: ",jj," i: ",i)
+                    if em[jj, i] != 0:
+                        print("found to swap")
+                        swapped = True
+                        y = np.eye(srow)
+                        y[[nr, jj]] = y[[jj, nr]]
+                        em = np.matmul(y, em)
+                        am = np.matmul(y, am)
+                        print("swap to")
+                        print("rref MAT: ", em)
+                        print("rref ANS MAT: ", am)
+                    if swapped:
+                        skip = 0
+                        break
+                    jj += 1
+                if skip == 1:
+                    print("free car adding at index of i:",i)
+                    # add free var index
+                    skipped = 1
+                    c["freeindex"].append(i)
+            if skipped == 0:
+                print("didn't skip")
+                j = nr+1
+                while j < srow:
+                    print("running down at val of: ",em[j, i]," j: ",j," i: ",i)
+                    if em[j, i] != 0:
+                        print("j: ", j, " i: ", i, " nr: ", nr)
+                        print("multing: ", em[j, i], " / ", em[nr, i])
+                        tomult = (em[j, i]/em[nr, i])
+                        print(tomult)
+                        em[j] = em[j]-(em[nr]*tomult)
+                        am[j] = am[j]-(am[nr]*tomult)
+                        print("rref MAT: ", em)
+                        print("rref ANS MAT: ", am)
+                    j += 1
+                if em[nr, i] != 1:
+                    em[nr] = em[nr]/em[nr, i]
+                    am[nr] = am[nr]/em[nr, i]
                     print("rref MAT: ", em)
                     print("rref ANS MAT: ", am)
-                if swapped:
-                    skip = 0
-                    break
-                jj += 1
-            if skip == 1:
-                # add free var index
-                skipped = 1
-                c["freeindex"].append(i)
-        if skipped == 0:
-            j = nr+1
-            while j < srow:
-                if em[j, i] != 0:
-                    print("multing: ", em[j, i], " / ", em[nr, i])
-                    tomult = (em[j, i]/em[nr, i])
-                    print(tomult)
-                    em[j] = em[j]-(em[nr]*tomult)
-                    am[j] = am[j]-(am[nr]*tomult)
-                    print("rref MAT: ", em)
-                    print("rref ANS MAT: ", am)
-                j += 1
-            if em[nr, i] != 1:
-                em[nr] = em[nr]/em[nr, i]
-                am[nr] = am[nr]/em[nr, i]
-                print("rref MAT: ", em)
-                print("rref ANS MAT: ", am)
 
-            c["rowindex"][i] = nr
-            nr += 1
+                c["rowindex"][i] = nr
+                nr += 1
+        else:
+            c["freeindex"].append(i)   
         i += 1
     i = int((scol)-1)
     nr = srow-1

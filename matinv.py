@@ -123,7 +123,7 @@ def inverter(e, a):
                 if e[jj, i] != 0:
                     swapped = True
                     y = np.eye(srow)
-                    y[(nr, jj)] = y[(jj, nr)]
+                    y[[nr, jj]] = y[[jj, nr]]
                     e = np.matmul(y, e)
                     a["rreflog"].append(np.array(e))
                 if swapped:

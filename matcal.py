@@ -653,6 +653,125 @@ def show_inverse():
     scr.append(frame2)
 
 
+def show_quickelem2():
+    global root, scr, urow, ucol, stage, asset
+    root.title("Matrix Calculator: Functions >> Result (Quick Elementary)")
+    # export summary_btn
+    export_btn = Button(root, text="Export Summary",
+                        command=lambda: print("exporting func"))
+    scr.append(export_btn)
+    export_btn.grid(row=mr(), column=ucol)
+    # home_btn
+    home_btn = Button(root, text="Home",
+                      command=lambda: transit("main"))
+    scr.append(home_btn)
+    home_btn.grid(row=mr(), column=ucol)
+
+
+def randsolve_pastequick(re, ce):
+    global root, scr, urow, ucol, stage, asset
+    print("random and solve quick")
+    err = ""
+    if re.get().isdigit() and ce.get().isdigit():
+        r = int(re.get())
+        c = int(ce.get())
+        if r <= 0 or c <= 0:
+            err = "Input cannot be lower than 1"
+
+    else:
+        err = "Input has to be an integer"
+    if err == "":
+        print("rand after r c")
+        newm = np.random.rand(r, c)
+        newa = np.random.rand(r, 1)
+        # random after r c
+        print("solving randquick")
+    else:
+        re.delete(0, END)
+        ce.delete(0, END)
+        print("show msg box err")
+        messagebox.showerror(title="Solve Random Matrix Error", message=err)
+
+
+def solve_pastequick(ent):
+    global root, scr, urow, ucol, stage, asset
+    print("solve paste quick")
+    err = ""
+    coef = ent.get("1.0", END)
+    cango = False
+    try:
+        newm = np.array(np.mat(coef))
+        cango = True
+    except:
+        cango = False
+        err = "Coefficient Text Invalid, Please check your input"
+    ans = str(pc.paste())
+
+    try:
+        newa = np.array(np.mat(ans))
+        cango = True
+    except:
+        cango = False
+        err = "Answer(B) Text Invalid, Please check your clipboard value"
+    if err != "":
+        messagebox.showerror(title="Solve Pasted Matrix Error",
+                             message=err)
+    elif cango:
+        print("solving pastequick")
+
+
+def show_quickelem():
+    global root, scr, urow, ucol, stage, asset
+    root.title("Matrix Calculator: Functions >> Quick Elementary")
+    # paste --> m_ent,a_ent,pastem_btn,pastea_btn,solve_pasted_btn
+    paste_lab = Label(root, text="Paste Matrix")
+    mpaste_ent = Text(root, width=30, height=10, bg="#EEEEEE")
+    # apaste_ent = Text(root, width=30, height=10, bg="#EEEEEE")
+    mpaste_btn = Button(root, text="Paste Coefficient Matrix",
+                        command=lambda: paste_pastemat(mpaste_ent))
+    apaste_btn = Button(root, text="Paste B Matrix And Solve",
+                        command=lambda: solve_pastequick(mpaste_ent))
+
+    scr.append(paste_lab)
+    scr.append(mpaste_ent)
+    # scr.append(apaste_ent)
+    scr.append(mpaste_btn)
+    scr.append(apaste_btn)
+
+    paste_lab.grid(row=mr(), column=ucol)
+    mpaste_ent.grid(row=mr(), column=ucol)
+    mpaste_btn.grid(row=mr(), column=ucol)
+    apaste_btn.grid(row=mr(), column=ucol)
+    # random --> row_ent,col_ent,solve_random_btn
+    random_lab = Label(root, text="Random Matrix")
+    row_lab = Label(root, text="Number of Row: ")
+    col_lab = Label(root, text="Number of Column: ")
+    row_ent = Entry(root, width=5)
+    col_ent = Entry(root, width=5)
+    randsolev_btn = Button(root, text="Random and Solve",
+                           command=lambda: randsolve_pastequick(row_ent, col_ent))
+
+    scr.append(random_lab)
+    scr.append(row_lab)
+    scr.append(col_lab)
+    scr.append(row_ent)
+    scr.append(col_ent)
+    scr.append(randsolev_btn)
+
+    random_lab.grid(row=mr(), column=ucol)
+    row_lab.grid(row=mr(), column=ucol)
+    row_ent.grid(row=urow, column=ucol+1)
+    col_lab.grid(row=mr(), column=ucol)
+    col_ent.grid(row=urow, column=ucol+1)
+    randsolev_btn.grid(row=mr(), column=ucol)
+    # home_btn
+
+    home_btn = Button(root, text="Home",
+                      command=lambda: transit("main"))
+    scr.append(home_btn)
+    home_btn.grid(row=mr(), column=ucol)
+
+
 def show_elementary2():
     global root, scr, urow, ucol, stage, asset
     root.title("Matrix Calculator: Functions >> Result (Elementary)")
@@ -1345,6 +1464,8 @@ def next1_fixedmat(re, ce):
         c = int(ce.get())
         if r <= 0 or c <= 0:
             err = "Input cannot be lower than 1"
+        if r > 15 or c > 15:
+            err = "Input exceeded 15x15 matrix"
 
     else:
         err = "Input has to be an integer"
