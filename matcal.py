@@ -543,7 +543,8 @@ def show_inverse():
         det_log = Label(buttons_frame, text=detlog)
         scr.append(det_log)
         det_log.grid(row=urow, column=mc())
-    sumdet += beauty_mat(result["detlog"][-1])
+    if len(result["detlog"]) > 0:
+        sumdet += beauty_mat(result["detlog"][-1])
     # disp det result
     urow += 1
     ucol = 0
@@ -618,7 +619,8 @@ def show_inverse():
         scr.append(rr_log)
         rr_log.grid(row=urow, column=mc())
     # disp final inv
-    sumrref += beauty_mat(result["rreflog"][-1])
+    if len(result["rreflog"]) > 0:
+        sumrref += beauty_mat(result["rreflog"][-1])
     urow += 1
     ucol = 0
     summa += "\n Inversed Matrix: \n"
@@ -822,6 +824,50 @@ def solve_augmented():
         asset["quick_mat"] = newm
         asset["quick_ansmat"] = newa
         transit("quickelem_result")
+
+
+def show_quickinv2():
+    global root, scr, urow, ucol, stage, asset
+
+
+def randsolve_quickinv(ent):
+    global root, scr, urow, ucol, stage, asset
+
+
+def pastesolve_quickinv(ent):
+    global root, scr, urow, ucol, stage, asset
+
+
+def show_quickinv():
+    global root, scr, urow, ucol, stage, asset
+    root.title("Matrix Calculator: Functions >> Quick Inverse")
+    paste_lab = Label(root, text="Paste Matrix")
+    paste_btn = Button(root, text="Paste and Solve",
+                       command=lambda: pastesolve_quickinv())
+    random_lab = Label(root, text="Random Matrix")
+    cr_lab = Label(root, text="Number of Column & Row: ")
+    cr_ent = Entry(root, width=5)
+    randsolev_btn = Button(root, text="Random and Solve",
+                           command=lambda: randsolve_quickinv(cr_ent))
+
+    scr.append(paste_lab)
+    scr.append(paste_btn)
+    scr.append(random_lab)
+    scr.append(cr_lab)
+    scr.append(cr_ent)
+    scr.append(randsolev_btn)
+
+    paste_lab.grid(row=mr(), column=ucol)
+    paste_btn.grid(row=mr(), column=ucol)
+    random_lab.grid(row=mr(), column=ucol)
+    cr_lab.grid(row=mr(), column=ucol)
+    cr_ent.grid(row=urow, column=ucol+1)
+    randsolev_btn.grid(row=mr(), column=ucol)
+
+    home_btn = Button(root, text="Home",
+                      command=lambda: transit("main"))
+    scr.append(home_btn)
+    home_btn.grid(row=mr(), column=ucol)
 
 
 def show_quickelem():
@@ -1519,6 +1565,9 @@ def next1_matfunc(f):
     if asset["current_func"] == "Quick Elementary":
         print("going to quick elem")
         transit("quickelem")
+    elif asset["current_func"] == "Quick Inverse":
+        print("going quick inv")
+        transit("quickinv")
     elif asset["current_func"] != "":
         transit("matfunc2")
 
@@ -1837,6 +1886,10 @@ def summon():
         show_quickelem2()
     elif stage == "quickelem":
         show_quickelem()
+    elif stage == "quickinv":
+        show_quickinv()
+    elif stage == "quickinv_result":
+        showquickinv2()
 
 
 if __name__ == '__main__':
