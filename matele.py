@@ -10,8 +10,8 @@ def varback(x, y, a):
     xc = len(x[0])-1
     # cleaning row all zero
     l = 0
-    print("var finding")
-    print(nn)
+    # print("var finding")
+    # print(nn)
     while l < nn:
         # print("row run")
         stack = 0
@@ -28,7 +28,7 @@ def varback(x, y, a):
             xr = l
             n = l+1
         l += 1
-    print("var back from row: "+str(n))
+    # print("var back from row: "+str(n))
     while i < n:
         j = 0
         m = len(a["var"])
@@ -38,10 +38,10 @@ def varback(x, y, a):
             equalto -= a["var"][j]*x[xr, xc]
             xc -= 1
             j += 1
-        print("bug check")
-        print(equalto)
-        print(x[xr, xc])
-        print(equalto/x[xr, xc])
+        # print("bug check")
+        # print(equalto)
+        # print(x[xr, xc])
+        # print(equalto/x[xr, xc])
 
         newv = equalto/x[xr, xc]
         a["var"].append(newv)
@@ -62,24 +62,24 @@ def getfree(n):
 
 
 def multback(a):
-    print("len multback")
-    print(a["eye"])
+    # print("len multback")
+    # print(a["eye"])
     if len(a["eye"]) <= 0:
         return []
     elif len(a["eye"]) == 1:
         a["entire2"].append(a["eye"][0])
         return a["eye"][0]
     else:
-        print("more than 1")
+        # print("more than 1")
         i = len(a["eye"])-1
-        print(i)
+        # print(i)
         n = a["eye"][i]
         a["entire2"].append(n)
         while i > 0:
             n = np.matmul(n, a["eye"][i-1])
             a["entire2"].append(a["eye"][i-1])
             a["entire2"].append(n)
-            print(n)
+            # print(n)
             i -= 1
         return n
 
@@ -91,30 +91,30 @@ def mult(a, b):
 def checkzero(e):
     iszero = True
     e = np.round(e, 30)
-    print("checkzero len 0 - before" + str(len(e[0])-1))
+    # print("checkzero len 0 - before" + str(len(e[0])-1))
     i = 0
     while i <= len(e[0])-1:
-        print("i deep")
-        print(i)
+        # print("i deep")
+        # print(i)
         # print(len(e[0])-2)
-        print("end i")
+        # print("end i")
         d = False
         j = i+1
         while j <= len(e)-1:
-            print("j deep ")
-            print(j)
+            # print("j deep ")
+            # print(j)
             # print(len(e)-1)
-            print("end j ")
+            # print("end j ")
             if e[j, i] != 0:
                 iszero = False
                 d = True
-                print("pos row: "+str(j)+" col: "+str(i) +
-                      " which is "+str(e[j, i])+"is not zero yet")
+                # print("pos row: "+str(j)+" col: "+str(i) +
+                #       " which is "+str(e[j, i])+"is not zero yet")
                 break
             j += 1
         i += 1
         if d:
-            print("d breaker")
+            # print("d breaker")
             break
 
     return iszero
@@ -140,12 +140,14 @@ def rrefs(c):
         skip = 1
         skipped = 0
         if nr < srow:
-            print("check if have to swap of val: ",em[nr, i]," where nr: ",nr," i: ",i)
+            print("check if have to swap of val: ",
+                  em[nr, i], " where nr: ", nr, " i: ", i)
             if em[nr, i] == 0:
                 jj = nr
                 swapped = False
                 while jj < srow:
-                    print("check can swap of val: ",em[jj, i]," where jj: ",jj," i: ",i)
+                    print("check can swap of val: ",
+                          em[jj, i], " where jj: ", jj, " i: ", i)
                     if em[jj, i] != 0:
                         print("found to swap")
                         swapped = True
@@ -161,7 +163,7 @@ def rrefs(c):
                         break
                     jj += 1
                 if skip == 1:
-                    print("free car adding at index of i:",i)
+                    print("free car adding at index of i:", i)
                     # add free var index
                     skipped = 1
                     c["freeindex"].append(i)
@@ -169,7 +171,8 @@ def rrefs(c):
                 print("didn't skip")
                 j = nr+1
                 while j < srow:
-                    print("running down at val of: ",em[j, i]," j: ",j," i: ",i)
+                    print("running down at val of: ",
+                          em[j, i], " j: ", j, " i: ", i)
                     if em[j, i] != 0:
                         print("j: ", j, " i: ", i, " nr: ", nr)
                         print("multing: ", em[j, i], " / ", em[nr, i])
@@ -181,6 +184,9 @@ def rrefs(c):
                         print("rref ANS MAT: ", am)
                     j += 1
                 if em[nr, i] != 1:
+                    print(" i: ", i, " nr: ", nr)
+                    print("multing m: ", em[nr], " / ", em[nr, i])
+                    print("multing a: ", am[nr], " / ", em[nr, i])
                     em[nr] = em[nr]/em[nr, i]
                     am[nr] = am[nr]/em[nr, i]
                     print("rref MAT: ", em)
@@ -189,7 +195,7 @@ def rrefs(c):
                 c["rowindex"][i] = nr
                 nr += 1
         else:
-            c["freeindex"].append(i)   
+            c["freeindex"].append(i)
         i += 1
     i = int((scol)-1)
     nr = srow-1
@@ -219,13 +225,13 @@ def rrefs(c):
     print(am)
     i = scol-1
     while i > -1:
-        print("running col finding var")
+        # print("running col finding var")
         if i in c["freeindex"]:
-            print("setting free var")
+            # print("setting free var")
             fv = getfree(i)
             c["allval"].append(fv)
         else:
-            print("setting non free var")
+            # print("setting non free var")
             nv = ""
             idx = c["rowindex"][i]
             ans = am[idx, 0]
@@ -233,7 +239,7 @@ def rrefs(c):
             # running col for that var
             ii = 0
             while ii < scol:
-                print("running ii ")
+                # print("running ii ")
                 if em[idx, ii] != 0 and ii != i:
                     fvm = (em[idx, ii])*-1
                     sfvm = str(fvm)
@@ -255,14 +261,14 @@ def rrefs(c):
         i -= 1
     print("printing all val")
     print(c["allval"])
-    print("returning rrefs result with var val")
+    # print("returning rrefs result with var val")
     return c
 
 
 def notzero(e):
     index = []
     e = np.round(e, 30)
-    print("notzero len 0 - before" + str(len(e[0])-1))
+    # print("notzero len 0 - before" + str(len(e[0])-1))
     # for i in range(len(e[0])-1):
     #     print(i)
     #     tobreak = False
@@ -278,19 +284,19 @@ def notzero(e):
     #         break
     i = 0
     while i <= len(e[0])-1:
-        print(i)
+        # print(i)
         tobreak = False
         j = i + 1
         while j <= len(e)-1:
             if e[j, i] != 0:
                 index = [j, i]
-                print("NOTZERO pos row: "+str(j)+" col: "+str(i) +
-                      " which is "+str(e[j, i])+"is not zero yet")
+                # print("NOTZERO pos row: "+str(j)+" col: "+str(i) +
+                #      " which is "+str(e[j, i])+"is not zero yet")
                 tobreak = True
                 break
             j += 1
         if tobreak:
-            print("tobreak breaker")
+            # print("tobreak breaker")
             break
         i += 1
 
@@ -303,27 +309,26 @@ def swapper(e, i, j, a):
     m = i
     e = np.round(e, 30)
     # notswap = True
-    # print(e[m, j])
     # return
-    print("row swapping check")
-    print("starting at row: "+str(m)+" col: "+str(j))
+    # print("row swapping check")
+    # print("starting at row: "+str(m)+" col: "+str(j))
     if e[i, j] == 0:
-        print("have to swap")
+        # print("have to swap")
         sw = False
         while m < srow:
-            print("s check at row: "+str(m)+" value: "+str(e[m, j]))
+            # print("s check at row: "+str(m)+" value: "+str(e[m, j]))
             if e[m, j] != 0:
-                print("found row to swap")
+                # print("found row to swap")
                 y = np.eye(srow)
                 y[[i, m]] = y[[m, i]]
                 a["eye"].append(y)
                 e = np.matmul(y, e)
-                print("swapped")
+                # print("swapped")
                 sw = True
-                print(e)
+                # print(e)
 
             if sw:
-                print("row swapped break")
+                # print("row swapped break")
                 break
             m += 1
     # while e[m, j] == 0 or srow <= i:
@@ -351,15 +356,15 @@ def swapper(e, i, j, a):
 
 def ridzero(e, i, j, a):
     e = np.round(e, 30)
-    print("mult tester: ")
+    # print("mult tester: ")
     print(str(e[i, j]/e[j, j]))
     tomult = -1*(e[i, j]/e[j, j])
     print("my mult : -1*"+str(e[i, j])+"/"+str(e[j, j]))
-    print("multer")
+    # print("multer")
     # print(e[i, j])
     # print(e[j, j])
-    print("to mult: ")
-    print(tomult)
+    # print("to mult: ")
+    # print(tomult)
     srow = a["allr"]
     scol = a["allc"]
     y = np.eye(srow)
@@ -400,14 +405,14 @@ def square(e, an, answer):
         if x[1] != ccol:
             ccol = x[1]
             e, answer = swapper(e, x[1], x[1], answer)
-        print("appending entire")
+        # print("appending entire")
         answer["entire"].append(e)
         e, answer = ridzero(e, x[0], x[1], answer)
         print("NEW")
-        print(e)
-        print("IDENT")
-        print(answer["eye"][-1])
-        print("appending entire")
+        # print(e)
+        # print("IDENT")
+        # print(answer["eye"][-1])
+        # print("appending entire")
         answer["entire"].append(answer["eye"][-1])
         answer["entire"].append(e)
 
@@ -479,33 +484,33 @@ def isconsist(e, a, carrier, fcarrier):
     i = 0
     tr = 0
     while i < scol:
-        print("running col")
+        # print("running col")
         if not pout:
             gather = [False, False, False]
             j1 = tr
-            print("checking row,col: "+str(j1)+", "+str(i))
-            print(e)
-            print(e[j1, i])
+            # print("checking row,col: "+str(j1)+", "+str(i))
+            # print(e)
+            # print(e[j1, i])
             if 0 == e[j1, i]:
                 gather[0] = True
                 while j1 < srow:
                     gather[1] = False
                     if 0 != e[j1, i]:
                         y = np.eye(srow)
-                        print("j1 and tr")
-                        print(j1)
-                        print(tr)
-                        print(y)
+                        # print("j1 and tr")
+                        # print(j1)
+                        # print(tr)
+                        # print(y)
                         y[[j1, tr]] = y[[tr, j1]]
-                        print(y)
+                        # print(y)
                         carrier["eye"].append(y)
                         e = np.matmul(y, e)
                         a = np.matmul(y, a)
-                        print("swapped: ")
+                        # print("swapped: ")
 
                         carrier["consistlog"].append(np.array(e))
                         carrier["consistlog"].append(np.array(a))
-                        print(e)
+                        # print(e)
                         gather[1] = True
 
                     if gather[1]:
@@ -526,9 +531,9 @@ def isconsist(e, a, carrier, fcarrier):
                     pout = True
                 while j2 < srow:
                     # tomult = -1*(e[j2, i]/e[tr, i])
-                    print("running row")
+                    # print("running row")
                     tomult = (e[j2, i]/e[tr, i])
-                    print(tomult)
+                    # print(tomult)
                     # y = np.eye(srow, scol)
                     # y[j2, i] = tomult
                     # newsave = e[j2]-(e[tr]*tomult)
@@ -543,7 +548,7 @@ def isconsist(e, a, carrier, fcarrier):
                     # print(e)
                     j2 += 1
                 tr += 1
-            print("END ROW")
+            # print("END ROW")
             # print(e)
 
             carrier["gather"].append(gather)
@@ -574,7 +579,7 @@ def isconsist(e, a, carrier, fcarrier):
     # if newa != []:
     #     a = np.matmul(newa, a)
     print("print consistlog")
-    print(carrier["consistlog"])
+    # print(carrier["consistlog"])
     carrier["consistresult"] = []
     print("time for consistency")
     print("check every row")
@@ -582,6 +587,7 @@ def isconsist(e, a, carrier, fcarrier):
     print(e)
     print("current ANS")
     print(a)
+    carrier["freevar_ans"] = np.array(a)
     carrier["out"] = -999
     k = 0
     while k < srow:
@@ -599,9 +605,9 @@ def isconsist(e, a, carrier, fcarrier):
             break
         k += 1
     print("check consistency done")
-    print("combine text")
+    # print("combine text")
 
-    print("check all no var")
+    # print("check all no var")
     i = 0
     while i < scol:
         j = 0
@@ -615,8 +621,8 @@ def isconsist(e, a, carrier, fcarrier):
         i += 1
     consist_text = "It is "
     if len(carrier["freevar"]) > 0:
-        print("doing rref for deep values")
-        print(carrier["ecopy"])
+        # print("doing rref for deep values")
+        # print(carrier["ecopy"])
         carrier = rrefs(carrier)
     if carrier["consist"]:
         consist_text += "consistent"
@@ -654,9 +660,9 @@ def isconsist(e, a, carrier, fcarrier):
     carrier["consistresult"].append(consist_text)
 
     print("isconsist: "+str(carrier["consist"]))
-    print("freevar: "+str(carrier["freevar"]))
-    print("novar: "+str(carrier["novar"]))
-    print("current MAT: "+str(e))
+    # print("freevar: "+str(carrier["freevar"]))
+    # print("novar: "+str(carrier["novar"]))
+    # print("current MAT: "+str(e))
     carrier["result_text"] = ""
     carrier["answer_opt"] = 1
     carrier["firster"] = 0
@@ -665,7 +671,7 @@ def isconsist(e, a, carrier, fcarrier):
 
     if carrier["consist"] and len(carrier["freevar"]) > 0:
         carrier["answer_opt"] = 2
-        print("finding var")
+        # print("finding var")
         l = 0
         while l < scol:
             if l in carrier["freevar"]:
@@ -687,30 +693,30 @@ def isconsist(e, a, carrier, fcarrier):
             ll -= 1
         o = carrier["out"]
         cl = carrier["firster"]
-        print(cl)
-        print("checking all var")
-        print("first not all zero for var: "+str(cl))
-        print("first row not all zero: "+str(o))
-        print("before rev")
-        print(carrier["allval"])
+        # print(cl)
+        # print("checking all var")
+        # print("first not all zero for var: "+str(cl))
+        # print("first row not all zero: "+str(o))
+        # print("before rev")
+        # print(carrier["allval"])
         if len(carrier["freevar"]) > 0:
-            print("after rev")
+            # print("after rev")
 
             carrier["allval"].reverse()
-            print(carrier["allval"])
+            # print(carrier["allval"])
         while o >= 0:
             carrier["result_text"] += "\n"
-            print("current o")
-            print(o)
-            print("current cl")
-            print(cl)
+            # print("current o")
+            # print(o)
+            # print("current cl")
+            # print(cl)
             if not cl in carrier["freevar"]:
                 carrier["result_text"] += "x"+str(cl+1)+" = "
                 cd = e[o, cl]
                 ci = cl+1
                 carrier["result_text"] += str(a[o, 0]/cd)
                 current_text = str(a[o, 0]/cd)
-                print(a[o, 0]/cd)
+                # print(a[o, 0]/cd)
                 while ci < scol:
                     if ci in carrier["novar"]:
                         print("current var = 0")
@@ -738,7 +744,7 @@ def isconsist(e, a, carrier, fcarrier):
                 current_text = "("+current_text+")"
                 # current_text += "[finishing]"
                 # current_text += "= "+carrier["allval"][o]
-                print("print o: ", o, " val: ", carrier["allval"][o])
+                # print("print o: ", o, " val: ", carrier["allval"][o])
 
                 # carrier["result_text"] += " = " + carrier["allval"][o]
                 carrier["vardict"].append([cl, current_text])
@@ -755,8 +761,8 @@ def isconsist(e, a, carrier, fcarrier):
             if cl not in carrier["freevar"]:
                 carrier["result_text"] += " = " + carrier["allval"][cl]
             cl -= 1
-        print("adding new free var")
-        print(carrier["vardict"])
+        # print("adding new free var")
+        # print(carrier["vardict"])
 
         # if len(carrier["freevar"]) > 0:
         #     xrx = 0
@@ -765,9 +771,9 @@ def isconsist(e, a, carrier, fcarrier):
         #             carrier["vardict"][xrx] += carrier["allval"][xrx]
         #         xrx += 1
 
-        print("printing result...")
+        # print("printing result...")
         print(carrier["result_text"])
-        print("done result")
+        # print("done result")
 
     return carrier
 

@@ -656,9 +656,59 @@ def show_inverse():
 def show_quickelem2():
     global root, scr, urow, ucol, stage, asset
     root.title("Matrix Calculator: Functions >> Result (Quick Elementary)")
+    asset["quick_mat"] = np.round(asset["quick_mat"], 30)
+    asset["quick_ansmat"] = np.round(asset["quick_ansmat"], 30)
+    firstleft = np.array(asset["quick_mat"])
+    firstright = np.array(asset["quick_ansmat"])
+    result = elemental(asset["quick_mat"], asset["quick_ansmat"])
     # export summary_btn
+    res_text = "\n Quick Elementary Result Summary\n"
+
+    res_text += "\n"+str(result["consistresult"][0])+"\n"
+    if len(result["freevar"]) > 0:
+        # looping var for free var
+        summa_free = "\n All Variables Value\n"
+        newresult = ""
+        cot = 0
+        summer = 0
+        for rt in range(len(result["result_text"])):
+            # print(newresult)
+            if cot >= 20:
+                newresult += "\n"
+                cot = 0
+            if summer >= 100:
+                summer = 0
+                summa_free += "\n"
+            summa_free += result["result_text"][rt]
+            newresult += result["result_text"][rt]
+            cot += 1
+        res_text += summa_free
+
+        res_text += "\n Original Matrix\n"
+        res_text += str(firstleft)
+        res_text += "\n Answer(B) Matrix\n"
+        res_text += str(firstright)
+    else:
+        iv = len(result["var"])-1
+        iiv = 1
+        vt = ""
+        while iv >= 0:
+            vt += "x"+str(iiv)+" = "+str(round(result["var"][iv], 2))
+
+            if iv != 0:
+                vt += ", "
+            if len(vt) % 50 >= 1:
+                vt += "\n"
+            iv -= 1
+            iiv += 1
+        res_text += vt
+        res_text += "\n Original Matrix\n"
+        res_text += str(firstleft)
+        res_text += "\n Answer(B) Matrix\n"
+        res_text += str(firstright)
+    pc.copy(res_text)
     export_btn = Button(root, text="Export Summary",
-                        command=lambda: print("exporting func"))
+                        command=lambda: pc.copy(res_text))
     scr.append(export_btn)
     export_btn.grid(row=mr(), column=ucol)
     # home_btn
@@ -686,6 +736,13 @@ def randsolve_pastequick(re, ce):
         newa = np.random.rand(r, 1)
         # random after r c
         print("solving randquick")
+        asset["quick_mat"] = newm
+        asset["quick_ansmat"] = newa
+        print("newm")
+        print(newm)
+        print(newm)
+        print(asset["quick_mat"])
+        transit("quickelem_result")
     else:
         re.delete(0, END)
         ce.delete(0, END)
@@ -718,6 +775,9 @@ def solve_pastequick(ent):
                              message=err)
     elif cango:
         print("solving pastequick")
+        asset["quick_mat"] = newm
+        asset["quick_ansmat"] = newa
+        transit("quickelem_result")
 
 
 def show_quickelem():
@@ -952,6 +1012,7 @@ def show_elementary2():
             summa += summa_ori
         if asset["cons_set"] == 1:
             summa += summa_cons
+        summa += "\n"+beauty_mat(result["freevar_ans"])+"\n"
         result_text.grid(row=urow, column=mc())
         home_btn = Button(root, text="Home",
                           command=lambda: transit("main"))
@@ -1407,7 +1468,10 @@ def next1_matfunc(f):
     for i in range(len(asset["all_func"])):
         if asset["all_func"][i] == sf:
             asset["current_func"] = sf
-    if asset["current_func"] != "":
+    if asset["current_func"] == "Quick Elementary":
+        print("going to quick elem")
+        transit("quickelem")
+    elif asset["current_func"] != "":
         transit("matfunc2")
 
 
@@ -1721,6 +1785,10 @@ def summon():
         show_inverse()
     elif stage == "setting":
         show_setting()
+    elif stage == "quickelem_result":
+        show_quickelem2()
+    elif stage == "quickelem":
+        show_quickelem()
 
 
 if __name__ == '__main__':
@@ -1732,7 +1800,7 @@ if __name__ == '__main__':
     ucol = 0
     asset = {}
     asset["all_mat"] = []
-    asset["all_func"] = ["Elementary", "Inverse"]
+    asset["all_func"] = ["Elementary", "Inverse", "Quick Elementary"]
     stage = "main"
     asset["o_set"] = 1
     asset["cons_set"] = 1
