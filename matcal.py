@@ -876,7 +876,7 @@ def show_quickinv2():
     ac = tt[1]
     result = inverse(asset["quick_mat"])
     res_text = ""
-
+    res_text += "\n Quick Inverse Result\n"
     res_text += "\n Determinant\n"
     if len(result["detlog"]) > 0:
         # res_text += beauty_mat(result["detlog"][-1])
