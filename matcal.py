@@ -64,17 +64,20 @@ def save_pastemat(cd, rd, ent, name):
         if sh[0] > 15 or sh[1] > 15:
             err = "Invalid Matrix Size (15x15 Limitation Exceeded), Please use Quick function instead"
 
+        if sh[0] <= 0 or sh[1] <= 0:
+            err = "Invalid Matrix Size, Please use bigger size matrix"
+
     if err == "":
         newname = namer_fixedmat(name.get())
         print(newname)
         asset["all_mat"].append([newname, newm])
         messagebox.showinfo(title="Create Matrix Success",
-                            message=err)
+                            message="Your Pasted  Matrix has been created")
         transit("main")
 
     if err != "":
         messagebox.showerror(title="Create Matrix Error",
-                             message="Invalid input, please check your pasted text")
+                             message=err)
 
 
 def paste_pastemat(ent):
@@ -818,7 +821,7 @@ def solve_augmented():
             newm = augm[:, :-1]
             newa = augm[:, -1].reshape(-1, 1)
     if err != "":
-        messagebox.showerror(title="Solve Pasted AugmentedMatrix Error",
+        messagebox.showerror(title="Solve Pasted Augmented Matrix Error",
                              message=err)
     else:
         print("solving pastequick")
@@ -839,7 +842,7 @@ def pastesolve_quickinv():
         err = "Input Invalid, Please check your clipboard value"
 
     if err != "":
-        messagebox.showerror(title="Solve Pasted AugmentedMatrix Error",
+        messagebox.showerror(title="Solve Pasted Matrix Error",
                              message=err)
     else:
         asset["quick_mat"] = newm
@@ -879,13 +882,15 @@ def show_quickinv2():
     res_text += "\n Quick Inverse Result\n"
     res_text += "\n Determinant\n"
     if len(result["detlog"]) > 0:
+        print("final det")
         # res_text += beauty_mat(result["detlog"][-1])
-        res_text += result["detresult"] + "\n"
+    res_text += result["detresult"] + "\n"
 
     if not result["invertible"]:
         res_text += result["reason"] + "\n"
-    res_text += "\n Inversed Matrix\n"
-    res_text += beauty_mat(result["inverted"])
+    else:
+        res_text += "\n Inversed Matrix\n"
+        res_text += beauty_mat(result["inverted"])
     res_text += "\n Original Matrix\n"
     res_text += beauty_mat(newm)
 

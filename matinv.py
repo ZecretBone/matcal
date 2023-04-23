@@ -84,7 +84,7 @@ def make_det(m, a):
         dettext += "= "+str(det)
     a["detresult"] = dettext
     print("printing detlog")
-    print(a["detresult"])
+    # print(a["detresult"])
     a["det"] = det
 
     return a
@@ -102,10 +102,10 @@ def inverter(e, a):
     srow = total[0]
     scol = total[1]
     y = np.eye(srow)
-    print(y)
+    # print(y)
     e = np.concatenate((e, y), axis=1)
     a["invlog"].append(np.array(e))
-    print(e)
+    # print(e)
     total = e.shape
     srow = total[0]
     scol = total[1]
@@ -117,7 +117,7 @@ def inverter(e, a):
     i = 0
     nr = 0
     while i < (scol/2):
-        print("run col/2")
+        # print("run col/2")
         if e[nr, i] == 0:
             jj = nr
             swapped = False
@@ -137,7 +137,7 @@ def inverter(e, a):
                 # fix float
                 e = e.astype(float)
                 tomult = (e[j, i]/e[nr, i])
-                print(tomult)
+                # print(tomult)
                 e[j] = e[j]-(e[nr]*tomult)
                 a["rreflog"].append(np.array(e))
             j += 1
@@ -148,33 +148,51 @@ def inverter(e, a):
         i += 1
 
     print("loop down to up no swap row")
-    print(e)
+    # print(e)
     i = int((scol/2)-1)
     nr = srow-1
     while i > -1:
         j = nr-1
-        print(j)
-        print("i")
-        print(i)
+        # print(j)
+        # print("i")
+        # print(i)
         while j > -1:
-            print("print j")
-            print(j)
+            # print("print j")
+            # print(j)
             if e[j, i] != 0:
                 # fix float
                 e = e.astype(float)
                 tomult = (e[j, i]/e[nr, i])
-                print(tomult)
+                # print(tomult)
                 e[j] = e[j]-(e[nr]*tomult)
                 a["rreflog"].append(np.array(e))
             j -= 1
         nr -= 1
         i -= 1
     print("end invert")
-    print(e)
+    # print(e)
     inv = np.array(e[0:srow, int(scol/2):int(scol)])
     print("inverted")
-    print(inv)
+    # print(inv)
     a["inverted"] = inv
+    copyi = np.array(a["inverted"])
+    hello = False
+    if hello:
+        # copyans = np.array(myansw)
+        copyans = np.array(np.mat("[4; 5; 8; 7]"))
+        try:
+            a["haveans"] = True
+            # a["ansinv"] = []
+            myans = np.matmul(copyi, copyans)
+            # print(myans)
+            ai = 0
+            atext = ""
+            while ai < len(myans):
+                atext += "x"+str(ai+1)+" = "+str(myans[ai, 0])+"\n"
+                ai += 1
+            a["ansinv"] = atext
+        except:
+            print("hello disable invert answer")
 
     return a
 
@@ -184,6 +202,7 @@ def init_invert(e):
     print('copy original mat')
     ans = {}
     ans["invlog"] = []
+    ans["haveans"] = False
     total = e.shape
     srow = total[0]
     scol = total[1]
@@ -195,7 +214,7 @@ def init_invert(e):
     ans["det"] = 0
     fakeE = np.array(e)
     ans = make_det(fakeE, ans)
-    print(ans)
+    # print(ans)
     if ans["det"] == 0:
         ans["invertible"] = False
         return ans
