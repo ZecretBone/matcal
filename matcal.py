@@ -811,8 +811,9 @@ def solve_augmented():
         err = "Invalid Augmented Matrix, Please check your clipboard value"
     if err == "":
         sh = augm.shape
-        if sh[1] <= 1:
+        if sh[1] <= 1 or sh[0] <= 0:
             err = "Augmented Matrix insufficient column, It should be more than 1 column"
+
         else:
             newm = augm[:, :-1]
             newa = augm[:, -1].reshape(-1, 1)
@@ -826,16 +827,78 @@ def solve_augmented():
         transit("quickelem_result")
 
 
-def show_quickinv2():
+def pastesolve_quickinv():
     global root, scr, urow, ucol, stage, asset
+    err = ""
+    try:
+        newm = np.array(np.mat(pc.paste()))
+        s = newm.shape
+        if s[0] <= 0:
+            err = "Input Matrix Size,At least one column required"
+    except:
+        err = "Input Invalid, Please check your clipboard value"
+
+    if err != "":
+        messagebox.showerror(title="Solve Pasted AugmentedMatrix Error",
+                             message=err)
+    else:
+        asset["quick_mat"] = newm
+        transit("quickinv_result")
 
 
 def randsolve_quickinv(ent):
     global root, scr, urow, ucol, stage, asset
+    err = ""
+    if ent.get().isdigit():
+        r = int(ent.get())
+        if r <= 0:
+            err = "Input cannot be lower than 1"
+
+    else:
+        err = "Input has to be an integer"
+    if err == "":
+        print("rand after r c")
+        newm = np.random.rand(r, r)
+        asset["quick_mat"] = newm
+        transit("quickinv_result")
+    else:
+        ent.delete(0, END)
+        print("show msg box err")
+        messagebox.showerror(title="Solve Random Matrix Error", message=err)
 
 
-def pastesolve_quickinv(ent):
+def show_quickinv2():
     global root, scr, urow, ucol, stage, asset
+    root.title("Matrix Calculator: Functions >> Result (Quick Inverse)")
+    newm = np.array(asset["quick_mat"])
+    tt = newm.shape
+    ar = tt[0]
+    ac = tt[1]
+    result = inverse(asset["quick_mat"])
+    res_text = ""
+
+    res_text += "\n Determinant\n"
+    if len(result["detlog"]) > 0:
+        # res_text += beauty_mat(result["detlog"][-1])
+        res_text += result["detresult"] + "\n"
+
+    if not result["invertible"]:
+        res_text += result["reason"] + "\n"
+    res_text += "\n Inversed Matrix\n"
+    res_text += beauty_mat(result["inverted"])
+    res_text += "\n Original Matrix\n"
+    res_text += beauty_mat(newm)
+
+    pc.copy(res_text)
+    export_btn = Button(root, text="Export Summary",
+                        command=lambda: pc.copy(res_text))
+    scr.append(export_btn)
+    export_btn.grid(row=mr(), column=ucol)
+    # home_btn
+    home_btn = Button(root, text="Home",
+                      command=lambda: transit("main"))
+    scr.append(home_btn)
+    home_btn.grid(row=mr(), column=ucol)
 
 
 def show_quickinv():
@@ -1889,7 +1952,7 @@ def summon():
     elif stage == "quickinv":
         show_quickinv()
     elif stage == "quickinv_result":
-        showquickinv2()
+        show_quickinv2()
 
 
 if __name__ == '__main__':
