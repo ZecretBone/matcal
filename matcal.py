@@ -430,10 +430,10 @@ def bt_alter(rl):
     print(asset["bt_var"].get())
     if str(asset["bt_var"].get()) == "1":
         asset["bt2"] = False
-        rl.config(text=">> Current Type: "+str(asset["bt_var"].get()))
+        rl.config(text="Current Type: "+str(asset["bt_var"].get()))
     elif str(asset["bt_var"].get()) == "2":
         asset["bt2"] = True
-        rl.config(text=">> Current Type: "+str(asset["bt_var"].get()))
+        rl.config(text="Current Type: "+str(asset["bt_var"].get()))
 
 
 def show_setting():
