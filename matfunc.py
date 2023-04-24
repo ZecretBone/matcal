@@ -9,7 +9,7 @@ def elemental(a, an):
     return x
 
 
-def inverse(a):
+def inverse(a, aa, haveans):
     print(a)
-    x = init_invert(a)
+    x = init_invert(a, aa, haveans)
     return x

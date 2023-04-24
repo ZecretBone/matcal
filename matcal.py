@@ -134,9 +134,15 @@ def export_mat(m):
     return b
 
 
+def bt2(m):
+    return str(m)
+
+
 def beauty_mat(m):
     b = ""
     rc = m.shape
+    if asset["bt2"]:
+        return bt2(m)
     print("test d")
     print(0)
     print(round(0, 2))
@@ -359,7 +365,8 @@ def validate_matfunc(mat_lb):
             transit("elementary")
         if asset["current_func"] == "Inverse":
             print("Inverse func..")
-            transit("inverse")
+            transit("quickinv_ans")
+            # transit("inverse")
     else:
         messagebox.showerror(title="Matrix Function Error",
                              message="Something went wrong")
@@ -460,10 +467,12 @@ def show_inverse():
     global root, scr, urow, ucol, stage, asset
     root.title("Matrix Calculator: Functions >> Result (Inverse)")
     newm = np.array(asset["current_mat"])
+    newa = np.array(asset["invans_mat"])
     tt = newm.shape
     ar = tt[0]
     ac = tt[1]
-    result = inverse(asset["current_mat"])
+    result = inverse(asset["current_mat"],
+                     asset["invans_mat"], asset["inv_haveans"])
     print(result)
     # checking if its rectangle
     summa = ""
@@ -522,7 +531,6 @@ def show_inverse():
     ROWS_DISP = 3  # Number of rows to display.
     COLS_DISP = 2  # Number of columns to display.
     test_row = 10
-
     print("checking row col")
     if ar >= ac:
         test_row = ar**2
@@ -551,6 +559,9 @@ def show_inverse():
     # disp det result
     urow += 1
     ucol = 0
+    if result["haveans"]:
+        summa += "\n All variables value\n"
+        summa += result["ansinv"]
     sumdet += "\nDeterminant Result: \n"
     det_result = Label(buttons_frame, text="Determinant Result: ")
     det_result.grid(row=urow, column=ucol)
@@ -568,6 +579,9 @@ def show_inverse():
         if asset["o_set"] == 1:
             summa += "\n Original Matrix: \n"
             summa += beauty_mat(newm)
+        if result["haveans"]:
+            summa += "\n Original Answer(B) Matrix\n"
+            summa += beauty_mat(newa)
         if asset["d_set"] == 1:
             summa += sumdet
         pc.copy(summa)
@@ -846,7 +860,9 @@ def pastesolve_quickinv():
                              message=err)
     else:
         asset["quick_mat"] = newm
-        transit("quickinv_result")
+        asset["quick_mat_inv"] = True
+        transit("quickinv_ans")
+        # transit("quickinv_result")
 
 
 def randsolve_quickinv(ent):
@@ -863,21 +879,170 @@ def randsolve_quickinv(ent):
         print("rand after r c")
         newm = np.random.rand(r, r)
         asset["quick_mat"] = newm
-        transit("quickinv_result")
+        asset["quick_mat_inv"] = True
+        transit("quickinv_ans")
+        # transit("quickinv_result")
     else:
         ent.delete(0, END)
         print("show msg box err")
         messagebox.showerror(title="Solve Random Matrix Error", message=err)
 
 
+def show_noansinv():
+    global root, scr, urow, ucol, stage, asset
+    asset["inv_haveans"] = False
+    asset["invans_mat"] = [[1]]
+    if quickcheck():
+        transit("quickinv_result")
+    else:
+        transit("inverse")
+
+
+def show_randansinv():
+    global root, scr, urow, ucol, stage, asset
+    asset["inv_haveans"] = True
+    err = ""
+    if not quickcheck():
+        mm = np.array(asset["current_mat"])
+    else:
+        mm = np.array(asset["quick_mat"])
+    sm = mm.shape
+
+    try:
+        newa = np.random.rand(sm[0], 1)
+    except:
+        err = "Something went wrong"
+
+    if err != "":
+        messagebox.showerror(title="Solve Inverse Error", message=err)
+    else:
+        asset["invans_mat"] = newa
+        if quickcheck():
+            transit("quickinv_result")
+        else:
+            transit("inverse")
+
+
+def show_normalansinv(allent):
+    global root, scr, urow, ucol, stage, asset
+    asset["inv_haveans"] = True
+    err = ""
+    mm = np.array(asset["current_mat"])
+    newaa = []
+    for i in allent:
+        try:
+            x = float(i.get())
+            newaa.append([x])
+        except:
+            err = "Invalid Input"
+    if err != "":
+        messagebox.showerror(title="Solve Inverse Error",
+                             message="Invalid input")
+    else:
+        newa = np.array(newaa)
+    if err == "":
+        asset["invans_mat"] = newa
+        transit("inverse")
+    else:
+        messagebox.showerror(title="Solve Inverse Error",
+                             message=err)
+
+
+def show_pasteansinv():
+    global root, scr, urow, ucol, stage, asset
+    asset["inv_haveans"] = True
+    err = ""
+    if not quickcheck():
+        mm = np.array(asset["current_mat"])
+    else:
+        mm = np.array(asset["quick_mat"])
+    sm = mm.shape
+    try:
+        newa = np.array(np.mat(pc.paste()))
+        s = newa.shape
+        if s[0] != sm[0]:
+            err = "Row mismatched, Please enter proper matrix"
+        elif s[1] != 1:
+            err = "Column Invalid, Please enter 1 only column"
+
+    except:
+        err = "Invalid Input, Please check your clipboard value"
+
+    if err != "":
+        messagebox.showerror(title="Solve Inverse Error", message=err)
+    else:
+        asset["invans_mat"] = newa
+        if quickcheck():
+            transit("quickinv_result")
+        else:
+            transit("inverse")
+
+
+def quickcheck():
+    global root, scr, urow, ucol, stage, asset
+    if not "quick_mat_inv" in asset:
+        print("using normal inv")
+        return False
+    if "quick_mat_inv" in asset and not asset["quick_mat_inv"]:
+        print("using normal inv")
+        return False
+    return True
+
+
+def show_ansinv():
+    global root, scr, urow, ucol, stage, asset
+    root.title(
+        "Matrix Calculator: Functions >> Setting Answer(B) Matrix for Inverse")
+    # if not quick show table
+    if not quickcheck():
+        print("showing table ans inv")
+        all_ent = []
+        nx = np.array(asset["current_mat"])
+        total = nx.shape
+        for i in range(total[0]):
+            urow += 1
+            ucol = 0
+            for j in range(total[1]):
+                new_lab = Label(root, text=str(asset["current_mat"][i, j]))
+                new_lab.grid(row=urow, column=mc())
+                scr.append(new_lab)
+            new_ent = Entry(root, width=5)
+            new_ent.grid(row=urow, column=mc())
+            scr.append(new_ent)
+            all_ent.append(new_ent)
+
+        ucol = 0
+        solve_btn = Button(root, text="Solve",
+                           command=lambda: show_normalansinv(all_ent))
+        scr.append(solve_btn)
+        solve_btn.grid(row=mr(), column=ucol)
+
+    # paste_btn, rand_btn, no solve ans *no home btn
+    ucol = 0
+    paste_btn = Button(root, text="Paste and Solve",
+                       command=lambda: show_pasteansinv())
+    scr.append(paste_btn)
+    paste_btn.grid(row=mr(), column=ucol)
+    rand_btn = Button(root, text="Random and Solve",
+                      command=lambda: show_randansinv())
+    scr.append(rand_btn)
+    rand_btn.grid(row=mr(), column=ucol)
+    noans_btn = Button(root, text="Solve Inverse Only",
+                       command=lambda: show_noansinv())
+    scr.append(noans_btn)
+    noans_btn.grid(row=mr(), column=ucol)
+
+
 def show_quickinv2():
     global root, scr, urow, ucol, stage, asset
     root.title("Matrix Calculator: Functions >> Result (Quick Inverse)")
     newm = np.array(asset["quick_mat"])
+    newa = np.array(asset["invans_mat"])
     tt = newm.shape
     ar = tt[0]
     ac = tt[1]
-    result = inverse(asset["quick_mat"])
+    result = inverse(asset["quick_mat"],
+                     asset["invans_mat"], asset["inv_haveans"])
     res_text = ""
     res_text += "\n Quick Inverse Result\n"
     res_text += "\n Determinant\n"
@@ -889,10 +1054,16 @@ def show_quickinv2():
     if not result["invertible"]:
         res_text += result["reason"] + "\n"
     else:
+        if result["haveans"]:
+            res_text += "\n All variables value\n"
+            res_text += result["ansinv"]
         res_text += "\n Inversed Matrix\n"
         res_text += beauty_mat(result["inverted"])
     res_text += "\n Original Matrix\n"
     res_text += beauty_mat(newm)
+    if result["haveans"]:
+        res_text += "\n Original Answer(B) Matrix\n"
+        res_text += beauty_mat(newa)
 
     pc.copy(res_text)
     export_btn = Button(root, text="Export Summary",
@@ -1958,6 +2129,8 @@ def summon():
         show_quickinv()
     elif stage == "quickinv_result":
         show_quickinv2()
+    elif stage == "quickinv_ans":
+        show_ansinv()
 
 
 if __name__ == '__main__':
@@ -1968,6 +2141,7 @@ if __name__ == '__main__':
     urow = 0
     ucol = 0
     asset = {}
+    asset["bt2"] = False
     asset["all_mat"] = []
     asset["all_func"] = ["Elementary", "Inverse",
                          "Quick Elementary", "Quick Inverse"]

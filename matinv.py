@@ -95,7 +95,7 @@ def make_det(m, a):
 #     a["rreflog"] = []
 
 
-def inverter(e, a):
+def inverter(e, a, aa, haveans):
     print("adding E")
 
     total = e.shape
@@ -177,9 +177,9 @@ def inverter(e, a):
     a["inverted"] = inv
     copyi = np.array(a["inverted"])
     hello = False
-    if hello:
-        # copyans = np.array(myansw)
-        copyans = np.array(np.mat("[4; 5; 8; 7]"))
+    if haveans:
+        copyans = np.array(aa)
+        # copyans = np.array(np.mat("[4; 5; 8; 7]"))
         try:
             a["haveans"] = True
             # a["ansinv"] = []
@@ -197,11 +197,12 @@ def inverter(e, a):
     return a
 
 
-def init_invert(e):
+def init_invert(e, aa, haveans):
     print("checking mat if it's invertible")
     print('copy original mat')
     ans = {}
     ans["invlog"] = []
+    ans["havedet"] = False
     ans["haveans"] = False
     total = e.shape
     srow = total[0]
@@ -209,6 +210,8 @@ def init_invert(e):
     ans["invertible"] = True
     if srow != scol:
         ans["invertible"] = False
+        ans["detlog"] = []
+        ans["detresult"] = "No determinant"
         ans["reason"] = "Since it is rectangle matrix so it is not invertible"
         return ans
     ans["det"] = 0
@@ -219,6 +222,6 @@ def init_invert(e):
         ans["invertible"] = False
         return ans
     print("inverting...")
-    ans = inverter(e, ans)
+    ans = inverter(e, ans, aa, haveans)
     ans["reason"] = "Since determinant not equal to 0 so it's invertible"
     return ans
