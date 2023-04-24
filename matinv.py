@@ -26,10 +26,12 @@ def make_det(m, a):
                 if m[jj, i] != 0:
                     swapped = True
                     y = np.eye(srow)
-                    y[(nr, jj)] = y[(jj, nr)]
+                    y[[nr, jj]] = y[[jj, nr]]
                     m = np.matmul(y, m)
                     swap += 1
+
                     print("swapped: "+str(swap))
+                    # print(m)
                     a["detlog"].append(np.array(m))
                     print("Row swapped")
                     jj = srow + 1
@@ -55,6 +57,7 @@ def make_det(m, a):
                     tomult = (m[j, i]/m[nr, i])
                     print(tomult)
                     m[j] = m[j]-(m[nr]*tomult)
+                    # print(m)
                     a["detlog"].append(np.array(m))
                 j += 1
             i += 1

@@ -441,7 +441,7 @@ def show_setting():
     rref_var = IntVar()
     rref_box = Checkbutton(root, text="Reduced Row Echelon", variable=rref_var)
 
-    TS = Label(root, text=">> Matrix Export Type")
+    TS = Label(root, text=">> Matrix Display Type")
     TCS = Label(root, text="Current Type: "+str(asset["bt_var"].get()))
     t1 = Radiobutton(root, text="Type 1", variable=asset["bt_var"], value=1,
                      command=lambda: bt_alter(TCS))
