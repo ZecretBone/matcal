@@ -166,9 +166,11 @@ def beauty_mat(m):
     rc = m.shape
     # print("bbb")
     # print(asset["bt2"])
-    if asset["bt2"]:
+    if asset["bt2"] == 2:
         # print("use more bt")
         return bt2(m)
+    if asset["bt2"] == 3:
+        return export_mat(m)
     # print("test d")
     # print(0)
     # print(round(0, 2))
@@ -429,10 +431,13 @@ def bt_alter(rl):
     print("change beauty type")
     print(asset["bt_var"].get())
     if str(asset["bt_var"].get()) == "1":
-        asset["bt2"] = False
+        asset["bt2"] = 1
         rl.config(text="Current Type: "+str(asset["bt_var"].get()))
     elif str(asset["bt_var"].get()) == "2":
-        asset["bt2"] = True
+        asset["bt2"] = 2
+        rl.config(text="Current Type: "+str(asset["bt_var"].get()))
+    elif str(asset["bt_var"].get()) == "3":
+        asset["bt2"] = 3
         rl.config(text="Current Type: "+str(asset["bt_var"].get()))
 
 
@@ -470,6 +475,8 @@ def show_setting():
                      command=lambda: bt_alter(TCS))
     t2 = Radiobutton(root, text="Type 2", variable=asset["bt_var"], value=2,
                      command=lambda: bt_alter(TCS))
+    t3 = Radiobutton(root, text="Type 3", variable=asset["bt_var"], value=3,
+                     command=lambda: bt_alter(TCS))
 
     o_var.set(asset["o_set"])
     con_var.set(asset["cons_set"])
@@ -491,6 +498,7 @@ def show_setting():
 
     scr.append(t1)
     scr.append(t2)
+    scr.append(t3)
     scr.append(TS)
     scr.append(TCS)
 
@@ -517,6 +525,7 @@ def show_setting():
     TCS.grid(row=mr(), column=0, sticky='news')
     t1.grid(row=mr(), column=0, sticky='news')
     t2.grid(row=mr(), column=0, sticky='news')
+    t3.grid(row=mr(), column=0, sticky='news')
 
     home_btn2 = Button(root, text="Home", command=lambda: transit("main"))
     scr.append(home_btn2)
@@ -2214,7 +2223,7 @@ if __name__ == '__main__':
     urow = 0
     ucol = 0
     asset = {}
-    asset["bt2"] = False
+    asset["bt2"] = 1
     asset["bt_var"] = IntVar()
     asset["bt_var"].set(1)
     asset["all_mat"] = []
