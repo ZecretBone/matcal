@@ -141,12 +141,15 @@ def bt2(m):
 def beauty_mat(m):
     b = ""
     rc = m.shape
+    # print("bbb")
+    # print(asset["bt2"])
     if asset["bt2"]:
+        # print("use more bt")
         return bt2(m)
-    print("test d")
-    print(0)
-    print(round(0, 2))
-    print(len(str(round(0, 2))))
+    # print("test d")
+    # print(0)
+    # print(round(0, 2))
+    # print(len(str(round(0, 2))))
     np.round(m, 2)
     r = rc[0]
     c = rc[1]
@@ -398,6 +401,18 @@ def init_setting(o, c, e, t, d, cat, rr):
     rr = asset["rr_set"]
 
 
+def bt_alter(rl):
+    global root, scr, urow, ucol, stage, asset
+    print("change beauty type")
+    print(asset["bt_var"].get())
+    if str(asset["bt_var"].get()) == "1":
+        asset["bt2"] = False
+        rl.config(text=">> Current Type: "+str(asset["bt_var"].get()))
+    elif str(asset["bt_var"].get()) == "2":
+        asset["bt2"] = True
+        rl.config(text=">> Current Type: "+str(asset["bt_var"].get()))
+
+
 def show_setting():
     global root, scr, urow, ucol, stage, asset
 
@@ -426,6 +441,13 @@ def show_setting():
     rref_var = IntVar()
     rref_box = Checkbutton(root, text="Reduced Row Echelon", variable=rref_var)
 
+    TS = Label(root, text=">> Matrix Export Type")
+    TCS = Label(root, text="Current Type: "+str(asset["bt_var"].get()))
+    t1 = Radiobutton(root, text="Type 1", variable=asset["bt_var"], value=1,
+                     command=lambda: bt_alter(TCS))
+    t2 = Radiobutton(root, text="Type 2", variable=asset["bt_var"], value=2,
+                     command=lambda: bt_alter(TCS))
+
     o_var.set(asset["o_set"])
     con_var.set(asset["cons_set"])
     e_var.set(asset["e_set"])
@@ -443,6 +465,12 @@ def show_setting():
     scr.append(rref_box)
     scr.append(EL)
     scr.append(IL)
+
+    scr.append(t1)
+    scr.append(t2)
+    scr.append(TS)
+    scr.append(TCS)
+
     o_box.grid(row=mr(), column=0, sticky='news')
     EL.grid(row=mr(), column=0, sticky='news')
     con_box.grid(row=mr(), column=0, sticky='news')
@@ -461,6 +489,15 @@ def show_setting():
     home_btn = Button(root, text="Cancel", command=lambda: transit("main"))
     scr.append(home_btn)
     home_btn.grid(row=mr(), column=0, sticky='news')
+
+    TS.grid(row=mr(), column=0, sticky='news')
+    TCS.grid(row=mr(), column=0, sticky='news')
+    t1.grid(row=mr(), column=0, sticky='news')
+    t2.grid(row=mr(), column=0, sticky='news')
+
+    home_btn2 = Button(root, text="Home", command=lambda: transit("main"))
+    scr.append(home_btn2)
+    home_btn2.grid(row=mr(), column=0, sticky='news')
 
 
 def show_inverse():
@@ -2142,6 +2179,8 @@ if __name__ == '__main__':
     ucol = 0
     asset = {}
     asset["bt2"] = False
+    asset["bt_var"] = IntVar()
+    asset["bt_var"].set(1)
     asset["all_mat"] = []
     asset["all_func"] = ["Elementary", "Inverse",
                          "Quick Elementary", "Quick Inverse"]
