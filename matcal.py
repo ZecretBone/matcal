@@ -5,8 +5,31 @@ import random
 import pyperclip as pc
 # from textwrap import wrap
 from matfunc import *
+import pandas as pd
 
 np.set_printoptions(threshold=np.inf, linewidth=np.inf)
+
+
+def exsave(arr, name, opt1, opt2):
+
+    try:
+        df = pd.DataFrame(arr)
+        x = ""
+        if str(name) == "":
+            x = "default"
+        else:
+            x = str(name)
+        filepath = "./Inversed/"+str(x)+'.xlsx'
+        print("path: ", filepath)
+        df.to_excel(filepath, index=False)
+        if opt1 == "inv":
+            opt2.delete(0, END)
+        messagebox.showinfo(title="File Saved",
+                            message="Your file has been successfully saved as "+str(x)+".xlsx in Inversed folder")
+    except:
+        print("saving excel err")
+        messagebox.showerror(title="Save File Error",
+                             message="Something went wrong while saving file")
 
 
 def ansvalid_pastemat(allent):
@@ -1107,10 +1130,23 @@ def show_quickinv2():
                         command=lambda: pc.copy(res_text))
     scr.append(export_btn)
     export_btn.grid(row=mr(), column=ucol)
+    # saver filename_label,file_name_ent,btn
+
+    excel_lab = Label(root, text="File Name: ")
+    excel_ent = Entry(root, width=5)
+    excel_btn = Button(root, text="Save as .xlsx",
+                       command=lambda: exsave(result["inverted"], str(excel_ent.get()), "inv", excel_ent))
+    scr.append(excel_btn)
+    scr.append(excel_ent)
+    scr.append(excel_lab)
+    excel_lab.grid(row=mr(), column=ucol)
+    excel_ent.grid(row=urow, column=ucol+1)
+    excel_btn.grid(row=mr(), column=ucol)
     # home_btn
     home_btn = Button(root, text="Home",
                       command=lambda: transit("main"))
     scr.append(home_btn)
+
     home_btn.grid(row=mr(), column=ucol)
 
 
@@ -1118,12 +1154,12 @@ def show_quickinv():
     global root, scr, urow, ucol, stage, asset
     root.title("Matrix Calculator: Functions >> Quick Inverse")
     paste_lab = Label(root, text="Paste Matrix")
-    paste_btn = Button(root, text="Paste and Solve",
+    paste_btn = Button(root, text="Paste and Next",
                        command=lambda: pastesolve_quickinv())
     random_lab = Label(root, text="Random Matrix")
     cr_lab = Label(root, text="Number of Column & Row: ")
     cr_ent = Entry(root, width=5)
-    randsolev_btn = Button(root, text="Random and Solve",
+    randsolev_btn = Button(root, text="Random and Next",
                            command=lambda: randsolve_quickinv(cr_ent))
 
     scr.append(paste_lab)
@@ -1937,7 +1973,7 @@ def show_createmat():
 
 def show_welcome():
     global root, scr, urow, ucol, stage, asset
-    root.title("Matrix Calculator: Main Menu")
+    root.title("Matrix Calculator: Main Menu (Home)")
     root.geometry("1000x700")
     hilabel = Label(root, text="Welcome to Matrix Calculator")
     creatorlabel = Label(root, text="Created by Naphat and Samita")

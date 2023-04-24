@@ -63,6 +63,7 @@ def make_det(m, a):
             i += 1
             nr += 1
     dettext = ""
+    # print(m)
     if not invertible:
         det = 0
         dettext = "determinant = 0"
