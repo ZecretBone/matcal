@@ -168,44 +168,44 @@ def rrefs(c):
                     skipped = 1
                     c["freeindex"].append(i)
             if skipped == 0:
-                print("didn't skip")
+                # print("didn't skip")
                 j = nr+1
                 while j < srow:
-                    print("running down at val of: ",
-                          em[j, i], " j: ", j, " i: ", i)
+                    # #print("running down at val of: ",
+                    #       em[j, i], " j: ", j, " i: ", i)
                     if em[j, i] != 0:
-                        #fix float
+                        # fix float
                         em = em.astype(float)
                         am = am.astype(float)
-                        print("j: ", j, " i: ", i, " nr: ", nr)
-                        print("multing: ", em[j, i], " / ", em[nr, i])
+                        # print("j: ", j, " i: ", i, " nr: ", nr)
+                        # print("multing: ", em[j, i], " / ", em[nr, i])
                         tomult = (em[j, i]/em[nr, i])
-                        print(tomult)
+                        # print(tomult)
                         em[j] = em[j]-(em[nr]*tomult)
                         am[j] = am[j]-(am[nr]*tomult)
-                        print("rref MAT: ", em)
-                        print("rref ANS MAT: ", am)
+                        # print("rref MAT: ", em)
+                        # print("rref ANS MAT: ", am)
                     j += 1
                 if em[nr, i] != 1:
                     newem = np.array(em[nr, i])
                     enewem = newem
-                    print(" i: ", i, " nr: ", nr)
-                    print("multing m: ", em[nr], " / ", enewem)
-                    print("multing a: ", am[nr, 0], " / ", enewem)
+                    # print(" i: ", i, " nr: ", nr)
+                    # print("multing m: ", em[nr], " / ", enewem)
+                    # print("multing a: ", am[nr, 0], " / ", enewem)
 
                     # em[nr] = em[nr]/em[nr, i]
                     # am[nr] = am[nr, 0]/em[nr, i]
                     am = am.astype(float)
                     em = em.astype(float)
                     # test end
-                    print("a result", am[nr, 0]/enewem)
+                    # print("a result", am[nr, 0]/enewem)
 
                     am[nr, 0] /= enewem
-                    print("done with a: ", am)
+                    # print("done with a: ", am)
                     em[nr] = em[nr]/enewem
 
-                    print("rref MAT: ", em)
-                    print("rref ANS MAT: ", am)
+                    # print("rref MAT: ", em)
+                    # print("rref ANS MAT: ", am)
 
                 c["rowindex"][i] = nr
                 nr += 1
@@ -221,18 +221,18 @@ def rrefs(c):
             j = nr-1
             while j > -1:
                 if em[j, i] != 0:
-                    #fix float
+                    # fix float
                     em = em.astype(float)
                     am = am.astype(float)
-                    print("above col: ", i, " row: ", j)
-                    print("below col: ", i, " row: ", nr)
-                    print("multing: ", em[j, i], " / ", em[nr, i])
+                    # print("above col: ", i, " row: ", j)
+                    # print("below col: ", i, " row: ", nr)
+                    # print("multing: ", em[j, i], " / ", em[nr, i])
                     tomult = (em[j, i]/em[nr, i])
-                    print(tomult)
+                    # print(tomult)
                     em[j] = em[j]-(em[nr]*tomult)
                     am[j] = am[j]-(am[nr]*tomult)
-                    print("rref MAT: ", em)
-                    print("rref ANS MAT: ", am)
+                    # print("rref MAT: ", em)
+                    # print("rref ANS MAT: ", am)
                 j -= 1
         nr -= 1
         i -= 1
@@ -528,7 +528,7 @@ def isconsist(e, a, carrier, fcarrier):
 
                         carrier["consistlog"].append(np.array(e))
                         carrier["consistlog"].append(np.array(a))
-                        print(e)
+                        # print(e)
                         gather[1] = True
 
                     if gather[1]:
@@ -553,8 +553,8 @@ def isconsist(e, a, carrier, fcarrier):
                     e = e.astype(float)
                     a = a.astype(float)
                     tomult = (e[j2, i]/e[tr, i])
-                    print("j2: ", j2, " i: ", i, " tr: ", tr)
-                    print("tomult", tomult)
+                    # print("j2: ", j2, " i: ", i, " tr: ", tr)
+                    # print("tomult", tomult)
                     # y = np.eye(srow, scol)
                     # y[j2, i] = tomult
                     # newsave = e[j2]-(e[tr]*tomult)
@@ -566,8 +566,8 @@ def isconsist(e, a, carrier, fcarrier):
                     # carrier["eye"].append(y)
                     # e = np.matmul(y, e)
                     # print("after mult e: ")
-                    print(e)
-                    print(a)
+                    # print(e)
+                    # print(a)
                     j2 += 1
                 tr += 1
             # print("END ROW")
@@ -681,7 +681,7 @@ def isconsist(e, a, carrier, fcarrier):
         consist_text += "inconsistent"
     carrier["consistresult"].append(consist_text)
 
-    print("isconsist: "+str(carrier["consist"]))
+    # print("isconsist: "+str(carrier["consist"]))
     # print("freevar: "+str(carrier["freevar"]))
     # print("novar: "+str(carrier["novar"]))
     # print("current MAT: "+str(e))
